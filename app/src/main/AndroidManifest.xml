@@ -16,6 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".database.structure.ContentProviderDatabase"
+            android:authorities="com.adja.apps.mohamednagy.bakingapp" />
     </application>
 
 </manifest>

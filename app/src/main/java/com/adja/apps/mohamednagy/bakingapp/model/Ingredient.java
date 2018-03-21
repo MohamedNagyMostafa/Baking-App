@@ -11,8 +11,8 @@ public class Ingredient {
 
     public Ingredient(){}
     public Ingredient(int quantity, String measure, String ingredient){
-        mQuantity = quantity;
-        mMeasure = measure;
+        mQuantity   = quantity;
+        mMeasure    = measure;
         mIngredient = ingredient;
     }
 
