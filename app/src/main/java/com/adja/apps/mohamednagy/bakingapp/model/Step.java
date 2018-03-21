@@ -1,14 +1,21 @@
 package com.adja.apps.mohamednagy.bakingapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Mohamed Nagy on 3/21/2018.
  */
 
 public class Step {
+    @SerializedName("id")
     private int mId;
+    @SerializedName("shortDescription")
     private String mShortDescription;
+    @SerializedName("description")
     private String mDescription;
+    @SerializedName("videoURL")
     private String mVideoLink;
+    @SerializedName("thumbnailURL")
     private String mThumbnailURL;
 
     public Step(){}

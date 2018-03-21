@@ -1,12 +1,17 @@
 package com.adja.apps.mohamednagy.bakingapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Mohamed Nagy on 3/21/2018.
  */
 
 public class Ingredient {
+    @SerializedName("quantity")
     private int mQuantity;
+    @SerializedName("measure")
     private String mMeasure;
+    @SerializedName("ingredient")
     private String mIngredient;
 
     public Ingredient(){}
