@@ -2,6 +2,8 @@ package com.adja.apps.mohamednagy.bakingapp.model;
 
 import android.support.annotation.Nullable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -9,11 +11,17 @@ import java.util.List;
  */
 
 public class Recipe {
+    @SerializedName("id")
     private long mId;
+    @SerializedName("name")
     private String mName;
+    @SerializedName("ingedients")
     private List<Ingredient> mIngredients;
+    @SerializedName("steps")
     private List<Step> mSteps;
+    @SerializedName("servings")
     private int mServings;
+    @SerializedName("image")
     private String mImageURL;
 
     public Recipe(){}
