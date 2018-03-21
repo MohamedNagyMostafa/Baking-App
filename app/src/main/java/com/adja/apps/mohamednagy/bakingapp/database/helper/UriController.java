@@ -25,4 +25,9 @@ public class UriController {
     public static Uri getStepTableUri(){
         return STEP_TABLE_URI;
     }
+
+    public static Uri getRecipeStepIngredientJoinUri(){
+        return RECIPE_TABLE_URI.buildUpon().appendPath(DbContent.Step.TABLE_NAME)
+                .appendPath(DbContent.Ingredient.TABLE_NAME).build();
+    }
 }
