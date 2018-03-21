@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             protected void onFailure(String message) {
-                Log.e("error", message);
+                Log.e("erroor", message);
             }
         };
         networkHandler.execute();
