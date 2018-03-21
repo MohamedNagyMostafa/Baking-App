@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.database;
+package com.adja.apps.mohamednagy.bakingapp.database.structure;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -8,6 +8,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.adja.apps.mohamednagy.bakingapp.database.helper.DbUriMatcher;
 
 /**
  * Created by Mohamed Nagy on 3/21/2018.
@@ -92,6 +95,7 @@ public class ContentProviderDatabase extends ContentProvider{
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         int match = mUriMatcher.match(uri);
         long id = -1;
+        Log.e("asdddddddddddddddddd",String.valueOf(match));
 
         switch (match){
             case DbUriMatcher.RECIPE_ID:

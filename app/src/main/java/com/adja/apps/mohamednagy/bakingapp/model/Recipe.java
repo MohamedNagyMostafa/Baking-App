@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 public class Recipe {
-    private int mId;
+    private long mId;
     private String mName;
     private List<Ingredient> mIngredients;
     private List<Step> mSteps;
@@ -17,7 +17,7 @@ public class Recipe {
     private String mImageURL;
 
     public Recipe(){}
-    public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, @Nullable String imageURL){
+    public Recipe(long id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, @Nullable String imageURL){
         mId          = id;
         mName        = name;
         mIngredients = ingredients;
@@ -26,7 +26,7 @@ public class Recipe {
         mImageURL    = imageURL;
     }
 
-    public void setId(int mId) {
+    public void setId(long mId) {
         this.mId = mId;
     }
 
@@ -50,7 +50,7 @@ public class Recipe {
         this.mImageURL = mImageURL;
     }
 
-    public int getId() {
+    public long getId() {
         return mId;
     }
 

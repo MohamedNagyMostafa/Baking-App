@@ -1,6 +1,8 @@
-package com.adja.apps.mohamednagy.bakingapp.database;
+package com.adja.apps.mohamednagy.bakingapp.database.helper;
 
 import android.content.UriMatcher;
+
+import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
 
 /**
  * Created by Mohamed Nagy on 3/21/2018.

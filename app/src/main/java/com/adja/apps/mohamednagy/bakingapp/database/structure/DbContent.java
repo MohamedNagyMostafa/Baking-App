@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.database;
+package com.adja.apps.mohamednagy.bakingapp.database.structure;
 
 import android.content.ContentResolver;
 import android.net.Uri;
@@ -39,10 +39,10 @@ public class DbContent {
 
         public static String CREATE_RECIPE_TABLE = CREATE_TABLE + SPACE +
                 TABLE_NAME + "(" +
-                _ID + SPACE + INTEGER_TYPE + SPACE + PRIMARY_KEY + "," +
-                RECIPE_NAME_COLUMN + SPACE + TEXT_TYPE + SPACE + NOT_NULL + "," +
-                RECIPE_SERVING_COLUMN + SPACE + INTEGER_TYPE + "," +
-                RECIPE_IMAGE_COLUMN + SPACE + BLOB_TYPE + ");";
+                _ID                   + SPACE + INTEGER_TYPE + SPACE            + PRIMARY_KEY + "," +
+                RECIPE_NAME_COLUMN    + SPACE + TEXT_TYPE    + SPACE + NOT_NULL               + "," +
+                RECIPE_SERVING_COLUMN + SPACE + INTEGER_TYPE                                  + "," +
+                RECIPE_IMAGE_COLUMN   + SPACE + BLOB_TYPE                                     + ");";
 
     }
 
@@ -72,19 +72,19 @@ public class DbContent {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 
         public static final String STEP_SHORT_DESCRIPTION_COLUMN = "short_description";
-        public static final String STEP_DESCRIPTION_COLUMN = "description";
-        public static final String STEP_VIDEO_URL_COLUMN = "video_url";
-        public static final String STEP_THUMBNAIL_COLUMN = "thumbnail";
-        public static final String STEP_RECIPE_ID_COLUMN = "recp_id";
+        public static final String STEP_DESCRIPTION_COLUMN       = "description";
+        public static final String STEP_VIDEO_URL_COLUMN         = "video_url";
+        public static final String STEP_THUMBNAIL_COLUMN         = "thumbnail";
+        public static final String STEP_RECIPE_ID_COLUMN         = "recp_id";
 
         public static final String CREATE_STEP_TABLE = CREATE_TABLE + SPACE +
                 TABLE_NAME + "(" +
-                _ID + SPACE + INTEGER_TYPE + SPACE + PRIMARY_KEY + "," +
-                STEP_SHORT_DESCRIPTION_COLUMN + SPACE + TEXT_TYPE + "," +
-                STEP_DESCRIPTION_COLUMN + SPACE + TEXT_TYPE + "," +
-                STEP_VIDEO_URL_COLUMN + SPACE + TEXT_TYPE + "," +
-                STEP_THUMBNAIL_COLUMN + SPACE + BLOB_TYPE + "," +
-                STEP_RECIPE_ID_COLUMN + SPACE + INTEGER_TYPE + "," +
+                _ID                           + SPACE + INTEGER_TYPE + SPACE + PRIMARY_KEY  + "," +
+                STEP_SHORT_DESCRIPTION_COLUMN + SPACE + TEXT_TYPE                           + "," +
+                STEP_DESCRIPTION_COLUMN       + SPACE + TEXT_TYPE                           + "," +
+                STEP_VIDEO_URL_COLUMN         + SPACE + TEXT_TYPE                           + "," +
+                STEP_THUMBNAIL_COLUMN         + SPACE + BLOB_TYPE                           + "," +
+                STEP_RECIPE_ID_COLUMN         + SPACE + INTEGER_TYPE                        + "," +
 
                 FOREIGN_KEY + SPACE + "(" + STEP_RECIPE_ID_COLUMN + ")" + SPACE + REFERENCES + SPACE +
                 Recipe.TABLE_NAME + "(" + Recipe._ID + "));";

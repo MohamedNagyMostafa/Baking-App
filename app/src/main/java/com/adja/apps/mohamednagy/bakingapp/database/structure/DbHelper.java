@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.database;
+package com.adja.apps.mohamednagy.bakingapp.database.structure;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
