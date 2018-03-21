@@ -18,12 +18,12 @@ public class Recipe {
 
     public Recipe(){}
     public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, @Nullable String imageURL){
-        mId = id;
-        mName = name;
+        mId          = id;
+        mName        = name;
         mIngredients = ingredients;
-        mSteps = steps;
-        mServings = servings;
-        mImageURL = imageURL;
+        mSteps       = steps;
+        mServings    = servings;
+        mImageURL    = imageURL;
     }
 
     public void setId(int mId) {

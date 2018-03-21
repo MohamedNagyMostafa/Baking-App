@@ -13,11 +13,11 @@ public class Step {
 
     public Step(){}
     public Step(int id, String shortDescription, String description, String videoLink, String thumbnailURL){
-        mId = id;
+        mId               = id;
         mShortDescription = shortDescription;
-        mDescription = description;
-        mVideoLink = videoLink;
-        mThumbnailURL = thumbnailURL;
+        mDescription      = description;
+        mVideoLink        = videoLink;
+        mThumbnailURL     = thumbnailURL;
     }
 
     public void setId(int mId) {
