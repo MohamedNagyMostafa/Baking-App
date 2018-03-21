@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        networkHandler = new NetworkHandler(getBaseContext()) {
+        networkHandler = new NetworkHandler(this) {
             @Override
             protected void onPostExecute(Recipe[] recipes) {
                 Log.e("data done", String.valueOf(recipes.length));
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
                     networkHandler.execute();
                 }else{
                     // TODO: error msg
+                    Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
                 }
         }
     }
