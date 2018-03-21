@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Baking App</string>
+
+    <!-- Error Message -->
+    <string name="no_network_connection">Please check your network connection and try again</string>
 </resources>
