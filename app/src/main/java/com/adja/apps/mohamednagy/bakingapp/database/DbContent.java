@@ -23,7 +23,10 @@ public class DbContent {
     private static final String NOT_NULL     = "NOT NULL";
     private static final String CREATE_TABLE = "CREATE TABLE";
 
-    private static final String CONTENT_AUTHORITY = "com.adja.apps.mohamednagy.bakingapp";
+    private static final String INNER_JOIN   = "INNER JOIN";
+    private static final String ON           = "ON";
+
+    public static final String CONTENT_AUTHORITY = "com.adja.apps.mohamednagy.bakingapp";
     private static final Uri BASE_CONTENT_URI = Uri.parse("content://" +  CONTENT_AUTHORITY);
 
     public static class Recipe implements BaseColumns {
@@ -87,5 +90,14 @@ public class DbContent {
                 Recipe.TABLE_NAME + "(" + Recipe._ID + "));";
     }
 
+
+    public static final String RECIPE_JOIN_WITH_STEP_INGREDIENT_QUERY =
+            Recipe.TABLE_NAME + SPACE +
+                    INNER_JOIN + SPACE + Ingredient.TABLE_NAME + SPACE +
+                    ON + SPACE + Recipe.TABLE_NAME + "." + Recipe._ID + "=" +
+                    Ingredient.TABLE_NAME + "." + Ingredient.INGREDIENT_RECIPE_ID_COLUMN + SPACE +
+
+                    INNER_JOIN + SPACE + Step.TABLE_NAME + SPACE +
+                    ON + SPACE + Step.TABLE_NAME + "." + Step._ID + "=" + Recipe.TABLE_NAME + "." + Recipe._ID;
 
 }
