@@ -23,12 +23,13 @@ import com.google.android.exoplayer2.util.Util;
  * Created by Mohamed Nagy on 3/23/2018.
  */
 
-public class Media {
+public class Media extends MediaController{
     private SimpleExoPlayer mSimpleExoPlayer;
     private Builder mBuilder;
     private Context mContext;
 
     public Media(Builder builder, Context context){
+        super(builder.mOnMediaStateChanged);
         mBuilder = builder;
         mContext = context;
         init();
@@ -55,8 +56,12 @@ public class Media {
     private void prepareExoPlayer(){
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
+
         mSimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector, loadControl);
         mBuilder.mSimpleExoPlayerView.setPlayer(mSimpleExoPlayer);
+
+        if(mBuilder.mOnMediaStateChanged != null)
+            mSimpleExoPlayer.addListener(this);
     }
 
     private void prepareMediaPlayer(){
@@ -72,6 +77,7 @@ public class Media {
     }
 
     public static class Builder{
+        private OnMediaStateChanged mOnMediaStateChanged;
         private SimpleExoPlayerView mSimpleExoPlayerView;
         private Uri mVideoUri;
 
@@ -91,6 +97,18 @@ public class Media {
             return this;
         }
 
+        public Builder mediaStateListener(@NonNull OnMediaStateChanged onMediaStateChanged){
+            mOnMediaStateChanged = onMediaStateChanged;
+            return this;
+        }
+    }
+
+    public enum State{
+        READY, IDLE, ENDED, NO_ACTION
+    }
+
+    public interface OnMediaStateChanged{
+        void onStateChanged(State state, boolean isPlaying);
     }
 
 }
