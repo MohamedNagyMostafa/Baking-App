@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -23,21 +24,32 @@ import com.google.android.exoplayer2.util.Util;
  * Created by Mohamed Nagy on 3/23/2018.
  */
 
-public class Media extends MediaController{
+public class Media{
+    private Uri mVideoUri;
     private SimpleExoPlayer mSimpleExoPlayer;
-    private Builder mBuilder;
+    private SimpleExoPlayerView mSimpleMediaView;
+
+    private OnMediaStateChanged mOnMediaStateChanged;
+    private MediaSessionController mMediaSessionController;
+
     private Context mContext;
 
-    public Media(Builder builder, Context context){
-        super(builder.mOnMediaStateChanged);
-        mBuilder = builder;
+    Media(Context context, SimpleExoPlayerView simpleExoPlayerView, Uri videoUri,
+          OnMediaStateChanged onMediaStateChanged){
+
+        mVideoUri = videoUri;
         mContext = context;
+        mSimpleMediaView = simpleExoPlayerView;
+        mOnMediaStateChanged = onMediaStateChanged;
+
         init();
     }
 
     private void init(){
         // initialize exoPlayer
         prepareExoPlayer();
+        // prepare media session.
+        prepareMediaSession();
         // Prepare Media
         prepareMediaPlayer();
     }
@@ -48,38 +60,69 @@ public class Media extends MediaController{
     }
 
     public void release(){
+        mMediaSessionController.stop();
         mSimpleExoPlayer.stop();
         mSimpleExoPlayer.release();
         mSimpleExoPlayer = null;
     }
 
+    /**
+     * Initialize Original media and set listener for its states.
+     * (Connect player state changing with session player and set outer listener "OnMediaStateChanged"
+     * to handle the changes by UI)
+     */
     private void prepareExoPlayer(){
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
 
         mSimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(mContext, trackSelector, loadControl);
-        mBuilder.mSimpleExoPlayerView.setPlayer(mSimpleExoPlayer);
+        mSimpleMediaView.setPlayer(mSimpleExoPlayer);
 
-        if(mBuilder.mOnMediaStateChanged != null)
-            mSimpleExoPlayer.addListener(this);
+        if(mOnMediaStateChanged != null)
+            mSimpleExoPlayer.addListener(mMediaSessionController);
+    }
+
+    /**
+     * Connect media session with original media
+     * (Connect media session actions with original media and update media changing state with session state)
+     */
+    private void prepareMediaSession(){
+        mMediaSessionController = new MediaSessionController(mContext, mOnMediaStateChanged,
+                new MediaSessionController.MediaSessionControllerListener() {
+            @Override
+            public void updateSessionState(PlaybackStateCompat.Builder playbackStateCompat, int state) {
+                playbackStateCompat.setState(state, mSimpleExoPlayer.getCurrentPosition(), 1f);
+            }
+
+            @Override
+            public void onStateChanged(boolean isPlaying) {
+                mSimpleExoPlayer.setPlayWhenReady(isPlaying);
+            }
+        });
     }
 
     private void prepareMediaPlayer(){
         String userAgent = Util.getUserAgent(mContext, "Baking");
         MediaSource mediaSource = new ExtractorMediaSource(
-                mBuilder.mVideoUri,
+                mVideoUri,
                 new DefaultDataSourceFactory(mContext, userAgent),
                 new DefaultExtractorsFactory(),
                 null,
                 null
         );
         mSimpleExoPlayer.prepare(mediaSource);
+        mMediaSessionController.start();
     }
 
     public static class Builder{
         private OnMediaStateChanged mOnMediaStateChanged;
         private SimpleExoPlayerView mSimpleExoPlayerView;
+        private Context mContext;
         private Uri mVideoUri;
+
+        public Builder(Context context){
+            mContext = context;
+        }
 
         public Builder mediaView(@NonNull SimpleExoPlayerView simpleExoPlayerView){
             mSimpleExoPlayerView = simpleExoPlayerView;
@@ -100,6 +143,10 @@ public class Media extends MediaController{
         public Builder mediaStateListener(@NonNull OnMediaStateChanged onMediaStateChanged){
             mOnMediaStateChanged = onMediaStateChanged;
             return this;
+        }
+
+        public Media build(){
+            return new Media(mContext, mSimpleExoPlayerView, mVideoUri, mOnMediaStateChanged);
         }
     }
 

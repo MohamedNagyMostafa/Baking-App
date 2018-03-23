@@ -1,5 +1,7 @@
 package com.adja.apps.mohamednagy.bakingapp.media;
 
+import android.media.session.MediaSession;
+
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Timeline;
@@ -11,15 +13,24 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
  */
 
 public abstract class MediaController implements ExoPlayer.EventListener {
+
     private Media.OnMediaStateChanged mOnMediaStateChanged;
+    private MediaControllerListener mMediaControllerListener;
 
     MediaController(Media.OnMediaStateChanged onMediaStateChanged){
         if(onMediaStateChanged != null)
             mOnMediaStateChanged = onMediaStateChanged;
+
     }
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        handleMediaListener(playWhenReady, playbackState);
+        handleSessionListener(playWhenReady, playbackState);
+
+    }
+
+    private void handleMediaListener(boolean playWhenReady, int playbackState){
         assert mOnMediaStateChanged != null;
 
         Media.State state = Media.State.NO_ACTION;
@@ -36,6 +47,20 @@ public abstract class MediaController implements ExoPlayer.EventListener {
         }
 
         mOnMediaStateChanged.onStateChanged(state, playWhenReady);
+    }
+
+    /**
+     * Send changing state to media session.
+     * @param playWhenReady
+     * @param playbackState
+     */
+    private void handleSessionListener(boolean playWhenReady, int playbackState){
+        if(playbackState == ExoPlayer.STATE_READY){
+            if(playWhenReady)
+                mMediaControllerListener.onStateChanged(true);
+            else
+                mMediaControllerListener.onStateChanged(false);
+        }
     }
 
     @Override
@@ -61,5 +86,14 @@ public abstract class MediaController implements ExoPlayer.EventListener {
     @Override
     public void onPositionDiscontinuity() {
 
+    }
+
+    protected void setMediaSessionListener(MediaControllerListener
+                                                 mediaControllerListener){
+        mMediaControllerListener = mediaControllerListener;
+    }
+
+    public interface MediaControllerListener {
+        void onStateChanged(boolean isPlaying);
     }
 }

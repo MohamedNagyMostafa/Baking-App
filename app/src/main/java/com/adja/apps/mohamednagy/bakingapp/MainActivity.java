@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 .mediaStateListener(new Media.OnMediaStateChanged() {
                     @Override
                     public void onStateChanged(Media.State state, boolean isPlaying) {
-                     
+
                         switch (state){
                             case READY:
                                 Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
