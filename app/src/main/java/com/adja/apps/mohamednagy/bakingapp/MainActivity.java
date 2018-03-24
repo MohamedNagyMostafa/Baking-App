@@ -18,6 +18,7 @@ import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Media media;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,19 +26,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        Media.Builder mediaBuilder = new Media.Builder()
+        Media.Builder mediaBuilder = new Media.Builder(this)
                 .mediaView(activityMainBinding.simpleExoPlayer)
                 .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
                 .mediaStateListener(new Media.OnMediaStateChanged() {
                     @Override
                     public void onStateChanged(Media.State state, boolean isPlaying) {
+                        if(!isPlaying && state == Media.State.READY)
+                            Toast.makeText(MainActivity.this, "pause", Toast.LENGTH_SHORT).show();
 
                         switch (state){
                             case READY:
                                 Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
-                            break;
-                            case IDLE:
-                                Toast.makeText(MainActivity.this, "idle", Toast.LENGTH_SHORT).show();
                             break;
                             case ENDED:
                             Toast.makeText(MainActivity.this, "ended", Toast.LENGTH_SHORT).show();
@@ -45,7 +45,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-        final Media media = new Media(mediaBuilder, this);
+
+        media = mediaBuilder.build();
         activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,5 +70,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
                 }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        media.release();
+        super.onPause();
     }
 }

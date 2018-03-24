@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -46,10 +47,10 @@ public class Media{
     }
 
     private void init(){
-        // initialize exoPlayer
-        prepareExoPlayer();
         // prepare media session.
         prepareMediaSession();
+        // initialize exoPlayer
+        prepareExoPlayer();
         // Prepare Media
         prepareMediaPlayer();
     }
@@ -61,9 +62,14 @@ public class Media{
 
     public void release(){
         mMediaSessionController.stop();
-        mSimpleExoPlayer.stop();
-        mSimpleExoPlayer.release();
-        mSimpleExoPlayer = null;
+
+        if(mSimpleExoPlayer != null) {
+
+            mSimpleExoPlayer.stop();
+            mSimpleExoPlayer.release();
+            mSimpleExoPlayer = null;
+
+        }
     }
 
     /**
@@ -97,6 +103,9 @@ public class Media{
             @Override
             public void onStateChanged(boolean isPlaying) {
                 mSimpleExoPlayer.setPlayWhenReady(isPlaying);
+                Log.e("session changed","aaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+
             }
         });
     }

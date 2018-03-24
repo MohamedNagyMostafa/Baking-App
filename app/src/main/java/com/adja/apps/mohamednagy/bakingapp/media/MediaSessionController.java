@@ -1,9 +1,15 @@
 package com.adja.apps.mohamednagy.bakingapp.media;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.session.MediaSession;
+import android.support.annotation.NonNull;
+import android.support.v4.media.session.MediaButtonReceiver;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
+import android.view.KeyEvent;
 
 /**
  * Created by Mohamed Nagy on 3/23/2018.
@@ -46,7 +52,6 @@ public class MediaSessionController extends MediaController
 
         mMediaSession = new MediaSession(context, TAG);
         mMediaSession.setCallback(new SessionControllerCallback());
-
     }
 
     void start(){
@@ -74,14 +79,21 @@ public class MediaSessionController extends MediaController
     private class SessionControllerCallback extends MediaSession.Callback{
         @Override
         public void onPlay() {
+            Log.e("session","playing cmd");
             mMediaSessionControllerListener.onStateChanged(true);
         }
 
         @Override
         public void onPause() {
+            Log.e("session","pause cmd");
             mMediaSessionControllerListener.onStateChanged(false);
         }
 
+        @Override
+        public boolean onMediaButtonEvent(@NonNull Intent mediaButtonIntent) {
+            Log.e("called","done");
+            return super.onMediaButtonEvent(mediaButtonIntent);
+        }
     }
 
     interface MediaSessionControllerListener extends MediaControllerListener {
