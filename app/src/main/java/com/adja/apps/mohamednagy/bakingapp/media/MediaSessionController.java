@@ -79,21 +79,16 @@ public class MediaSessionController extends MediaController
     private class SessionControllerCallback extends MediaSession.Callback{
         @Override
         public void onPlay() {
-            Log.e("session","playing cmd");
+            //Log.e("session","playing cmd");
             mMediaSessionControllerListener.onStateChanged(true);
         }
 
         @Override
         public void onPause() {
-            Log.e("session","pause cmd");
+            //Log.e("session","pause cmd");
             mMediaSessionControllerListener.onStateChanged(false);
         }
 
-        @Override
-        public boolean onMediaButtonEvent(@NonNull Intent mediaButtonIntent) {
-            Log.e("called","done");
-            return super.onMediaButtonEvent(mediaButtonIntent);
-        }
     }
 
     interface MediaSessionControllerListener extends MediaControllerListener {

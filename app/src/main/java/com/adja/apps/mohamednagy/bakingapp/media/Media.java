@@ -60,6 +60,10 @@ public class Media{
         mSimpleExoPlayer.setPlayWhenReady(true);
     }
 
+    public void pause(){
+        mSimpleExoPlayer.setPlayWhenReady(false);
+    }
+
     public void release(){
         mMediaSessionController.stop();
 
