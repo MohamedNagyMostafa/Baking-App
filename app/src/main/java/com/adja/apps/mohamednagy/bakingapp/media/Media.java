@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
@@ -34,19 +35,20 @@ public class Media{
     private MediaSessionController mMediaSessionController;
 
     private Context mContext;
+    private AudioFocusSystem mAudioFocusSystem;
 
     Media(Context context, SimpleExoPlayerView simpleExoPlayerView, Uri videoUri,
-          OnMediaStateChanged onMediaStateChanged){
-
-        mVideoUri = videoUri;
-        mContext = context;
-        mSimpleMediaView = simpleExoPlayerView;
+          OnMediaStateChanged onMediaStateChanged, AudioFocusSystem audioFocusSystem){
+        mVideoUri            = videoUri;
+        mContext             = context;
+        mSimpleMediaView     = simpleExoPlayerView;
         mOnMediaStateChanged = onMediaStateChanged;
-
+        mAudioFocusSystem    = audioFocusSystem;
         init();
     }
 
     private void init(){
+        prepareMediaFocus();
         // prepare media session.
         prepareMediaSession();
         // initialize exoPlayer
@@ -57,6 +59,8 @@ public class Media{
 
 
     public void play(){
+        if(mAudioFocusSystem.getState() != AudioFocusSystem.GAINED)
+            mAudioFocusSystem.run();
         mSimpleExoPlayer.setPlayWhenReady(true);
     }
 
@@ -74,6 +78,16 @@ public class Media{
             mSimpleExoPlayer = null;
 
         }
+
+        if(mAudioFocusSystem != null)
+            mAudioFocusSystem.stop();
+    }
+
+    /**
+     * Attach MediaFocusSystem to media
+     */
+    private void prepareMediaFocus(){
+        mAudioFocusSystem.setMedia(this);
     }
 
     /**
@@ -130,6 +144,7 @@ public class Media{
     public static class Builder{
         private OnMediaStateChanged mOnMediaStateChanged;
         private SimpleExoPlayerView mSimpleExoPlayerView;
+        private AudioFocusSystem mAudioFocusSystem;
         private Context mContext;
         private Uri mVideoUri;
 
@@ -158,8 +173,15 @@ public class Media{
             return this;
         }
 
+        public Builder audioFocusSystem(@Nullable AudioFocusSystem audioFocusSystem){
+            if(audioFocusSystem != null)
+                mAudioFocusSystem = audioFocusSystem;
+
+            return this;
+        }
+
         public Media build(){
-            return new Media(mContext, mSimpleExoPlayerView, mVideoUri, mOnMediaStateChanged);
+            return new Media(mContext, mSimpleExoPlayerView, mVideoUri, mOnMediaStateChanged, mAudioFocusSystem);
         }
     }
 

@@ -7,6 +7,7 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
 /**
@@ -14,8 +15,8 @@ import android.support.annotation.RequiresApi;
  */
 
 public class AudioFocusSystem {
-    public static final int VERSION_21 = 0x1;
-    public static final int VERSION_26 = 0X2;
+    private static final int VERSION_21 = 0x1;
+    private static final int VERSION_26 = 0X2;
 
     public static final int ON_DELAY = 0x001;
     public static final int GAINED = 0x003;
@@ -30,6 +31,11 @@ public class AudioFocusSystem {
     private AudioManager mAudioManager;
     private Media mMedia;
 
+    public AudioFocusSystem(@NonNull Context context){
+        mContext = context;
+        init();
+    }
+
     public AudioFocusSystem(@NonNull Context context, @NonNull Media media) {
         mContext = context;
         mMedia   = media;
@@ -39,10 +45,13 @@ public class AudioFocusSystem {
     private void init() {
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mState = IDLE;
-        mOnAudioFocusChangeListener = getFocusListener();
     }
 
-    public void run() {
+    void run() {
+        assert mMedia != null;
+
+        mOnAudioFocusChangeListener = getFocusListener();
+
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
             audioFocusSys21();
         }else{
@@ -59,8 +68,8 @@ public class AudioFocusSystem {
                 AudioManager.AUDIOFOCUS_GAIN);
 
         if(res == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mMedia.play();
             mState = GAINED;
+            mMedia.play();
         }
     }
     /**
@@ -132,8 +141,12 @@ public class AudioFocusSystem {
                 .build();
     }
 
-    private int getState(){
+    public int getState(){
         return mState;
+    }
+
+    public void setMedia(Media media){
+        mMedia = media;
     }
 
     public void stop() {
