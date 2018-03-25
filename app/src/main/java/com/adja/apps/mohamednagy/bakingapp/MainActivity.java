@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         final Media.Builder mediaBuilder = new Media.Builder(this)
                 .mediaView(activityMainBinding.simpleExoPlayer)
                 .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                media.pause();
+                media.play();
             }
         });
 
