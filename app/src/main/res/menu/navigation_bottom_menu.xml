@@ -8,13 +8,13 @@
         android:enabled="true"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_schedules"
+        android:id="@+id/step_nav"
         android:icon="@drawable/exo_controls_pause"
         android:title="@string/menu_nav_step"
         android:enabled="true"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/action_music"
+        android:id="@+id/gradient_nav"
         android:icon="@drawable/exo_controls_play"
         android:title="@string/menu_nav_gradient"
         android:enabled="true"

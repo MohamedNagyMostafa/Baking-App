@@ -1,5 +1,6 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -20,22 +21,24 @@ import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
+import com.adja.apps.mohamednagy.bakingapp.ui.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Media media;
+    private NavigationBottomSystem mNavigationBottomSystem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        GradientFragment gradientFragment = new GradientFragment();
-        getSupportFragmentManager().beginTransaction().replace(
-                R.id.fragment, gradientFragment
-        ).commit();
-
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
+        mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
+        addFragmentsToNavigationSys();
 
 //        final Media.Builder mediaBuilder = new Media.Builder(this)
 //                .mediaView(activityMainBinding.simpleExoPlayer)
@@ -71,9 +74,26 @@ public class MainActivity extends AppCompatActivity {
 //                return true;
 //            }
 //        });
+
     }
 
+    private void addFragmentsToNavigationSys(){
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
+        StepFragment stepFragment             = new StepFragment();
+        GradientFragment gradientFragment     = new GradientFragment();
 
+        final Integer HOME_NAV    = R.id.home_nav;
+        final Integer STEP_NAV    = R.id.step_nav;
+        final Integer GRADIENT_NV = R.id.gradient_nav;
+
+        final NavigationBottomSystem.FragmentNav RECIPE_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(HOME_NAV, recipeListFragment);
+        final NavigationBottomSystem.FragmentNav STEP_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(STEP_NAV, stepFragment);
+        final NavigationBottomSystem.FragmentNav GRADIENT_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(GRADIENT_NV, gradientFragment);
+
+        mNavigationBottomSystem.put(RECIPE_FRAGMENT_NAV);
+        mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
+        mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);
+    }
 
 //    @Override
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
