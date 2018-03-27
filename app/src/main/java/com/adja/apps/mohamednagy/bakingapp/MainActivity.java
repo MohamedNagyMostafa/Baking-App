@@ -20,6 +20,7 @@ import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        GradientFragment gradientFragment = new GradientFragment();
+        getSupportFragmentManager().beginTransaction().replace(
+                R.id.fragment, gradientFragment
+        ).commit();
+
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
 //        final Media.Builder mediaBuilder = new Media.Builder(this)
@@ -59,35 +65,35 @@ public class MainActivity extends AppCompatActivity {
 //                media.pause();
 //            }
 //        });
-        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                return true;
-            }
-        });
+//        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                return true;
+//            }
+//        });
     }
 
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case PermissionHandler.REQUEST_CODE:
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-
-                }else{
-                    // TODO: error msg
-                    Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
-                }
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        media.release();
-        super.onPause();
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode){
+//            case PermissionHandler.REQUEST_CODE:
+//                if (grantResults.length > 0 &&
+//                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+//                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//
+//                }else{
+//                    // TODO: error msg
+//                    Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
+//                }
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        media.release();
+//        super.onPause();
+//    }
 }
