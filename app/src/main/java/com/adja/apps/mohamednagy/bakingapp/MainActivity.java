@@ -6,9 +6,11 @@ import android.databinding.DataBindingUtil;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,35 +31,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        final Media.Builder mediaBuilder = new Media.Builder(this)
-                .mediaView(activityMainBinding.simpleExoPlayer)
-                .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
-                .audioFocusSystem(new AudioFocusSystem(this))
-                .mediaStateListener(new Media.OnMediaStateChanged() {
-                    @Override
-                    public void onStateChanged(Media.State state, boolean isPlaying) {
-                        if(!isPlaying && state == Media.State.READY)
-                            Toast.makeText(MainActivity.this, "pause", Toast.LENGTH_SHORT).show();
-
-                        switch (state){
-                            case READY:
-                                Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
-                            break;
-                            case ENDED:
-                            Toast.makeText(MainActivity.this, "ended", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                    }
-                });
-
-        media = mediaBuilder.build();
-        activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
+//        final Media.Builder mediaBuilder = new Media.Builder(this)
+//                .mediaView(activityMainBinding.simpleExoPlayer)
+//                .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
+//                .audioFocusSystem(new AudioFocusSystem(this))
+//                .mediaStateListener(new Media.OnMediaStateChanged() {
+//                    @Override
+//                    public void onStateChanged(Media.State state, boolean isPlaying) {
+//                        if(!isPlaying && state == Media.State.READY)
+//                            Toast.makeText(MainActivity.this, "pause", Toast.LENGTH_SHORT).show();
+//
+//                        switch (state){
+//                            case READY:
+//                                Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
+//                            break;
+//                            case ENDED:
+//                            Toast.makeText(MainActivity.this, "ended", Toast.LENGTH_SHORT).show();
+//                            break;
+//                        }
+//                    }
+//                });
+//
+//        media = mediaBuilder.build();
+//        activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                media.pause();
+//            }
+//        });
+        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                media.pause();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                return true;
             }
         });
-
     }
 
 
