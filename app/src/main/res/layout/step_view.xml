@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
     <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -43,15 +42,14 @@
             app:layout_constraintEnd_toEndOf="@+id/exoPlayerView"
             app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
-        <Button
-            android:id="@+id/previousButton"
-            style="@style/StepButton"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/pre_btn"
-            app:layout_constraintBaseline_toBaselineOf="@+id/button"
-            app:layout_constraintStart_toStartOf="@+id/exoPlayerView" />
+    <Button
+        android:id="@+id/previousButton"
+        style="@style/StepButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/pre_btn"
+        app:layout_constraintBaseline_toBaselineOf="@+id/nextButton"
+        app:layout_constraintStart_toStartOf="@+id/exoPlayerView" />
 
     </android.support.constraint.ConstraintLayout>
-</layout>

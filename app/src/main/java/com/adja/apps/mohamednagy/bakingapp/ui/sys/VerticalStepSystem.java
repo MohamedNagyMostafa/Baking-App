@@ -3,9 +3,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
-
 import java.util.List;
 
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
@@ -36,8 +34,8 @@ public class VerticalStepSystem implements VerticalStepperForm {
                 this,
                 activity
         );
-
-        mViewCreation.buildStepFormView(mVerticalStepperFormLayoutBuilder);
+        mVerticalStepperFormLayoutBuilder.init();
+        //mViewCreation.buildStepFormView(mVerticalStepperFormLayoutBuilder);
     }
 
     private String[] getStepsTitle(){

@@ -5,9 +5,11 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout;
 
+
 /**
  * Created by Mohamed Nagy on 3/27/2018.
  */
@@ -33,7 +36,6 @@ public class StepFragment extends Fragment implements VerticalStepSystem.ViewCre
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.step_fragment, container, false);
-        StepFragmentBinding stepFragmentBinding = DataBindingUtil.setContentView(getActivity(), R.layout.step_fragment);
         List<Step> steps = new ArrayList<>();
         steps.add(
                 new Step(
@@ -53,7 +55,7 @@ public class StepFragment extends Fragment implements VerticalStepSystem.ViewCre
         VerticalStepSystem verticalStepSystem = new VerticalStepSystem(
                 steps,
                 this,
-                stepFragmentBinding.verticalStepper,
+                (VerticalStepperFormLayout) rootView.findViewById(R.id.verticalStepper),
                 getActivity()
         );
 
@@ -63,11 +65,12 @@ public class StepFragment extends Fragment implements VerticalStepSystem.ViewCre
 
     @Override
     public View createView(Step step) {
-        StepViewBinding stepViewBinding = DataBindingUtil.setContentView(getActivity(), R.layout.step_view);
-        stepViewBinding.descriptionText.setText(step.getDescription());
-        setupMedia(stepViewBinding.exoPlayerView, step.getVideoLink(), step.getThumbnailURL());
-
-        return stepViewBinding.getRoot();
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.step_view, null, false);
+        TextView descriptionText = view.findViewById(R.id.descriptionText);
+        descriptionText.setText(step.getDescription());
+//        setupMedia(stepViewBinding.exoPlayerView, step.getVideoLink(), step.getThumbnailURL());
+        Log.e("called","done");
+        return view;
     }
 
     @Override
