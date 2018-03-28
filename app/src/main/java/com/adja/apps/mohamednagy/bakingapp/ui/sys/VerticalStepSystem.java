@@ -34,8 +34,8 @@ public class VerticalStepSystem implements VerticalStepperForm {
                 this,
                 activity
         );
-        mVerticalStepperFormLayoutBuilder.init();
-        //mViewCreation.buildStepFormView(mVerticalStepperFormLayoutBuilder);
+
+        mViewCreation.buildStepFormView(mVerticalStepperFormLayoutBuilder);
     }
 
     private String[] getStepsTitle(){
@@ -50,7 +50,7 @@ public class VerticalStepSystem implements VerticalStepperForm {
 
     @Override
     public View createStepContentView(int stepNumber) {
-        return mViewCreation.createView(mSteps.get(stepNumber));
+        return mViewCreation.createView(mSteps.get(stepNumber), mVerticalStepperFormLayout);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class VerticalStepSystem implements VerticalStepperForm {
     public void sendData() {}
 
     public interface ViewCreation{
-        View createView(Step step);
+        View createView(Step step, VerticalStepperFormLayout verticalStepperFormLayout);
         void buildStepFormView(VerticalStepperFormLayout.Builder builder);
     }
 }

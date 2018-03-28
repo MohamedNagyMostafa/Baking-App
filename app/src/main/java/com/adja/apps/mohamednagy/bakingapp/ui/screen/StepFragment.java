@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
@@ -64,11 +65,32 @@ public class StepFragment extends Fragment implements VerticalStepSystem.ViewCre
     }
 
     @Override
-    public View createView(Step step) {
+    public View createView(Step step, final VerticalStepperFormLayout verticalStepperFormLayout) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.step_view, null, false);
-        TextView descriptionText = view.findViewById(R.id.descriptionText);
+        TextView descriptionText          = view.findViewById(R.id.descriptionText);
+        SimpleExoPlayerView exoPlayerView = view.findViewById(R.id.exoPlayerView);
+        Button previousStepButton         = view.findViewById(R.id.previousButton);
+        Button nextStepButton             = view.findViewById(R.id.nextButton);
+
         descriptionText.setText(step.getDescription());
-//        setupMedia(stepViewBinding.exoPlayerView, step.getVideoLink(), step.getThumbnailURL());
+        final Media media = setupMedia(exoPlayerView, step.getVideoLink(), step.getThumbnailURL());
+
+        nextStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                media.release();
+                verticalStepperFormLayout.goToNextStep();
+            }
+        });
+        previousStepButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                media.release();
+                verticalStepperFormLayout.goToPreviousStep();
+            }
+        });
+
+        media.play();
         Log.e("called","done");
         return view;
     }
@@ -76,21 +98,19 @@ public class StepFragment extends Fragment implements VerticalStepSystem.ViewCre
     @Override
     public void buildStepFormView(VerticalStepperFormLayout.Builder builder) {
         builder.primaryColor(R.color.colorPrimary)
-                .primaryDarkColor(R.color.colorPrimaryDark)
+                .primaryDarkColor(R.color.colorPrimary)
                 .init();
     }
 
-    void setupMedia(SimpleExoPlayerView simpleExoPlayerView, String videoLink, String thumbnailLink){
+    Media setupMedia(SimpleExoPlayerView simpleExoPlayerView, String videoLink, String thumbnailLink){
         AudioFocusSystem audioFocusSystem = new AudioFocusSystem(getContext());
         String mediaVideoLink = (videoLink.isEmpty())? thumbnailLink: videoLink;
 
-        Media media = new Media.Builder(getContext())
+        return new Media.Builder(getContext())
                 .audioFocusSystem(audioFocusSystem)
                 .mediaView(simpleExoPlayerView)
                 .mediaStateListener(null)
                 .videoLink(mediaVideoLink)
                 .build();
-
-        media.play();
     }
 }
