@@ -1,27 +1,11 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
-import com.adja.apps.mohamednagy.bakingapp.media.AudioFocusSystem;
-import com.adja.apps.mohamednagy.bakingapp.media.Media;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
-import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
-import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
-import com.adja.apps.mohamednagy.bakingapp.ui.NavigationBottomSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
