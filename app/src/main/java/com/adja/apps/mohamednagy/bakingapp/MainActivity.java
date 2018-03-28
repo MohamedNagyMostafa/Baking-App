@@ -1,14 +1,17 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,10 +21,14 @@ import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
+import com.adja.apps.mohamednagy.bakingapp.ui.NavigationBottomSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Media media;
+    private NavigationBottomSystem mNavigationBottomSystem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,58 +36,84 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        final Media.Builder mediaBuilder = new Media.Builder(this)
-                .mediaView(activityMainBinding.simpleExoPlayer)
-                .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
-                .audioFocusSystem(new AudioFocusSystem(this))
-                .mediaStateListener(new Media.OnMediaStateChanged() {
-                    @Override
-                    public void onStateChanged(Media.State state, boolean isPlaying) {
-                        if(!isPlaying && state == Media.State.READY)
-                            Toast.makeText(MainActivity.this, "pause", Toast.LENGTH_SHORT).show();
+        mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
+        mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
+        addFragmentsToNavigationSys();
 
-                        switch (state){
-                            case READY:
-                                Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
-                            break;
-                            case ENDED:
-                            Toast.makeText(MainActivity.this, "ended", Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                    }
-                });
-
-        media = mediaBuilder.build();
-        activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                media.pause();
-            }
-        });
+//        final Media.Builder mediaBuilder = new Media.Builder(this)
+//                .mediaView(activityMainBinding.simpleExoPlayer)
+//                .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
+//                .audioFocusSystem(new AudioFocusSystem(this))
+//                .mediaStateListener(new Media.OnMediaStateChanged() {
+//                    @Override
+//                    public void onStateChanged(Media.State state, boolean isPlaying) {
+//                        if(!isPlaying && state == Media.State.READY)
+//                            Toast.makeText(MainActivity.this, "pause", Toast.LENGTH_SHORT).show();
+//
+//                        switch (state){
+//                            case READY:
+//                                Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
+//                            break;
+//                            case ENDED:
+//                            Toast.makeText(MainActivity.this, "ended", Toast.LENGTH_SHORT).show();
+//                            break;
+//                        }
+//                    }
+//                });
+//
+//        media = mediaBuilder.build();
+//        activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                media.pause();
+//            }
+//        });
+//        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                return true;
+//            }
+//        });
 
     }
 
+    private void addFragmentsToNavigationSys(){
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
+        StepFragment stepFragment             = new StepFragment();
+        GradientFragment gradientFragment     = new GradientFragment();
 
+        final Integer HOME_NAV    = R.id.home_nav;
+        final Integer STEP_NAV    = R.id.step_nav;
+        final Integer GRADIENT_NV = R.id.gradient_nav;
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case PermissionHandler.REQUEST_CODE:
-                if (grantResults.length > 0 &&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+        final NavigationBottomSystem.FragmentNav RECIPE_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(HOME_NAV, recipeListFragment);
+        final NavigationBottomSystem.FragmentNav STEP_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(STEP_NAV, stepFragment);
+        final NavigationBottomSystem.FragmentNav GRADIENT_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(GRADIENT_NV, gradientFragment);
 
-                }else{
-                    // TODO: error msg
-                    Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
-                }
-        }
+        mNavigationBottomSystem.put(RECIPE_FRAGMENT_NAV);
+        mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
+        mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);
     }
 
-    @Override
-    protected void onPause() {
-        media.release();
-        super.onPause();
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode){
+//            case PermissionHandler.REQUEST_CODE:
+//                if (grantResults.length > 0 &&
+//                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+//                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//
+//                }else{
+//                    // TODO: error msg
+//                    Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
+//                }
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        media.release();
+//        super.onPause();
+//    }
 }

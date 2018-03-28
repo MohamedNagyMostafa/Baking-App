@@ -4,4 +4,10 @@
     <!-- Error Message -->
     <string name="no_network_connection">Please check your network connection and try again</string>
     <string name="permission_denied">Network permissions are denied</string>
+
+    <!-- Menu Strings -->
+    <string name="menu_nav_home">Home</string>
+    <string name="menu_nav_step">Steps</string>
+    <string name="menu_nav_gradient">Gradients</string>
+
 </resources>
