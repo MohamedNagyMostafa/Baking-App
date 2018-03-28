@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.media;
+package com.adja.apps.mohamednagy.bakingapp.media.sys;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,14 +10,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 
+import com.adja.apps.mohamednagy.bakingapp.media.Media;
+
 /**
  * Created by Mohamed Nagy on 3/24/2018.
  */
 
 public class AudioFocusSystem {
-    private static final int VERSION_21 = 0x1;
-    private static final int VERSION_26 = 0X2;
-
     public static final int ON_DELAY = 0x001;
     public static final int GAINED = 0x003;
     public static final int FAILED = 0x002;
@@ -47,7 +46,7 @@ public class AudioFocusSystem {
         mState = IDLE;
     }
 
-    void run() {
+    public void run() {
         assert mMedia != null;
 
         mOnAudioFocusChangeListener = getFocusListener();

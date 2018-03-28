@@ -10,4 +10,7 @@
     <string name="menu_nav_step">Steps</string>
     <string name="menu_nav_gradient">Gradients</string>
 
+    <!-- Step View Strings -->
+    <string name="pre_btn">Previous</string>
+    <string name="next_btn">Next</string>
 </resources>
