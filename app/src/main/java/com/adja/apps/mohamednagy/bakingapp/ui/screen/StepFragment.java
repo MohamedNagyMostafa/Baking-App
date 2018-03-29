@@ -55,7 +55,16 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
                         "Mix together dry ingredients.",
                         "4. Sift together the flour, cocoa, and salt in a small bowl and whisk until mixture is uniform and no clumps remain. ",
                         "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc9e_4-sift-flower-add-coco-powder-salt-brownies/4-sift-flower-add-coco-powder-salt-brownies.mp4",
-                        ""));
+                        "")
+        );
+        steps.add(
+                new Step(
+                        0,
+                        "MO together dry ingredients.",
+                        "4. Sift together the flour, cocoa, and salt in a small bowl and whisk until mixture is uniform and no clumps remain. ",
+                        "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc9e_4-sift-flower-add-coco-powder-salt-brownies/4-sift-flower-add-coco-powder-salt-brownies.mp4",
+                        "")
+        );
 
         StepFragmentBinding stepFragmentBinding = DataBindingUtil.setContentView(getActivity(), R.layout.step_fragment);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -74,5 +83,6 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     @Override
     public void updateView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step) {
         Log.e("done","view is here");
+        stepperViewHolder.STEPPER_VIEW.descriptionText.setText(step.getDescription());
     }
 }

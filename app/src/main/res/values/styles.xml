@@ -17,9 +17,20 @@
     </style>
 
     <!-- Circle Style -->
-    <style name="activeCircle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
+    <style name="circleMargin">
+        <item name="android:layout_marginStart">@dimen/twice_margin</item>
+        <item name="android:layout_marginTop">@dimen/twice_margin</item>
+        <item name="android:layout_marginBottom">@dimen/twice_margin</item>
+        <item name="android:layout_marginEnd">@dimen/start_fit_margin</item>
+    </style>
+
+    <style name="circleNumberText" parent="circleMargin">
+        <item name="android:textColor">@color/colorIcon</item>
+    </style>
+
+    <style name="activeCircle" parent="circleMargin">
+        <item name="android:layout_width">@dimen/twice_margin</item>
+        <item name="android:layout_height">@dimen/twice_margin</item>
         <item name="android:background">@drawable/step_circle_active</item>
     </style>
 
@@ -46,10 +57,6 @@
 
     <style name="iconText" parent="text">
         <item name="android:textColor">@color/colorIcon</item>
-        <item name="android:layout_marginBottom">@dimen/start_fit_margin</item>
-        <item name="android:layout_marginEnd">@dimen/start_fit_margin</item>
-        <item name="android:layout_marginStart">@dimen/start_fit_margin</item>
-        <item name="android:layout_marginTop">@dimen/start_fit_margin</item>
     </style>
 
     <!-- Divider Section -->

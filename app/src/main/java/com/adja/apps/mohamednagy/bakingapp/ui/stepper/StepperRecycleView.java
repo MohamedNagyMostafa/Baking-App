@@ -1,9 +1,12 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.stepper;
 
 import android.app.Activity;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,10 +36,10 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
 
     @Override
     public StepperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        StepperViewBinding stepperViewBinding = DataBindingUtil.setContentView(mActivity, R.layout.stepper_view);
+        StepperViewBinding stepperViewBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+                R.layout.stepper_view, parent, false);
         // To avoid IllegalStateException.
         // State: The specified child already has a parent. You must call removeView() on the child's parent first.
-        checkParentView(stepperViewBinding);
         return new StepperViewHolder(stepperViewBinding);
     }
 
@@ -56,6 +59,7 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
     }
 
     public StepperViewHolder getView(int position){
+        Log.e("views", "numbers :" + String.valueOf(mViewContainer.size()));
         return mViewContainer.get(position);
     }
 

@@ -1,45 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="52dp"
+        android:minHeight="72dp"
         android:background="@color/colorIcon">
 
         <View
             android:id="@+id/verticalDividerLine"
             style="@style/verticalDivider"
             android:layout_height="0dp"
-            android:minHeight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/barrier3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/barrier2" />
+            app:layout_constraintEnd_toStartOf="@+id/relativeLayout"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
         <RelativeLayout
             android:id="@+id/relativeLayout"
-            android:layout_width="36dp"
-            android:layout_height="36dp">
+            style="@style/activeCircle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <View
                 android:id="@+id/stepCircle"
-                style="@style/activeCircle" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <TextView
                 android:id="@+id/circleNumber"
                 style="@style/iconText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:visibility="gone"
                 tools:text="1" />
 
             <ImageView
                 android:id="@+id/circleDone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/ic_done_white_24dp"
-                android:visibility="gone" />
+                android:src="@drawable/ic_done_white_18dp" />
 
 
         </RelativeLayout>
@@ -50,26 +55,27 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="@color/colorPrimaryText"
-            app:layout_constraintBottom_toTopOf="@+id/barrier2"
-            app:layout_constraintStart_toEndOf="@+id/barrier3"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/relativeLayout"
+            app:layout_constraintStart_toEndOf="@+id/relativeLayout"
+            app:layout_constraintTop_toTopOf="@+id/relativeLayout"
             tools:text="Introduction" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/stepDetails"
             android:layout_width="0dp"
-            android:layout_height="453dp"
-            android:layout_marginEnd="16dp"
             android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/barrier3"
-            app:layout_constraintTop_toTopOf="@+id/barrier2">
+            app:layout_constraintStart_toStartOf="@+id/stepTitle"
+            app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/exoPlayerView"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginTop="@dimen/start_fit_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -79,6 +85,7 @@
             <TextView
                 android:id="@+id/descriptionText"
                 style="@style/primaryText"
+                android:layout_width="0dp"
                 android:layout_marginTop="24dp"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
@@ -88,43 +95,26 @@
                 tools:text="Melt the butter and bittersweet chocolate together in a microwave or a double boiler. If microwaving, heat for 30 seconds at a time, removing bowl and stirring ingredients in between." />
 
             <Button
-                android:id="@+id/nextButton"
-                style="@style/StepButton"
+                android:id="@+id/previousButton"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
-                android:text="@string/next_btn"
-                app:layout_constraintEnd_toEndOf="@+id/exoPlayerView"
+                android:background="@color/colorIcon"
+                android:text="@string/pre_btn"
+                android:textColor="@color/colorSecondaryText"
+                app:layout_constraintStart_toEndOf="@+id/nextButton"
                 app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
             <Button
-                android:id="@+id/previousButton"
+                android:id="@+id/nextButton"
                 style="@style/StepButton"
-                android:text="@string/pre_btn"
-                app:layout_constraintBaseline_toBaselineOf="@+id/nextButton"
+                android:text="@string/next_btn"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/exoPlayerView" />
 
         </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.Barrier
-            android:id="@+id/barrier2"
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="relativeLayout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.constraint.Barrier
-            android:id="@+id/barrier3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:barrierDirection="right"
-            app:constraint_referenced_ids="relativeLayout,view4"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

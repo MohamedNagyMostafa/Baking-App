@@ -1,8 +1,10 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.sys;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
@@ -39,12 +41,12 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
             mCurrentActivePosition++;
             // Scroll to new node.
             mLayoutManager.scrollToPosition(mCurrentActivePosition);
-
-            StepperRecycleView.StepperViewHolder stepperViewHolder =
-                    mStepperRecycleView.getView(mCurrentActivePosition);
-            Step nodeData = mStepperRecycleView.getData(mCurrentActivePosition);
-
-            bindView(stepperViewHolder, nodeData, mCurrentActivePosition);
+//            Log.e("get view","number " + String.valueOf(mCurrentActivePosition));
+//            StepperRecycleView.StepperViewHolder stepperViewHolder =
+//                    mStepperRecycleView.getView(mCurrentActivePosition);
+//            Step nodeData = mStepperRecycleView.getData(mCurrentActivePosition);
+//
+//            bindView(stepperViewHolder, nodeData, mCurrentActivePosition);
 
         }
     };
@@ -110,6 +112,10 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     }
 
     private void setAsActiveNode(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step){
+        if(stepperViewHolder == null){
+            Log.e("view", " null");
+            return;
+        }
         // Circle Settings.
         stepperViewHolder.STEPPER_VIEW.stepCircle.setBackground(mContext.getDrawable(R.drawable.step_circle_active));
         stepperViewHolder.STEPPER_VIEW.circleDone.setVisibility(View.GONE);
@@ -118,6 +124,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
 
         // Inner View Settings.
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.VISIBLE);
+        stepperViewHolder.STEPPER_VIEW.stepTitle.setTypeface(Typeface.DEFAULT_BOLD);
 
         // Set Listeners.
         setViewActions(stepperViewHolder);
@@ -133,6 +140,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
 
         // Inner View Settings.
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.GONE);
+        stepperViewHolder.STEPPER_VIEW.stepTitle.setTypeface(Typeface.DEFAULT);
         stepperViewHolder.STEPPER_VIEW.stepTitle.setText(stepTitle);
     }
 
@@ -145,6 +153,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
 
         // Inner View Settings.
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.GONE);
+        stepperViewHolder.STEPPER_VIEW.stepTitle.setTypeface(Typeface.DEFAULT);
         stepperViewHolder.STEPPER_VIEW.stepTitle.setText(stepTitle);
     }
 
@@ -153,14 +162,14 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
             stepperViewHolder.STEPPER_VIEW.previousButton.setOnClickListener(mOnClickListenerPreviousStep);
             stepperViewHolder.STEPPER_VIEW.previousButton.setVisibility(View.VISIBLE);
         }else{
-            stepperViewHolder.STEPPER_VIEW.previousButton.setVisibility(View.GONE);
+            stepperViewHolder.STEPPER_VIEW.previousButton.setVisibility(View.INVISIBLE);
         }
 
         if(mCurrentActivePosition < mStepperRecycleView.getItemCount() - 1){
             stepperViewHolder.STEPPER_VIEW.nextButton.setOnClickListener(mOnClickListenerNextStep);
             stepperViewHolder.STEPPER_VIEW.nextButton.setVisibility(View.VISIBLE);
         }else{
-            stepperViewHolder.STEPPER_VIEW.nextButton.setVisibility(View.GONE);
+            stepperViewHolder.STEPPER_VIEW.nextButton.setVisibility(View.INVISIBLE);
         }
     }
 
