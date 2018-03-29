@@ -5,6 +5,9 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,9 +17,12 @@ import android.widget.TextView;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 
+import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
+import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import java.util.ArrayList;
@@ -28,12 +34,13 @@ import java.util.List;
  * Created by Mohamed Nagy on 3/27/2018.
  */
 
-public class StepFragment extends Fragment  {
+public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.step_fragment, container, false);
+
         List<Step> steps = new ArrayList<>();
         steps.add(
                 new Step(
@@ -50,8 +57,22 @@ public class StepFragment extends Fragment  {
                         "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc9e_4-sift-flower-add-coco-powder-salt-brownies/4-sift-flower-add-coco-powder-salt-brownies.mp4",
                         ""));
 
+        StepFragmentBinding stepFragmentBinding = DataBindingUtil.setContentView(getActivity(), R.layout.step_fragment);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        StepperRecycleView stepperRecycleView = new StepperRecycleView(steps, getActivity());
+
+        StepperSystem stepperSystem = new StepperSystem(getActivity(), stepperRecycleView,
+                layoutManager,this );
+
+        stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
+        stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
+        stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
 
         return rootView;
     }
 
+    @Override
+    public void updateView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step) {
+        Log.e("done","view is here");
+    }
 }

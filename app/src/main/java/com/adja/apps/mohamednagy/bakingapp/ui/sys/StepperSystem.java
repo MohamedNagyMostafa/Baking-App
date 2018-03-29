@@ -14,16 +14,16 @@ import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
  * Created by Mohamed Nagy on 3/29/2018.
  */
 
-public abstract class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
+public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     private static final int ACTIVE_NODE     = 0x01;
     private static final int NON_ACTIVE_NODE = 0x02;
     private static final int COMPLETED_NODE  = 0x03;
 
-    private int mCurrentActivePosition;
-    private Context mContext;
-    private StepperRecycleView mStepperRecycleView;
     private OnCurrentStepViewListener mOnCurrentStepViewListener;
     private RecyclerView.LayoutManager mLayoutManager;
+    private StepperRecycleView mStepperRecycleView;
+    private int mCurrentActivePosition;
+    private Context mContext;
 
     private View.OnClickListener mOnClickListenerNextStep = new View.OnClickListener() {
         @Override
@@ -114,7 +114,7 @@ public abstract class StepperSystem implements StepperRecycleView.OnItemCreatedL
         stepperViewHolder.STEPPER_VIEW.stepCircle.setBackground(mContext.getDrawable(R.drawable.step_circle_active));
         stepperViewHolder.STEPPER_VIEW.circleDone.setVisibility(View.GONE);
         stepperViewHolder.STEPPER_VIEW.circleNumber.setVisibility(View.VISIBLE);
-        stepperViewHolder.STEPPER_VIEW.circleNumber.setText(mCurrentActivePosition + 1);
+        stepperViewHolder.STEPPER_VIEW.circleNumber.setText(String.valueOf(mCurrentActivePosition + 1));
 
         // Inner View Settings.
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.VISIBLE);
@@ -141,7 +141,7 @@ public abstract class StepperSystem implements StepperRecycleView.OnItemCreatedL
         stepperViewHolder.STEPPER_VIEW.stepCircle.setBackground(mContext.getDrawable(R.drawable.step_circle_unactive));
         stepperViewHolder.STEPPER_VIEW.circleDone.setVisibility(View.GONE);
         stepperViewHolder.STEPPER_VIEW.circleNumber.setVisibility(View.VISIBLE);
-        stepperViewHolder.STEPPER_VIEW.circleNumber.setText(position + 1);
+        stepperViewHolder.STEPPER_VIEW.circleNumber.setText(String.valueOf(position + 1));
 
         // Inner View Settings.
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.GONE);

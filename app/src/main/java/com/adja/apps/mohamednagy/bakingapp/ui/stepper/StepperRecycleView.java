@@ -1,9 +1,13 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.stepper;
 
+import android.app.Activity;
+import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.databinding.StepperViewBinding;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 
@@ -19,15 +23,21 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
     private OnItemCreatedListener mOnItemCreatedListener;
     private List<Step> mSteps;
     private HashMap<Integer, StepperViewHolder> mViewContainer;
+    private Activity mActivity;
 
-    public StepperRecycleView(List<Step> steps){
+    public StepperRecycleView(List<Step> steps, Activity activity){
         mSteps = steps;
+        mActivity = activity;
         mViewContainer = new HashMap<>();
     }
 
     @Override
     public StepperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new StepperViewHolder(new StepperViewBinding());
+        StepperViewBinding stepperViewBinding = DataBindingUtil.setContentView(mActivity, R.layout.stepper_view);
+        // To avoid IllegalStateException.
+        // State: The specified child already has a parent. You must call removeView() on the child's parent first.
+        checkParentView(stepperViewBinding);
+        return new StepperViewHolder(stepperViewBinding);
     }
 
     @Override
@@ -66,9 +76,20 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
     public class StepperViewHolder extends RecyclerView.ViewHolder{
         public final StepperViewBinding STEPPER_VIEW;
 
-        StepperViewHolder(StepperViewBinding stepperViewBinding) {
+        StepperViewHolder(@NonNull StepperViewBinding stepperViewBinding) {
             super(stepperViewBinding.getRoot());
             STEPPER_VIEW = stepperViewBinding;
+        }
+    }
+
+    /**
+     * To avoid IllegalStateException.
+     * State: The specified child already has a parent.
+     * You must call removeView() on the child's parent first.
+     */
+    private void checkParentView(StepperViewBinding stepperViewBinding){
+        if(stepperViewBinding.getRoot().getParent() != null){
+            ((ViewGroup)stepperViewBinding.getRoot().getParent()).removeView(stepperViewBinding.getRoot());
         }
     }
 
