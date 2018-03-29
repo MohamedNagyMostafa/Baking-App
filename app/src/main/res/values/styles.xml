@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -8,7 +8,62 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="StepButton" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
-        <item name="android:textColor">@color/colorAccent</item>
+    <style name="StepButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/start_fit_margin</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorIcon</item>
+    </style>
+
+    <!-- Circle Style -->
+    <style name="activeCircle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/step_circle_active</item>
+    </style>
+
+    <style name="nonactiveCircle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/step_circle_unactive</item>
+    </style>
+    <!-- Text Style -->
+    <style name="text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">@dimen/start_fit_margin</item>
+        <item name="android:layout_marginStart">@dimen/start_fit_margin</item>
+    </style>
+
+    <style name="primaryText" parent="text">
+        <item name="android:textColor">@color/colorPrimaryText</item>
+    </style>
+
+    <style name="secondaryText" parent="text">
+        <item name="android:textColor">@color/colorSecondaryText</item>
+    </style>
+
+    <style name="iconText" parent="text">
+        <item name="android:textColor">@color/colorIcon</item>
+        <item name="android:layout_marginBottom">@dimen/start_fit_margin</item>
+        <item name="android:layout_marginEnd">@dimen/start_fit_margin</item>
+        <item name="android:layout_marginStart">@dimen/start_fit_margin</item>
+        <item name="android:layout_marginTop">@dimen/start_fit_margin</item>
+    </style>
+
+    <!-- Divider Section -->
+    <style name="divider">
+        <item name="android:background">@color/colorDivider</item>
+    </style>
+
+    <style name="verticalDivider" parent="divider">
+        <item name="android:layout_width">1dp</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
+
+    <style name="horizontalDivider" parent="divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
     </style>
 </resources>

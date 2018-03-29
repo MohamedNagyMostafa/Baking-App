@@ -21,9 +21,7 @@
 
         <View
             android:id="@+id/verticalDividerLine"
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:background="@color/colorDivider"
+            style="@style/verticalDivider"
             app:layout_constraintEnd_toEndOf="@+id/barrier3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
@@ -35,20 +33,12 @@
 
             <View
                 android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/step_circle_active" />
+                style="@style/activeCircle" />
 
             <TextView
                 android:id="@+id/circleNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/iconText"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/colorIcon"
                 tools:text="1" />
 
             <ImageView
@@ -86,7 +76,7 @@
                 android:id="@+id/exoPlayerView"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/start_fit_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -95,10 +85,7 @@
 
             <TextView
                 android:id="@+id/descriptionText"
-                android:layout_width="228dp"
-                android:layout_height="98dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                style="@style/primaryText"
                 android:layout_marginTop="24dp"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
@@ -109,25 +96,15 @@
 
             <Button
                 android:id="@+id/nextButton"
-                style="@style/StepButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
+                style ="@style/StepButton"
                 android:layout_marginTop="28dp"
-                android:background="@color/colorPrimary"
-                android:textColor="@color/colorIcon"
                 android:text="@string/next_btn"
                 app:layout_constraintEnd_toEndOf="@+id/exoPlayerView"
                 app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
             <Button
                 android:id="@+id/previousButton"
-                style="@android:style/Widget.Material.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="48dp"
-                android:layout_marginStart="8dp"
-                android:background="@color/colorPrimary"
-                android:textColor="@color/colorIcon"
+                style ="@style/StepButton"
                 android:text="@string/pre_btn"
                 app:layout_constraintBaseline_toBaselineOf="@+id/nextButton"
                 app:layout_constraintStart_toStartOf="@+id/exoPlayerView" />
