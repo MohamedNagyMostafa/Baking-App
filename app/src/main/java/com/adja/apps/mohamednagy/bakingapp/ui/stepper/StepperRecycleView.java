@@ -26,20 +26,16 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
     private OnItemCreatedListener mOnItemCreatedListener;
     private List<Step> mSteps;
     private HashMap<Integer, StepperViewHolder> mViewContainer;
-    private Activity mActivity;
 
-    public StepperRecycleView(List<Step> steps, Activity activity){
+    public StepperRecycleView(List<Step> steps){
         mSteps = steps;
-        mActivity = activity;
         mViewContainer = new HashMap<>();
     }
 
     @Override
     public StepperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        StepperViewBinding stepperViewBinding = DataBindingUtil.inflate(LayoutInflater.from(mActivity),
+        StepperViewBinding stepperViewBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.stepper_view, parent, false);
-        // To avoid IllegalStateException.
-        // State: The specified child already has a parent. You must call removeView() on the child's parent first.
         return new StepperViewHolder(stepperViewBinding);
     }
 

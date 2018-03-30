@@ -67,10 +67,10 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         );
 
         StepFragmentBinding stepFragmentBinding = DataBindingUtil.setContentView(getActivity(), R.layout.step_fragment);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        StepperRecycleView stepperRecycleView = new StepperRecycleView(steps, getActivity());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
 
-        StepperSystem stepperSystem = new StepperSystem(getActivity(), stepperRecycleView,
+        StepperSystem stepperSystem = new StepperSystem(getContext(), stepperRecycleView,
                 layoutManager,this );
 
         stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);

@@ -95,7 +95,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     public void bindView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step, int position) {
         switch (currentNodeMode(position)){
             case ACTIVE_NODE:
-                setAsActiveNode(stepperViewHolder, step);
+                setAsActiveNode(stepperViewHolder, step, position);
                 break;
             case NON_ACTIVE_NODE:
                 setAsNonActiveNode(stepperViewHolder, step.getShortDescription(), position);
@@ -111,7 +111,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
                 (position == mCurrentActivePosition)? ACTIVE_NODE: NON_ACTIVE_NODE :COMPLETED_NODE;
     }
 
-    private void setAsActiveNode(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step){
+    private void setAsActiveNode(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step, int position){
         if(stepperViewHolder == null){
             Log.e("view", " null");
             return;
@@ -125,9 +125,14 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
         // Inner View Settings.
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.VISIBLE);
         stepperViewHolder.STEPPER_VIEW.stepTitle.setTypeface(Typeface.DEFAULT_BOLD);
+        stepperViewHolder.STEPPER_VIEW.stepTitle.setText(step.getShortDescription());
 
         // Set Listeners.
         setViewActions(stepperViewHolder);
+
+        // Check If Last Node.
+        if(position == mStepperRecycleView.getItemCount()-1)
+            stepperViewHolder.STEPPER_VIEW.verticalDividerLine.setVisibility(View.GONE);
 
         mOnCurrentStepViewListener.updateView(stepperViewHolder, step);
     }
@@ -155,6 +160,10 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
         stepperViewHolder.STEPPER_VIEW.stepDetails.setVisibility(View.GONE);
         stepperViewHolder.STEPPER_VIEW.stepTitle.setTypeface(Typeface.DEFAULT);
         stepperViewHolder.STEPPER_VIEW.stepTitle.setText(stepTitle);
+
+        // Check If Last Node.
+        if(position == mStepperRecycleView.getItemCount()-1)
+            stepperViewHolder.STEPPER_VIEW.verticalDividerLine.setVisibility(View.GONE);
     }
 
     private void setViewActions(StepperRecycleView.StepperViewHolder stepperViewHolder){
