@@ -1,13 +1,9 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.stepper;
 
-import android.app.Activity;
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
@@ -18,7 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Mohamed Nagy on 3/29/2018.
+ * Created by Mohamed Nagy on 3/29/2018 .
+ * Project projects submission
+ * Time    3:52 PM
  */
 
 public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.StepperViewHolder> {
@@ -34,10 +32,8 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
 
     @Override
     public StepperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.e("dd","Dd");
         StepperViewBinding stepperViewBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.stepper_view, parent, false);
-        Log.e("dd","Dd");
 
         return new StepperViewHolder(stepperViewBinding);
     }
@@ -58,7 +54,6 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
     }
 
     public StepperViewHolder getView(int position){
-        Log.e("views", "numbers :" + String.valueOf(mViewContainer.size()));
         return mViewContainer.get(position);
     }
 

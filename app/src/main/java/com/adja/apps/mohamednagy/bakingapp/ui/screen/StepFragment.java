@@ -8,30 +8,25 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
-import com.adja.apps.mohamednagy.bakingapp.media.Media;
-import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
- * Created by Mohamed Nagy on 3/27/2018.
+ * Created by Mohamed Nagy on 3/27/2018 .
+ * Project projects submission
+ * Time    3:53 PM
  */
 
 public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
@@ -70,7 +65,7 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
 
-        StepperSystem stepperSystem = new StepperSystem(getContext(), stepperRecycleView,
+        new StepperSystem(getContext(), stepperRecycleView,
                 layoutManager,this );
 
         stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
@@ -81,8 +76,12 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
     public void updateView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step) {
-        Log.e("done","view is here");
         stepperViewHolder.STEPPER_VIEW.descriptionText.setText(step.getDescription());
     }
 }

@@ -4,16 +4,16 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
-import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
 
 /**
- * Created by Mohamed Nagy on 3/29/2018.
+ * Created by Mohamed Nagy on 3/29/2018 .
+ * Project projects submission
+ * Time    3:51 PM
  */
 
 public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
@@ -46,7 +46,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
             mCurrentActivePosition++;
             // Scroll to new node.
             mLayoutManager.scrollToPosition(mCurrentActivePosition);
-            Log.e("get view","number " + String.valueOf(mCurrentActivePosition));
+
             StepperRecycleView.StepperViewHolder stepperViewHolder =
                     mStepperRecycleView.getView(mCurrentActivePosition);
             // bindView method is called by this listener and original adapter
@@ -70,6 +70,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
             setAsNonActiveNode(currentNodeViewHolder, currentNodeData.getShortDescription(), mCurrentActivePosition);
             // Set new node.
             mCurrentActivePosition--;
+
             // Scroll to new node.
             mLayoutManager.scrollToPosition(mCurrentActivePosition);
 
@@ -103,12 +104,7 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     }
 
     @Override
-    public void bindView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step, int position) {
-        // To prevent repeating this process twice.
-        if(mFocusingPosition != null && mFocusingPosition == position)
-            return;
-
-        mFocusingPosition = position;
+    public synchronized void bindView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step, int position) {
         switch (currentNodeMode(position)){
             case ACTIVE_NODE:
                 setAsActiveNode(stepperViewHolder, step, position);
@@ -128,6 +124,14 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     }
 
     private void setAsActiveNode(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step, int position){
+        // To prevent repeating this process twice.
+        {
+            if (mFocusingPosition != null && mFocusingPosition == position)
+                return;
+
+            mFocusingPosition = position;
+        }
+
         // Circle Settings.
         stepperViewHolder.STEPPER_VIEW.stepCircle.setBackground(mContext.getDrawable(R.drawable.step_circle_active));
         stepperViewHolder.STEPPER_VIEW.circleDone.setVisibility(View.GONE);
