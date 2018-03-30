@@ -34,8 +34,11 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
 
     @Override
     public StepperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.e("dd","Dd");
         StepperViewBinding stepperViewBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.stepper_view, parent, false);
+        Log.e("dd","Dd");
+
         return new StepperViewHolder(stepperViewBinding);
     }
 

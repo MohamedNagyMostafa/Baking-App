@@ -66,7 +66,7 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
                         "")
         );
 
-        StepFragmentBinding stepFragmentBinding = DataBindingUtil.setContentView(getActivity(), R.layout.step_fragment);
+        StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
 
