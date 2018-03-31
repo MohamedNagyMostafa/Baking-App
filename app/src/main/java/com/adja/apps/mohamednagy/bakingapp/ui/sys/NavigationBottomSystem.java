@@ -4,6 +4,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.util.Pair;
 import android.view.MenuItem;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,16 +83,18 @@ public class NavigationBottomSystem {
         }
     }
 
-
     public static class FragmentNav{
         private final String TAG;
-        private int mNavigationItem;
-        private Fragment mFragment;
 
-        public FragmentNav(int navigationItem, Fragment fragment, String tag){
+        private SaverSystem mSaverSystem;
+        private int         mNavigationItem;
+        private Fragment    mFragment;
+
+        public FragmentNav(int navigationItem, Fragment fragment, SaverSystem saverSystem, String tag){
             mFragment         = fragment;
             mNavigationItem   = navigationItem;
             TAG               = tag;
+            mSaverSystem      = saverSystem;
         }
 
         public void setNavigationItem(int mNavigationItem) {
@@ -99,6 +103,10 @@ public class NavigationBottomSystem {
 
         public void setFragment(Fragment mFragment) {
             this.mFragment = mFragment;
+        }
+
+        public SaverSystem getSaverSystem(){
+            return mSaverSystem;
         }
 
         int getNavigationItem() {

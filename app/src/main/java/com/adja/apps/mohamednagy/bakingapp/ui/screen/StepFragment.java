@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.adja.apps.mohamednagy.bakingapp.model.Step;
 import com.adja.apps.mohamednagy.bakingapp.ui.Util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.Util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
 
 import java.util.List;
@@ -35,15 +37,16 @@ import java.util.List;
 
 public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
 
-    private Media mMedia;
+    private Media       mMedia;
+    private SaverSystem mSaverSystem;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.step_fragment, container, false);
 
-        if(savedInstanceState != null){
-            long recipeId = savedInstanceState.getLong(Extras.StepFragmentData.RECIPE_ID);
+        if(savedInstanceState != null || mSaverSystem.savedData() != null){
+            long recipeId = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
             // Get data from database
             List<Step> steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), recipeId);
             // Set data binding view
@@ -106,6 +109,22 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
             }
         }
         return newDescription.trim();
+    }
+    // Apply Save System to save data during fragment swap.
+    public void applySaverSystem(SaverSystem saverSystem){
+        mSaverSystem = saverSystem;
+    }
+
+    @Override
+    public void onDestroyView() {
+        if(mSaverSystem != null){
+            Bundle bundle = new Bundle();
+            bundle.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
+            mSaverSystem.save(bundle);
+            //mSaverSystem.save();
+            Log.e("data saved", "saved");
+        }
+        super.onDestroyView();
     }
 
 }
