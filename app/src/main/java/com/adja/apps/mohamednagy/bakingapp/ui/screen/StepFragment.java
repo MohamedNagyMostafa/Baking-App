@@ -2,7 +2,6 @@ package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
 
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,16 +19,12 @@ import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
-import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.ui.Util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.Util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
-import com.google.android.exoplayer2.ExoPlayer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,43 +42,24 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.step_fragment, container, false);
 
-//        List<Step> steps = new ArrayList<>();
-//        steps.add(
-//                new Step(
-//                        0,
-//                        "Melt butter and bittersweet chocolate.",
-//                        "2. Melt the butter and bittersweet chocolate together in a microwave or a double boiler. If microwaving, heat for 30 seconds at a time, removing bowl and stirring ingredients in between.",
-//                        "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc43_1-melt-choclate-chips-and-butter-brownies/1-melt-choclate-chips-and-butter-brownies.mp4",
-//                        ""));
-//        steps.add(
-//                new Step(
-//                        0,
-//                        "Mix together dry ingredients.",
-//                        "4. Sift together the flour, cocoa, and salt in a small bowl and whisk until mixture is uniform and no clumps remain. ",
-//                        "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc9e_4-sift-flower-add-coco-powder-salt-brownies/4-sift-flower-add-coco-powder-salt-brownies.mp4",
-//                        "")
-//        );
-//        steps.add(
-//                new Step(
-//                        0,
-//                        "MO together dry ingredients.",
-//                        "4. Sift together the flour, cocoa, and salt in a small bowl and whisk until mixture is uniform and no clumps remain. ",
-//                        "https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffdc9e_4-sift-flower-add-coco-powder-salt-brownies/4-sift-flower-add-coco-powder-salt-brownies.mp4",
-//                        "")
-//        );
-            //long recipeId = savedInstanceState.getLong(Extras.StepFragmentData.RECIPE_ID);
-            List<Step> steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), 1);
+        if(savedInstanceState != null){
+            long recipeId = savedInstanceState.getLong(Extras.StepFragmentData.RECIPE_ID);
+            // Get data from database
+            List<Step> steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), recipeId);
+            // Set data binding view
             StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
+            // Handle Recycle View
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
             StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
-
+            // Add Recycle View to Stepper System
+            // To Handle Stepper Process.
             new StepperSystem(getContext(), stepperRecycleView,
                     layoutManager,this );
 
             stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
             stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
             stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
-
+        }
 
         return rootView;
     }
@@ -92,24 +67,29 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
 
     @Override
     public void updateView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step) {
-        stepperViewHolder.STEPPER_VIEW.descriptionText.setText(step.getDescription());
-        mMedia = new Media.Builder(getContext())
-                .mediaStateListener(null)
-                .mediaView(stepperViewHolder.STEPPER_VIEW.exoPlayerView)
-                .audioFocusSystem(new AudioFocusSystem(getContext()))
-                .videoLink(step.getVideoLink())
-                .defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image))
-                .build();
+        stepperViewHolder.STEPPER_VIEW.descriptionText.setText(parseDescription(step.getDescription()));
 
-        mMedia.play();
+        if(!step.getVideoLink().isEmpty()) {
+            mMedia = new Media.Builder(getContext())
+                    .mediaStateListener(null)
+                    .mediaView(stepperViewHolder.STEPPER_VIEW.exoPlayerView)
+                    .audioFocusSystem(new AudioFocusSystem(getContext()))
+                    .videoLink(step.getVideoLink())
+                    .defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image))
+                    .build();
+
+            mMedia.play();
+        }
     }
-
+    // Called when Next button of current active step
+    // is clicked.
     @Override
     public void nextButtonClickListener() {
         if(mMedia != null)
             mMedia.release();
     }
-
+    // Called when Cancel button of current active step
+    // is clicked.
     @Override
     public void cancelButtonClickListener() {
         if(mMedia != null)
