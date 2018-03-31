@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ernestoyaquello.com.verticalstepperform.VerticalStepperFormLayout
-        android:id="@+id/verticalStepper"
-        android:layout_width="match_parent"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"/>
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/stepperRecycleView"
+            android:scrollbars="vertical"
+            android:layout_marginTop="@dimen/twice_margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
 
 </layout>
+

@@ -2,6 +2,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys;
 
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
@@ -17,7 +18,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Created by Mohamed Nagy on 3/27/2018.
+ * Created by Mohamed Nagy on 3/27/2018 .
+ * Project projects submission
+ * Time    3:51 PM
  */
 
 public class NavigationBottomSystem {
@@ -64,21 +67,30 @@ public class NavigationBottomSystem {
      * Replace current fragment with the new fragment based on navigation bar.
      */
     private void loadFragment(FragmentNav fragmentNav){
+        // Check If the fragment is created before.
+        Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNav.TAG);
 
-        mFragmentManager.beginTransaction().replace(
-                FRAME_ID,
-                fragmentNav.getFragment()
-        ).commit();
+        if(fragment != null) {
+            mFragmentManager.beginTransaction().show(fragment).commit();
+        }else {
+            mFragmentManager.beginTransaction().replace(
+                    FRAME_ID,
+                    fragmentNav.getFragment(),
+                    fragmentNav.TAG
+            ).commit();
+        }
     }
 
 
     public static class FragmentNav{
+        private final String TAG;
         private int mNavigationItem;
         private Fragment mFragment;
 
-        public FragmentNav(int navigationItem, Fragment fragment){
-            mFragment = fragment;
+        public FragmentNav(int navigationItem, Fragment fragment, String tag){
+            mFragment         = fragment;
             mNavigationItem   = navigationItem;
+            TAG               = tag;
         }
 
         public void setNavigationItem(int mNavigationItem) {

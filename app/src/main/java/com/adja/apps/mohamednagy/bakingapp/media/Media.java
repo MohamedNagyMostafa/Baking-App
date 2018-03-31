@@ -59,9 +59,10 @@ public class Media{
 
 
     public void play(){
-        if(mAudioFocusSystem.getState() != AudioFocusSystem.GAINED)
+        if(mAudioFocusSystem != null && mAudioFocusSystem.getState() != AudioFocusSystem.GAINED)
             mAudioFocusSystem.run();
-        mSimpleExoPlayer.setPlayWhenReady(true);
+        else
+            mSimpleExoPlayer.setPlayWhenReady(true);
     }
 
     public void pause(){
@@ -87,7 +88,8 @@ public class Media{
      * Attach MediaFocusSystem to media
      */
     private void prepareMediaFocus(){
-        mAudioFocusSystem.setMedia(this);
+        if(mAudioFocusSystem != null)
+            mAudioFocusSystem.setMedia(this);
     }
 
     /**
@@ -168,7 +170,7 @@ public class Media{
             return this;
         }
 
-        public Builder mediaStateListener(@NonNull OnMediaStateChanged onMediaStateChanged){
+        public Builder mediaStateListener(@Nullable OnMediaStateChanged onMediaStateChanged){
             mOnMediaStateChanged = onMediaStateChanged;
             return this;
         }
