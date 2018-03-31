@@ -1,13 +1,10 @@
-package com.adja.apps.mohamednagy.bakingapp.ui.Util;
+package com.adja.apps.mohamednagy.bakingapp.ui.util;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.net.Uri;
-import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 
 import java.util.ArrayList;
@@ -32,7 +29,7 @@ public class DatabaseRetriever {
                     null,
                     null
             );
-            Log.e("cursor", "size : " + String.valueOf(cursor.getCount()));
+
             assert cursor != null;
             while(cursor.moveToNext()){
                 Step step = new Step(

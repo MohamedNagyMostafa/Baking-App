@@ -19,9 +19,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
     private static final String GRADIENT_FRAGMENT_TAG = "gradient-fg";
 
-    private static final String STEP_SAVER_SYSTEM_ID      = "step-sv";
-    private static final String RECIPE_SAVER_SYSTEM_ID    = "recipe-sv";
-    private static final String GRADIENT_SAVER_SYSTEM_ID  = "gradient-sv";
+    public static final String STEP_SAVER_SYSTEM_ID      = "step-sv";
+    public static final String RECIPE_SAVER_SYSTEM_ID    = "recipe-sv";
+    public static final String GRADIENT_SAVER_SYSTEM_ID  = "gradient-sv";
 
     private static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem(RECIPE_SAVER_SYSTEM_ID);
     private static final SaverSystem STEP_SAVER_SYSTEM     = new SaverSystem(STEP_SAVER_SYSTEM_ID);
@@ -96,8 +96,6 @@ public class MainActivity extends AppCompatActivity {
         STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
         GRADIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(GRADIENT_SAVER_SYSTEM.ID));
         RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
-        if(STEP_SAVER_SYSTEM.savedData() == null && GRADIENT_SAVER_SYSTEM.savedData() == null && RECIPE_SAVER_SYSTEM.savedData() == null)
-            Log.e("data is delted",":(");
     }
 
     @Override

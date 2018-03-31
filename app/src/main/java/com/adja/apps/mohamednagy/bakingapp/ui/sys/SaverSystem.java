@@ -8,6 +8,10 @@ import android.os.Bundle;
  * Time    6:15 PM
  */
 
+/**
+ * To fragments data during swap through more than one fragment
+ * on the same activity
+ */
 public class SaverSystem {
     public final String ID;
     private Bundle mSavedData;

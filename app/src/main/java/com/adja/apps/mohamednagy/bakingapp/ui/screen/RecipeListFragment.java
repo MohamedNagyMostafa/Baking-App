@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 
@@ -27,6 +28,19 @@ public class RecipeListFragment extends Fragment {
 
     public void applySaverSystem(SaverSystem saverSystem){
         mSaverSystem = saverSystem;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBundle(mSaverSystem.ID, mSaverSystem.savedData());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        mSaverSystem = new SaverSystem(MainActivity.RECIPE_SAVER_SYSTEM_ID);
+        mSaverSystem.save(savedInstanceState != null ? savedInstanceState.getBundle(MainActivity.RECIPE_SAVER_SYSTEM_ID) : null);
     }
 
     @Override

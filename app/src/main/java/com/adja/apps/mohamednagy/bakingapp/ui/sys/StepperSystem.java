@@ -44,8 +44,6 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
 
             // Set new node.
             mCurrentActivePosition++;
-            // Scroll to new node.
-            mLayoutManager.scrollToPosition(mCurrentActivePosition);
 
             StepperRecycleView.StepperViewHolder stepperViewHolder =
                     mStepperRecycleView.getView(mCurrentActivePosition);
@@ -70,9 +68,6 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
             setAsNonActiveNode(currentNodeViewHolder, currentNodeData.getShortDescription(), mCurrentActivePosition);
             // Set new node.
             mCurrentActivePosition--;
-
-            // Scroll to new node.
-            mLayoutManager.scrollToPosition(mCurrentActivePosition);
 
             StepperRecycleView.StepperViewHolder stepperViewHolder =
                     mStepperRecycleView.getView(mCurrentActivePosition);
@@ -146,6 +141,9 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
         // Set Listeners.
         setViewActions(stepperViewHolder);
 
+        // Scroll to active step.
+        mLayoutManager.scrollToPosition(mCurrentActivePosition);
+
         // Check If Last Node.
         if(position == mStepperRecycleView.getItemCount()-1)
             stepperViewHolder.STEPPER_VIEW.verticalDividerLine.setVisibility(View.GONE);
@@ -196,6 +194,10 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
         }else{
             stepperViewHolder.STEPPER_VIEW.nextButton.setVisibility(View.INVISIBLE);
         }
+    }
+
+    public int getCurrentActiveStepPosition(){
+        return mCurrentActivePosition;
     }
 
     public interface OnCurrentStepViewListener{

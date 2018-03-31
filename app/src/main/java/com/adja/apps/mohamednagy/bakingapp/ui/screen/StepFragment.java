@@ -1,6 +1,7 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
 
+import android.Manifest;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,18 +16,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
-import com.adja.apps.mohamednagy.bakingapp.ui.Util.DatabaseRetriever;
-import com.adja.apps.mohamednagy.bakingapp.ui.Util.Extras;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,32 +40,45 @@ import java.util.List;
 
 public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
 
-    private Media       mMedia;
-    private SaverSystem mSaverSystem;
+    private Media         mMedia;
+    private Long       mRecipeId;
+    private SaverSystem   mSaverSystem;
+    private StepperSystem mStepperSystem;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.step_fragment, container, false);
-
-        if(savedInstanceState != null || mSaverSystem.savedData() != null){
-            long recipeId = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
-            // Get data from database
-            List<Step> steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), recipeId);
-            // Set data binding view
-            StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
-            // Handle Recycle View
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-            StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
-            // Add Recycle View to Stepper System
-            // To Handle Stepper Process.
-            new StepperSystem(getContext(), stepperRecycleView,
-                    layoutManager,this );
-
-            stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
-            stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
-            stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
+        // Handle fragment orientation.
+        if(savedInstanceState != null){
+            mSaverSystem = new SaverSystem(MainActivity.STEP_SAVER_SYSTEM_ID);
+            Bundle bundle = savedInstanceState.getBundle(MainActivity.STEP_SAVER_SYSTEM_ID);
+            mSaverSystem.save(bundle);
         }
+
+        List<Step> steps = new ArrayList<>();
+
+        // Retrieve data from database.
+        // Handle fragment swap.
+        if(mSaverSystem.savedData() != null){
+            mRecipeId = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+            // Get data from database
+            steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), mRecipeId);
+        }
+
+        // Set data binding view
+        StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
+        // Handle Recycle View
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
+        // Add Recycle View to Stepper System
+        // To Handle Stepper Process.
+        mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
+                layoutManager,this );
+
+        stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
+        stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
+        stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
 
         return rootView;
     }
@@ -116,15 +132,25 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBundle(mSaverSystem.ID, mSaverSystem.savedData());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onDestroyView() {
         if(mSaverSystem != null){
-            Bundle bundle = new Bundle();
-            bundle.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
-            mSaverSystem.save(bundle);
-            //mSaverSystem.save();
-            Log.e("data saved", "saved");
+            mSaverSystem.save(getSavedData());
         }
         super.onDestroyView();
+    }
+
+    public Bundle getSavedData(){
+        Bundle bundle = new Bundle();
+        bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
+        bundle.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
+
+        return bundle;
     }
 
 }
