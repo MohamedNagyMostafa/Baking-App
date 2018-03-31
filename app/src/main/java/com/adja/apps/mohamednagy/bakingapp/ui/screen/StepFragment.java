@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 
+import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
@@ -36,17 +37,37 @@ import java.util.List;
  */
 
 public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
-
+    // Media
     private Media         mMedia;
+    // Current time of the running video.
     private Long          mMediaPosition;
+    // Recipe id to retrieve steps data.
     private Long          mRecipeId;
+    // Save system to handle saving data
+    // during rotation and moving through
+    // others fragments.
     private SaverSystem   mSaverSystem;
+    // Handle moving through steps and
+    // set the right state of the recipe steps.
     private StepperSystem mStepperSystem;
+    // Handle retrieving data from database on
+    // isolated thread.
+    private DatabaseRetriever.StepFragmentRetriever mStepFragmentRetriever;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mStepFragmentRetriever = new DatabaseRetriever.StepFragmentRetriever(
+                getContext().getContentResolver());
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.step_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.step_fragment, container, false);
+
         // Handle fragment orientation.
         if(savedInstanceState != null){
             mSaverSystem = new SaverSystem(MainActivity.STEP_SAVER_SYSTEM_ID);
@@ -54,37 +75,42 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
             mSaverSystem.save(bundle);
         }
 
-        List<Step> steps = new ArrayList<>();
-
         // Retrieve data from database.
         // Handle fragment swap.
         if(mSaverSystem.savedData() != null){
             mRecipeId      = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
             mMediaPosition = mSaverSystem.savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-            // Get data from database
-            steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), mRecipeId);
         }
 
         // Set data binding view
-        StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
-        // Handle Recycle View
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
-        // Add Recycle View to Stepper System
-        // To Handle Stepper Process.
-        mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
-                layoutManager,this );
+        final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
 
-        // Handle rotation
-        {
-            Integer currentActiveStep = mSaverSystem.savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
-            // return zero if there's no value exist.
-            mStepperSystem.setCurrentActiveStepPosition(currentActiveStep);
-        }
+        // Get data from database.
+        if(mRecipeId != null)
+            mStepFragmentRetriever.getStepsFromDatabase(
+                    UriController.getStepTableUriByRecipeId(mRecipeId),
+                    steps -> {
 
-        stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
-        stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
-        stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
+                            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+                            StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
+                            // Add Recycle View to Stepper System
+                            // To Handle Stepper Process.
+                            mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
+                                    layoutManager,StepFragment.this );
+
+                            // Handle rotation
+                            {
+                                Integer currentActiveStep = mSaverSystem.savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+                                // return zero if there's no value exist.
+                                mStepperSystem.setCurrentActiveStepPosition(currentActiveStep);
+                            }
+
+                            stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
+                            stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
+                            stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
+                        }
+            );
 
         return rootView;
     }

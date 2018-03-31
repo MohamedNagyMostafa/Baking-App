@@ -1,7 +1,13 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.util;
 
+import android.annotation.SuppressLint;
+import android.content.AsyncQueryHandler;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
@@ -16,19 +22,38 @@ import java.util.List;
  * Time    5:15 PM
  */
 
-public class DatabaseRetriever {
+public class DatabaseRetriever{
+    /**
+     * Retrieval system for step fragment.
+     */
+    public static class StepFragmentRetriever extends AsyncQueryHandler{
+        private static final int TOKEN = 0x01A;
 
-    public static class StepFragmentRetriever{
-        public static List<Step> getStepsFromDatabase(Context context, long recipeId){
-            List<Step> steps = new ArrayList<>();
+        private OnCompletedListener mOnCompletedListener;
 
-            Cursor cursor = context.getContentResolver().query(
-                    UriController.getStepTableUriByRecipeId(recipeId),
+        public StepFragmentRetriever(ContentResolver contentResolver) {
+            super(contentResolver);
+        }
+
+        // Retrieve Steps for specific recipe.
+        public synchronized void getStepsFromDatabase(Uri uri, @NonNull OnCompletedListener onCompletedListener){
+            mOnCompletedListener = onCompletedListener;
+
+            startQuery(
+                    TOKEN,
+                    null,
+                    uri,
                     Projection.STEP_PROJECTION,
                     null,
                     null,
                     null
             );
+
+        }
+
+        @Override
+        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            List<Step> steps = new ArrayList<>();
 
             assert cursor != null;
             while(cursor.moveToNext()){
@@ -45,7 +70,22 @@ public class DatabaseRetriever {
 
             cursor.close();
 
-            return steps;
+            if(mOnCompletedListener != null)
+                mOnCompletedListener.onCompleted(steps);
+        }
+
+        /**
+         * Stop Any Working Operation.
+         */
+        public void release(){
+            cancelOperation(TOKEN);
+        }
+
+        /**
+         * Called when operation is completed.
+         */
+        public interface OnCompletedListener{
+            void onCompleted(List<Step> steps);
         }
     }
 }
