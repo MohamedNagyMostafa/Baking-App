@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
+import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
+import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 
@@ -115,6 +117,44 @@ public class DatabaseRetriever{
                     null
             );
 
+        }
+
+        // Insert recipes
+        public synchronized void insertRecipesToDatabase(Uri uri, List<Recipe> recipes){
+            for(Recipe recipe: recipes){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DbContent.Recipe.RECIPE_NAME_COLUMN, recipe.getName());
+                contentValues.put(DbContent.Recipe.RECIPE_IMAGE_COLUMN, recipe.getImageURL());
+                contentValues.put(DbContent.Recipe.RECIPE_SERVING_COLUMN, recipe.getServings());
+                startInsert(TOKEN, null, uri, contentValues);
+            }
+        }
+
+        // Insert steps
+        public synchronized void insertStepsToDatabase(Uri uri, List<Step> steps, long recipeId){
+            for(Step step: steps){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DbContent.Step.STEP_RECIPE_ID_COLUMN, recipeId);
+                contentValues.put(DbContent.Step.STEP_VIDEO_URL_COLUMN, step.getVideoLink());
+                contentValues.put(DbContent.Step.STEP_THUMBNAIL_COLUMN, step.getThumbnailURL());
+                contentValues.put(DbContent.Step.STEP_DESCRIPTION_COLUMN, step.getDescription());
+                contentValues.put(DbContent.Step.STEP_SHORT_DESCRIPTION_COLUMN, step.getShortDescription());
+
+                startInsert(TOKEN, null, uri, contentValues);
+            }
+        }
+
+        // Insert gradient
+        public synchronized void insertIngredientToDatabase(Uri uri, List<Ingredient> ingredients, long recipeId){
+            for(Ingredient ingredient: ingredients){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DbContent.Ingredient.INGREDIENT_RECIPE_ID_COLUMN, recipeId);
+                contentValues.put(DbContent.Ingredient.INGREDIENT_MEASURE_COLUMN, ingredient.getMeasure());
+                contentValues.put(DbContent.Ingredient.INGREDIENT_COLUMN, ingredient.getIngredient());
+                contentValues.put(DbContent.Ingredient.INGREDIENT_QUANTITY_COLUMN, ingredient.getQuantity());
+
+                startInsert(TOKEN, null, uri, contentValues);
+            }
         }
 
         @Override

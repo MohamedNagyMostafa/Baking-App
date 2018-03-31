@@ -2,6 +2,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
 
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 3/27/2018.
@@ -59,19 +61,18 @@ public class RecipeListFragment extends Fragment {
         mRecipeFragmentRetriever.getRecipesFromDatabase(UriController.getRecipeTableUri(), recipes -> {
             if(recipes.size() > 0){
                 recipeRecycleView.swap(recipes);
-                Log.e("data found","database");
 
             }else{
                 NetworkHandler networkHandler = new NetworkHandler(getContext()) {
                     @Override
                     protected void onPostExecute(Recipe[] recipes) {
                         recipeRecycleView.swap(Arrays.asList(recipes));
-                        Log.e("data found","done");
+                        // Save data.
+                        insertDataToDatabase(Arrays.asList(recipes));
                     }
 
                     @Override
                     protected void onFailure(String message) {
-                        Log.e("network","error");
 
                     }
                 };
@@ -79,6 +80,25 @@ public class RecipeListFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void insertDataToDatabase(List<Recipe> recipes){
+        mRecipeFragmentRetriever.insertRecipesToDatabase(UriController.getRecipeTableUri(), recipes);
+
+        for(Recipe recipe: recipes){
+
+            mRecipeFragmentRetriever.insertStepsToDatabase(
+                    UriController.getStepTableUri(),
+                    recipe.getSteps(),
+                    recipe.getId() + 1
+            );
+
+            mRecipeFragmentRetriever.insertIngredientToDatabase(
+                    UriController.getIngredientTableUri(),
+                    recipe.getIngredients(),
+                    recipe.getId() +1
+            );
+        }
     }
 
     public void applySaverSystem(SaverSystem saverSystem){
