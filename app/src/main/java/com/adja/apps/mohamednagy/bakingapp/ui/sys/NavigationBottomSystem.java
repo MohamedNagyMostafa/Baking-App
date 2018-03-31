@@ -65,7 +65,7 @@ public class NavigationBottomSystem {
     /**
      * Replace current fragment with the new fragment based on navigation bar.
      */
-    private void loadFragment(FragmentNav fragmentNav){
+    public void loadFragment(FragmentNav fragmentNav){
         // Check If the fragment is created before.
         Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNav.TAG);
 

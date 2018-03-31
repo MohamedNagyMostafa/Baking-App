@@ -2,6 +2,7 @@ package com.adja.apps.mohamednagy.bakingapp;
 
 import android.databinding.DataBindingUtil;
 import android.os.PersistableBundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        hideActionBar();
 
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
@@ -72,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
         mNavigationBottomSystem.put(RECIPE_FRAGMENT_NAV);
         mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
         mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);
+
+        mNavigationBottomSystem.loadFragment(RECIPE_FRAGMENT_NAV);
+    }
+
+    private void hideActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null)
+            actionBar.hide();
     }
 
     //    @Override

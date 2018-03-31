@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
+import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 
 import java.util.ArrayList;
@@ -86,6 +87,71 @@ public class DatabaseRetriever{
          */
         public interface OnCompletedListener{
             void onCompleted(List<Step> steps);
+        }
+    }
+    /**
+     * Retrieval system for recipe fragment.
+     */
+    public static class RecipeFragmentRetriever extends AsyncQueryHandler{
+        private static final int TOKEN = 0x01B;
+
+        private OnCompletedListener mOnCompletedListener;
+
+        public RecipeFragmentRetriever(ContentResolver contentResolver) {
+            super(contentResolver);
+        }
+
+        // Retrieve all recipes.
+        public synchronized void getRecipesFromDatabase(Uri uri, @NonNull OnCompletedListener onCompletedListener){
+            mOnCompletedListener = onCompletedListener;
+
+            startQuery(
+                    TOKEN,
+                    null,
+                    uri,
+                    Projection.STEP_PROJECTION,
+                    null,
+                    null,
+                    null
+            );
+
+        }
+
+        @Override
+        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            List<Recipe> recipes = new ArrayList<>();
+
+            if(cursor != null) {
+                while (cursor.moveToNext()) {
+                    Recipe recipe = new Recipe(
+                            cursor.getLong(Projection.RECIPE_ID_COLUMN),
+                            cursor.getString(Projection.RECIPE_NAME_COLUMN),
+                            null,
+                            null,
+                            cursor.getInt(Projection.RECIPE_SERVING_COLUMN),
+                            cursor.getString(Projection.RECIPE_IMAGE_COLUMN)
+                    );
+                    recipes.add(recipe);
+                }
+
+                cursor.close();
+            }
+            if(mOnCompletedListener != null)
+                mOnCompletedListener.onCompleted(recipes);
+        }
+
+        /**
+         * Stop Any Working Operation.
+         */
+        public void release(){
+            cancelOperation(TOKEN);
+        }
+
+        /**
+         * Called when operation is completed.
+         */
+        public interface OnCompletedListener{
+            void onCompleted(List<Recipe> recipes);
         }
     }
 }

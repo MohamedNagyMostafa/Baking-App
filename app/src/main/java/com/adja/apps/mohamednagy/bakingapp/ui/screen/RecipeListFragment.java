@@ -8,16 +8,22 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
+import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
+import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
+
+import java.util.Arrays;
 
 /**
  * Created by Mohamed Nagy on 3/27/2018.
@@ -26,6 +32,14 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 public class RecipeListFragment extends Fragment {
 
     private SaverSystem mSaverSystem;
+    private DatabaseRetriever.RecipeFragmentRetriever mRecipeFragmentRetriever;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mRecipeFragmentRetriever = new DatabaseRetriever.RecipeFragmentRetriever(getActivity().getContentResolver());
+    }
 
     @Nullable
     @Override
@@ -41,7 +55,29 @@ public class RecipeListFragment extends Fragment {
         recipeFragmentBinding.recipeRecycleView.setItemAnimator(new DefaultItemAnimator());
         recipeFragmentBinding.recipeRecycleView.setAdapter(recipeRecycleView);
 
-        
+
+        mRecipeFragmentRetriever.getRecipesFromDatabase(UriController.getRecipeTableUri(), recipes -> {
+            if(recipes.size() > 0){
+                recipeRecycleView.swap(recipes);
+                Log.e("data found","database");
+
+            }else{
+                NetworkHandler networkHandler = new NetworkHandler(getContext()) {
+                    @Override
+                    protected void onPostExecute(Recipe[] recipes) {
+                        recipeRecycleView.swap(Arrays.asList(recipes));
+                        Log.e("data found","done");
+                    }
+
+                    @Override
+                    protected void onFailure(String message) {
+                        Log.e("network","error");
+
+                    }
+                };
+                networkHandler.execute();
+            }
+        });
         return rootView;
     }
 
@@ -67,6 +103,7 @@ public class RecipeListFragment extends Fragment {
         if(mSaverSystem != null){
             //mSaverSystem.save();
         }
+        mRecipeFragmentRetriever.release();
         super.onDestroyView();
     }
 

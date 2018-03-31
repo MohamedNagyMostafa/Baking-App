@@ -14,6 +14,7 @@ public class Projection {
             DbContent.Recipe.RECIPE_SERVING_COLUMN
     };
 
+    public static final int RECIPE_ID_COLUMN      = 0;
     public static final int RECIPE_NAME_COLUMN    = 1;
     public static final int RECIPE_IMAGE_COLUMN   = 2;
     public static final int RECIPE_SERVING_COLUMN = 3;
