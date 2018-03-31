@@ -200,6 +200,8 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
 
     public interface OnCurrentStepViewListener{
         void updateView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step);
+        void nextButtonClickListener();
+        void cancelButtonClickListener();
     }
 
 }
