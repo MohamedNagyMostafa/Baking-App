@@ -12,6 +12,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,11 +58,17 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationBottomSystem.FragmentNav(STEP_NAV, stepFragment, STEP_SAVER_SYSTEM, STEP_FRAGMENT_TAG);
         final NavigationBottomSystem.FragmentNav GRADIENT_FRAGMENT_NAV = new
                 NavigationBottomSystem.FragmentNav(GRADIENT_NV, gradientFragment, GRADIENT_SAVER_SYSTEM, GRADIENT_FRAGMENT_TAG);
+        // Test block
+        {
+            Bundle b = new Bundle();
+            b.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
+            STEP_SAVER_SYSTEM.save(b);
+        }
 
         recipeListFragment.applySaverSystem(RECIPE_SAVER_SYSTEM);
         gradientFragment.applySaverSystem(GRADIENT_SAVER_SYSTEM);
         stepFragment.applySaverSystem(STEP_SAVER_SYSTEM);
-        Log.e("called","done");
+
         mNavigationBottomSystem.put(RECIPE_FRAGMENT_NAV);
         mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
         mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);

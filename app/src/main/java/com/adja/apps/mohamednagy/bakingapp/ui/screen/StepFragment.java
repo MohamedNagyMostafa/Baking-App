@@ -133,7 +133,7 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         if(!description.isEmpty()){
             String focusedArea = description.substring(0, 3);
             if(focusedArea.contains(".")){
-                newDescription = description.substring(0, focusedArea.indexOf(".") + 1);
+                newDescription = description.substring(focusedArea.indexOf(".") + 1, description.length());
             }
         }
         return newDescription.trim();

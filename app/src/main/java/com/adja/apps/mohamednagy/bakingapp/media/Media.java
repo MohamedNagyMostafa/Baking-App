@@ -65,7 +65,8 @@ public class Media{
     }
 
     public void pause(){
-        mSimpleExoPlayer.setPlayWhenReady(false);
+        if(mSimpleExoPlayer != null)
+            mSimpleExoPlayer.setPlayWhenReady(false);
     }
 
     public void release(){

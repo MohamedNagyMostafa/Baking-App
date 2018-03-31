@@ -125,6 +125,7 @@ public class AudioFocusSystem {
                         synchronized (this) {
                             mState = LOSS;
                         }
+
                         mMedia.pause();
                         break;
                 }
