@@ -23,12 +23,10 @@ import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
-import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
+import com.adja.apps.mohamednagy.bakingapp.ui.adapter.stepper.StepperRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 3/27/2018 .
@@ -180,6 +178,8 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         if(mSaverSystem != null){
             mSaverSystem.save(getSavedData());
         }
+
+        mStepFragmentRetriever.release();
         super.onDestroyView();
     }
 

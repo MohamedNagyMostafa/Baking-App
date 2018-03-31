@@ -50,18 +50,15 @@ public class NavigationBottomSystem {
     }
 
     private void applyListener(){
-        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                for(FragmentNav fragmentNav: mFragmentNavs){
-                    if(fragmentNav.getNavigationItem() == id){
-                        loadFragment(fragmentNav);
-                        break;
-                    }
+        mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            for(FragmentNav fragmentNav: mFragmentNavs){
+                if(fragmentNav.getNavigationItem() == id){
+                    loadFragment(fragmentNav);
+                    break;
                 }
-                return true;
             }
+            return true;
         });
     }
 
