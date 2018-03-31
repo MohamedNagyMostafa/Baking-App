@@ -99,5 +99,4 @@ public class DbContent {
 
                     INNER_JOIN + SPACE + Step.TABLE_NAME + SPACE +
                     ON + SPACE + Step.TABLE_NAME + "." + Step.STEP_RECIPE_ID_COLUMN + "=" + Recipe.TABLE_NAME + "." + Recipe._ID;
-
 }

@@ -1,32 +1,32 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
-import android.app.Fragment;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.media.AudioFocusRequest;
-import android.media.AudioManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
-import com.adja.apps.mohamednagy.bakingapp.media.AudioFocusSystem;
-import com.adja.apps.mohamednagy.bakingapp.media.Media;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
-import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
-import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
-import com.adja.apps.mohamednagy.bakingapp.ui.NavigationBottomSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String STEP_FRAGMENT_TAG     = "step-fg";
+    private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
+    private static final String GRADIENT_FRAGMENT_TAG = "gradient-fg";
+
+    public static final String STEP_SAVER_SYSTEM_ID      = "step-sv";
+    public static final String RECIPE_SAVER_SYSTEM_ID    = "recipe-sv";
+    public static final String GRADIENT_SAVER_SYSTEM_ID  = "gradient-sv";
+
+    private static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem(RECIPE_SAVER_SYSTEM_ID);
+    private static final SaverSystem STEP_SAVER_SYSTEM     = new SaverSystem(STEP_SAVER_SYSTEM_ID);
+    private static final SaverSystem GRADIENT_SAVER_SYSTEM = new SaverSystem(GRADIENT_SAVER_SYSTEM_ID);
 
     private NavigationBottomSystem mNavigationBottomSystem;
 
@@ -34,46 +34,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
         mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
         addFragmentsToNavigationSys();
-
-//        final Media.Builder mediaBuilder = new Media.Builder(this)
-//                .mediaView(activityMainBinding.simpleExoPlayer)
-//                .videoLink("https://d17h27t6h515a5.cloudfront.net/topher/2017/April/58ffd9cb_4-press-crumbs-in-pie-plate-creampie/4-press-crumbs-in-pie-plate-creampie.mp4")
-//                .audioFocusSystem(new AudioFocusSystem(this))
-//                .mediaStateListener(new Media.OnMediaStateChanged() {
-//                    @Override
-//                    public void onStateChanged(Media.State state, boolean isPlaying) {
-//                        if(!isPlaying && state == Media.State.READY)
-//                            Toast.makeText(MainActivity.this, "pause", Toast.LENGTH_SHORT).show();
-//
-//                        switch (state){
-//                            case READY:
-//                                Toast.makeText(MainActivity.this, "ready", Toast.LENGTH_SHORT).show();
-//                            break;
-//                            case ENDED:
-//                            Toast.makeText(MainActivity.this, "ended", Toast.LENGTH_SHORT).show();
-//                            break;
-//                        }
-//                    }
-//                });
-//
-//        media = mediaBuilder.build();
-//        activityMainBinding.play.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                media.pause();
-//            }
-//        });
-//        activityMainBinding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                return true;
-//            }
-//        });
 
     }
 
@@ -86,16 +52,29 @@ public class MainActivity extends AppCompatActivity {
         final Integer STEP_NAV    = R.id.step_nav;
         final Integer GRADIENT_NV = R.id.gradient_nav;
 
-        final NavigationBottomSystem.FragmentNav RECIPE_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(HOME_NAV, recipeListFragment);
-        final NavigationBottomSystem.FragmentNav STEP_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(STEP_NAV, stepFragment);
-        final NavigationBottomSystem.FragmentNav GRADIENT_FRAGMENT_NAV = new NavigationBottomSystem.FragmentNav(GRADIENT_NV, gradientFragment);
+        final NavigationBottomSystem.FragmentNav RECIPE_FRAGMENT_NAV =
+                new NavigationBottomSystem.FragmentNav(HOME_NAV, recipeListFragment, RECIPE_SAVER_SYSTEM ,RECIPE_FRAGMENT_TAG);
+        final NavigationBottomSystem.FragmentNav STEP_FRAGMENT_NAV =
+                new NavigationBottomSystem.FragmentNav(STEP_NAV, stepFragment, STEP_SAVER_SYSTEM, STEP_FRAGMENT_TAG);
+        final NavigationBottomSystem.FragmentNav GRADIENT_FRAGMENT_NAV = new
+                NavigationBottomSystem.FragmentNav(GRADIENT_NV, gradientFragment, GRADIENT_SAVER_SYSTEM, GRADIENT_FRAGMENT_TAG);
+        // Test block
+        {
+            Bundle b = new Bundle();
+            b.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
+            STEP_SAVER_SYSTEM.save(b);
+        }
+
+        recipeListFragment.applySaverSystem(RECIPE_SAVER_SYSTEM);
+        gradientFragment.applySaverSystem(GRADIENT_SAVER_SYSTEM);
+        stepFragment.applySaverSystem(STEP_SAVER_SYSTEM);
 
         mNavigationBottomSystem.put(RECIPE_FRAGMENT_NAV);
         mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
         mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);
     }
 
-//    @Override
+    //    @Override
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 //        switch (requestCode){
@@ -116,4 +95,29 @@ public class MainActivity extends AppCompatActivity {
 //        media.release();
 //        super.onPause();
 //    }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
+        GRADIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(GRADIENT_SAVER_SYSTEM.ID));
+        RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
+        outState.putBundle(GRADIENT_SAVER_SYSTEM.ID, GRADIENT_SAVER_SYSTEM.savedData());
+        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState, PersistableBundle outPersistentState) {
+
+        super.onSaveInstanceState(savedInstanceState, outPersistentState);
+    }
+
 }
