@@ -35,6 +35,9 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     private View.OnClickListener mOnClickListenerNextStep = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // To release data "avoid leaking in memory"
+            mOnCurrentStepViewListener.nextButtonClickListener();
+
             // Set current node as completed node
             StepperRecycleView.StepperViewHolder currentNodeViewHolder =
                     mStepperRecycleView.getView(mCurrentActivePosition);
@@ -60,6 +63,9 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
     private View.OnClickListener mOnClickListenerPreviousStep = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            // To release data "avoid leaking in memory"
+            mOnCurrentStepViewListener.cancelButtonClickListener();
+
             // Set current node as non-active node
             StepperRecycleView.StepperViewHolder currentNodeViewHolder =
                     mStepperRecycleView.getView(mCurrentActivePosition);
@@ -198,6 +204,10 @@ public class StepperSystem implements StepperRecycleView.OnItemCreatedListener{
 
     public int getCurrentActiveStepPosition(){
         return mCurrentActivePosition;
+    }
+
+    public void setCurrentActiveStepPosition(int stepPosition){
+        mCurrentActivePosition = stepPosition;
     }
 
     public interface OnCurrentStepViewListener{

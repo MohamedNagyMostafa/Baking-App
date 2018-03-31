@@ -57,7 +57,6 @@ public class Media{
         prepareMediaPlayer();
     }
 
-
     public void play(){
         if(mAudioFocusSystem != null && mAudioFocusSystem.getState() != AudioFocusSystem.GAINED)
             mAudioFocusSystem.run();
@@ -123,9 +122,6 @@ public class Media{
             @Override
             public void onStateChanged(boolean isPlaying) {
                 mSimpleExoPlayer.setPlayWhenReady(isPlaying);
-                Log.e("session changed","aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-
             }
         });
     }
@@ -141,6 +137,14 @@ public class Media{
         );
         mSimpleExoPlayer.prepare(mediaSource);
         mMediaSessionController.start();
+    }
+
+    public long getCurrentMediaPosition(){
+        return mSimpleExoPlayer.getCurrentPosition();
+    }
+
+    public void setCurrentMediaPosition(long position){
+        mSimpleExoPlayer.seekTo(position);
     }
 
     public static class Builder{

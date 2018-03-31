@@ -1,7 +1,5 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
-
-import android.Manifest;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -10,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +38,8 @@ import java.util.List;
 public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
 
     private Media         mMedia;
-    private Long       mRecipeId;
+    private Long          mMediaPosition;
+    private Long          mRecipeId;
     private SaverSystem   mSaverSystem;
     private StepperSystem mStepperSystem;
 
@@ -61,7 +59,8 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         // Retrieve data from database.
         // Handle fragment swap.
         if(mSaverSystem.savedData() != null){
-            mRecipeId = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+            mRecipeId      = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+            mMediaPosition = mSaverSystem.savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
             // Get data from database
             steps = DatabaseRetriever.StepFragmentRetriever.getStepsFromDatabase(getContext(), mRecipeId);
         }
@@ -75,6 +74,13 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         // To Handle Stepper Process.
         mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
                 layoutManager,this );
+
+        // Handle rotation
+        {
+            Integer currentActiveStep = mSaverSystem.savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+            // return zero if there's no value exist.
+            mStepperSystem.setCurrentActiveStepPosition(currentActiveStep);
+        }
 
         stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
         stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
@@ -96,6 +102,12 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
                     .videoLink(step.getVideoLink())
                     .defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image))
                     .build();
+
+            // Handle rotation.
+            {
+                if(mMediaPosition != null)
+                    mMedia.setCurrentMediaPosition(mMediaPosition);
+            }
 
             mMedia.play();
         }
@@ -133,7 +145,7 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(mSaverSystem.ID, mSaverSystem.savedData());
+        outState.putBundle(mSaverSystem.ID, getSavedData());
         super.onSaveInstanceState(outState);
     }
 
@@ -148,7 +160,8 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     public Bundle getSavedData(){
         Bundle bundle = new Bundle();
         bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
-        bundle.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
+        bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
+        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition);
 
         return bundle;
     }
