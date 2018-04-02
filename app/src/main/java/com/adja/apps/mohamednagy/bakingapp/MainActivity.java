@@ -1,5 +1,6 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
         mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);
 
-        mNavigationBottomSystem.loadFragment(RECIPE_FRAGMENT_NAV);
+        //mNavigationBottomSystem.loadFragment(RECIPE_FRAGMENT_NAV);
     }
 
     private void hideActionBar(){

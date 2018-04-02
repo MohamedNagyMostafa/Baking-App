@@ -17,6 +17,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class NavigationBottomSystem {
     // Holds Fragment with NavigationItem
-    private List<FragmentNav> mFragmentNavs;
+    private static List<FragmentNav> mFragmentNavs;
     private FragmentManager mFragmentManager;
     private BottomNavigationView mBottomNavigationView;
     private final Integer FRAME_ID;
@@ -54,7 +55,10 @@ public class NavigationBottomSystem {
             int id = item.getItemId();
             for(FragmentNav fragmentNav: mFragmentNavs){
                 if(fragmentNav.getNavigationItem() == id){
-                    loadFragment(fragmentNav);
+
+                    FragmentIntent fragmentIntent = new FragmentIntent(fragmentNav.getFragment().getClass());
+                    fragmentIntent.startFragment(fragmentNav);
+
                     break;
                 }
             }
@@ -63,23 +67,9 @@ public class NavigationBottomSystem {
     }
 
     /**
-     * Replace current fragment with the new fragment based on navigation bar.
+     * Class to hold fragments which will be showed by navigation bar
+     * and holds fragment details.
      */
-    public void loadFragment(FragmentNav fragmentNav){
-        // Check If the fragment is created before.
-        Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNav.TAG);
-
-        if(fragment != null) {
-            mFragmentManager.beginTransaction().show(fragment).commit();
-        }else {
-            mFragmentManager.beginTransaction().replace(
-                    FRAME_ID,
-                    fragmentNav.getFragment(),
-                    fragmentNav.TAG
-            ).commit();
-        }
-    }
-
     public static class FragmentNav{
         private final String TAG;
 
@@ -112,6 +102,60 @@ public class NavigationBottomSystem {
 
         Fragment getFragment() {
             return mFragment;
+        }
+    }
+
+    /**
+     * Class used to move through navigation bar fragments
+     * and passing data through its fragments
+     */
+    public class FragmentIntent{
+        private Class<? extends Fragment> mFragmentClass;
+
+        public FragmentIntent(Class<? extends Fragment> fragmentClass){
+            mFragmentClass = fragmentClass;
+        }
+
+        /**
+         * Save data for specific fragment of Bottom Navigation Fragments.
+         * @param bundle    Data To Save
+         */
+        public void put(Bundle bundle){
+            for (FragmentNav fragmentNav : mFragmentNavs) {
+
+                if(mFragmentClass.isInstance(fragmentNav.getFragment())){
+                    fragmentNav.getSaverSystem().save(bundle);
+                    break;
+                }
+            }
+        }
+
+        /**
+         * Replace current fragment with the new fragment based on navigation bar.
+         */
+        void startFragment(FragmentNav fragmentNav){
+            // Check If the fragment is created before.
+            Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNav.TAG);
+
+            if(fragment != null) {
+                mFragmentManager.beginTransaction().show(fragment).commit();
+            }else {
+                mFragmentManager.beginTransaction().replace(
+                        FRAME_ID,
+                        fragmentNav.getFragment(),
+                        fragmentNav.TAG
+                ).commit();
+            }
+        }
+
+        public void startFragment(){
+            for (FragmentNav fragmentNav : mFragmentNavs) {
+                if(mFragmentClass.isInstance(fragmentNav.getFragment())){
+                    NavigationBottomSystem.this.mBottomNavigationView
+                            .setSelectedItemId(fragmentNav.getNavigationItem());
+                    break;
+                }
+            }
         }
     }
 }
