@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void addFragmentsToNavigationSys(){
         Log.e("add navigation sys", "data aaaaaaaaaaaaaaa");
-        RecipeListFragment recipeListFragment = new RecipeListFragment();
-        StepFragment stepFragment             = new StepFragment();
-        GradientFragment gradientFragment     = new GradientFragment();
+        final RecipeListFragment recipeListFragment = new RecipeListFragment();
+        final StepFragment stepFragment             = new StepFragment();
+        final GradientFragment gradientFragment     = new GradientFragment();
 
         final Integer HOME_NAV    = R.id.home_nav;
         final Integer STEP_NAV    = R.id.step_nav;

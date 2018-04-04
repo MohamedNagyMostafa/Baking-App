@@ -62,9 +62,8 @@ public class FragmentNav extends Fragment {
     // Orientation
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
+        // outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
         outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, outState);
-        Log.e("data save fragment","data aaaaaaaaaaaaaaa save fragment");
         super.onSaveInstanceState(outState);
     }
 
@@ -72,13 +71,12 @@ public class FragmentNav extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            String dataSaverId = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
+            // String dataSaverId = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
             Bundle dataSaverBundle = savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_BUNDLE);
 
-            mSaverSystem = new SaverSystem(dataSaverId);
+            mSaverSystem = new SaverSystem("a");
             mSaverSystem.save(dataSaverBundle);
         }
-        Log.e("data restore fragment","data aaaaaaaaaaaaaaa save fragment");
     }
 
     // *** Fragment Services Section End ***

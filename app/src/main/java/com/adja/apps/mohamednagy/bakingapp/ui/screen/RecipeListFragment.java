@@ -2,40 +2,40 @@ package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
 
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Mohamed Nagy on 3/27/2018.
+ * Created by Mohamed Nagy on 3/27/2018 .
+ * Project projects submission
+ * Time    1:12 PM
  */
 
 public class RecipeListFragment extends FragmentNav {
 
     private DatabaseRetriever.RecipeFragmentRetriever mRecipeFragmentRetriever;
+    private Long mCurrentSelectedRecipe;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,13 +47,23 @@ public class RecipeListFragment extends FragmentNav {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipe_fragment, container, false);
-        Log.e("fragment view","aaaaaaaaaaaaaaa fragment view called");
 
         RecipeFragmentBinding recipeFragmentBinding = DataBindingUtil.bind(rootView);
+
+        // Handle Rotation.
+        if(savedInstanceState != null){
+            mCurrentSelectedRecipe = savedInstanceState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
+        }
 
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecipeRecycleView recipeRecycleView      = new RecipeRecycleView(null, getContext());
+
+        recipeRecycleView.setSelectedView(mCurrentSelectedRecipe);
+
+        recipeRecycleView.setRecipeClickListener(((recipeId) -> {
+            mCurrentSelectedRecipe = recipeId;
+        }));
 
         recipeFragmentBinding.recipeRecycleView.setLayoutManager(layoutManager);
         recipeFragmentBinding.recipeRecycleView.setItemAnimator(new DefaultItemAnimator());
@@ -106,21 +116,23 @@ public class RecipeListFragment extends FragmentNav {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("deo", 1);
+        outState.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, (mCurrentSelectedRecipe!= null)?mCurrentSelectedRecipe: SelectedSystem.DEFAULT_SELECTED_ID);
         super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(getSaverSystem().savedData() != null)
-            Log.e("data aaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaa " + getSaverSystem().savedData().getInt("deo"));
     }
 
     @Override
     public void onDestroyView() {
         mRecipeFragmentRetriever.release();
+        // To Handle Data During Swap.
+        getSaverSystem().save(getSavedData());
         super.onDestroyView();
+    }
+
+    private Bundle getSavedData(){
+        Bundle bundle = new Bundle();
+        bundle.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, mCurrentSelectedRecipe);
+
+        return bundle;
     }
 
 }
