@@ -111,10 +111,39 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
 
         /**
          * Save data for specific fragment of Bottom Navigation Fragments.
-         * @param bundle    Data To Save
          */
-        public void put(Bundle bundle){
-            mFragmentNavHolder.first.getSaverSystem().save(bundle);
+        public <T>void putExtra(String extraName, T data){
+            Bundle previousSavedData = mFragmentNavHolder.first.getSaverSystem().savedData();
+
+            if(data instanceof Integer){
+                if(previousSavedData != null) {
+                    previousSavedData.putInt(extraName, (Integer) data);
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putInt(extraName, (Integer) data);
+
+                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
+                }
+            }else if(data instanceof Long){
+                if(previousSavedData != null) {
+                    previousSavedData.putLong(extraName, (Long) data);
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putLong(extraName, (Long) data);
+
+                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
+                }
+
+            }else if(data instanceof String){
+                if(previousSavedData != null) {
+                    previousSavedData.putString(extraName, (String) data);
+                }else{
+                    Bundle bundle = new Bundle();
+                    bundle.putString(extraName, (String) data);
+
+                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
+                }
+            }
         }
     }
 }

@@ -20,13 +20,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
     private static final String GRADIENT_FRAGMENT_TAG = "gradient-fg";
 
-    public static final String STEP_SAVER_SYSTEM_ID      = "step-sv";
-    public static final String RECIPE_SAVER_SYSTEM_ID    = "recipe-sv";
-    public static final String GRADIENT_SAVER_SYSTEM_ID  = "gradient-sv";
-
-    public static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem(RECIPE_SAVER_SYSTEM_ID);
-    private static final SaverSystem STEP_SAVER_SYSTEM     = new SaverSystem(STEP_SAVER_SYSTEM_ID);
-    private static final SaverSystem GRADIENT_SAVER_SYSTEM = new SaverSystem(GRADIENT_SAVER_SYSTEM_ID);
+    public static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem();
+    private static final SaverSystem STEP_SAVER_SYSTEM     = new SaverSystem();
+    private static final SaverSystem GRADIENT_SAVER_SYSTEM = new SaverSystem();
 
     private NavigationBottomSystem mNavigationBottomSystem;
 

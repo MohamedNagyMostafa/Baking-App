@@ -21,7 +21,6 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
  */
 public class FragmentNav extends Fragment {
 
-    private static final String FRAGMENT_DATA_SAVER_ID = "fragment_data_sv";
     private static final String FRAGMENT_DATA_SAVER_BUNDLE = "fragment_data_bundle";
 
     private SaverSystem         mSaverSystem;
@@ -62,7 +61,6 @@ public class FragmentNav extends Fragment {
     // Orientation
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        // outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
         outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, outState);
         super.onSaveInstanceState(outState);
     }
@@ -71,27 +69,11 @@ public class FragmentNav extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            // String dataSaverId = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
             Bundle dataSaverBundle = savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_BUNDLE);
 
-            mSaverSystem = new SaverSystem("a");
+            mSaverSystem = new SaverSystem();
             mSaverSystem.save(dataSaverBundle);
         }
-    }
-
-    // *** Fragment Services Section End ***
-
-
-    @Override
-    public void onDestroyView() {
-        Log.e("onDestroyed view","done");
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        Log.e("onDestroyed","done");
-        super.onDestroy();
     }
 
     /**

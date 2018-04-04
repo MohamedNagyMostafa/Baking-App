@@ -53,9 +53,8 @@ public class RecipeListFragment extends FragmentNav {
         mRecipeFragmentBinding = DataBindingUtil.bind(rootView);
 
         // Handle Rotation.
-        if(savedInstanceState != null){
-            mCurrentSelectedRecipe = savedInstanceState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
-        }
+        if(getSaverSystem().savedData() != null)
+            mCurrentSelectedRecipe = getSaverSystem().savedData().getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
 
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -64,14 +63,14 @@ public class RecipeListFragment extends FragmentNav {
         recipeRecycleView.setSelectedView(mCurrentSelectedRecipe);
 
         recipeRecycleView.setRecipeClickListener(((recipeId) -> {
-            mCurrentSelectedRecipe = recipeId;
-            NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
-
-            Bundle bundle = new Bundle();
-            bundle.putLong(Extras.StepFragmentData.RECIPE_ID, recipeId);
-            fragmentIntent.put(bundle);
-
-            startFragment(fragmentIntent);
+            if(mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
+                mCurrentSelectedRecipe = recipeId;
+                // Reset active step position and video mint to initial state
+                openStepFragmentAsNewRecipe();
+            }else{
+                // Retrieve the previous state of steps/videos
+                openStepFragmentAsSameRecipe();
+            }
         }));
 
         mRecipeFragmentBinding.recipeRecycleView.setLayoutManager(layoutManager);
@@ -84,7 +83,7 @@ public class RecipeListFragment extends FragmentNav {
                 recipeRecycleView.swap(recipes);
                 // Handle scroll rotation.
                 mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                        savedInstanceState != null ? savedInstanceState.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION) : null);
+                        getSaverSystem().savedData() != null ? getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION) : null);
 
             }else{
                 NetworkHandler networkHandler = new NetworkHandler(getContext()) {
@@ -150,6 +149,23 @@ public class RecipeListFragment extends FragmentNav {
         );
 
         return bundle;
+    }
+
+    private void openStepFragmentAsNewRecipe(){
+        NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
+        fragmentIntent.putExtra(Extras.StepFragmentData.CURRENT_MEDIA_MINT, 0L);
+        fragmentIntent.putExtra(Extras.StepFragmentData.CURRENT_STEP_POSITION, 0);
+        fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
+
+        startFragment(fragmentIntent);
+    }
+
+    private void openStepFragmentAsSameRecipe(){
+        NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
+
+        fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
+
+        startFragment(fragmentIntent);
     }
 
 }

@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
@@ -42,6 +44,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     private Long          mMediaPosition;
     // Recipe id to retrieve steps data.
     private Long          mRecipeId;
+    private int           mCurrentActiveStep;
     // Save system to handle saving data
     // during rotation and moving through
     // others fragments.
@@ -67,11 +70,9 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
 
-        mRecipeId = getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
-
-        if(savedInstanceState != null) {
-            mMediaPosition = savedInstanceState.getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-        }
+        mMediaPosition     = getSaverSystem().savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
+        mRecipeId          = getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+        mCurrentActiveStep = getSaverSystem().savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
 
         // Get data from database.
         mStepFragmentRetriever.getStepsFromDatabase(
@@ -85,9 +86,9 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     // To Handle Stepper Process.
                     mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
                             layoutManager,StepFragment.this );
-                    // Set Active Step (When rotation is happened).
+                    // Set Active Step (When rotation/Fragments-Swap is happened).
                     {
-                        mStepperSystem.setCurrentActiveStepPosition(savedInstanceState != null ? savedInstanceState.getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION) : 0);
+                        mStepperSystem.setCurrentActiveStepPosition(mCurrentActiveStep);
                     }
                     stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
                     stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
@@ -111,7 +112,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     .videoLink(step.getVideoLink())
                     .defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image))
                     .build();
-
+            Log.e("videoLink", "video " + step.getVideoLink());
             // Handle rotation.
             {
                 if(mMediaPosition != null)
