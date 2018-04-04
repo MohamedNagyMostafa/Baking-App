@@ -15,6 +15,7 @@ public class Extras {
     }
 
     public static class RecipeListFragmentData{
-        public static final String SELECTED_RECIPE_ID     = "recipe_selected_id";
+        public static final String SELECTED_RECIPE_ID             = "recipe_selected_id";
+        public static final String RECIPE_RECYCLE_SCROLL_POSITION = "recipe_recycle_pos";
     }
 }
