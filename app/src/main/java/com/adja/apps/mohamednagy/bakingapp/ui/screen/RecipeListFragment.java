@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
@@ -22,6 +23,7 @@ import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 
 import java.util.Arrays;
@@ -31,11 +33,9 @@ import java.util.List;
  * Created by Mohamed Nagy on 3/27/2018.
  */
 
-public class RecipeListFragment extends Fragment {
+public class RecipeListFragment extends FragmentNav {
 
-    private SaverSystem mSaverSystem;
     private DatabaseRetriever.RecipeFragmentRetriever mRecipeFragmentRetriever;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,6 +47,8 @@ public class RecipeListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recipe_fragment, container, false);
+        Log.e("fragment view","aaaaaaaaaaaaaaa fragment view called");
+
         RecipeFragmentBinding recipeFragmentBinding = DataBindingUtil.bind(rootView);
 
         //Handle Recycle View
@@ -57,9 +59,9 @@ public class RecipeListFragment extends Fragment {
         recipeFragmentBinding.recipeRecycleView.setItemAnimator(new DefaultItemAnimator());
         recipeFragmentBinding.recipeRecycleView.setAdapter(recipeRecycleView);
 
-
         mRecipeFragmentRetriever.getRecipesFromDatabase(UriController.getRecipeTableUri(), recipes -> {
             if(recipes.size() > 0){
+                Toast.makeText(getContext(), "data in database", Toast.LENGTH_SHORT).show();
                 recipeRecycleView.swap(recipes);
 
             }else{
@@ -79,6 +81,7 @@ public class RecipeListFragment extends Fragment {
                 networkHandler.execute();
             }
         });
+
         return rootView;
     }
 
@@ -101,28 +104,21 @@ public class RecipeListFragment extends Fragment {
         }
     }
 
-    public void applySaverSystem(SaverSystem saverSystem){
-        mSaverSystem = saverSystem;
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(mSaverSystem.ID, mSaverSystem.savedData());
+        outState.putInt("deo", 1);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        mSaverSystem = new SaverSystem(MainActivity.RECIPE_SAVER_SYSTEM_ID);
-        mSaverSystem.save(savedInstanceState != null ? savedInstanceState.getBundle(MainActivity.RECIPE_SAVER_SYSTEM_ID) : null);
+        if(getSaverSystem().savedData() != null)
+            Log.e("data aaaaaaaaaaaaaaa", "aaaaaaaaaaaaaaa " + getSaverSystem().savedData().getInt("deo"));
     }
 
     @Override
     public void onDestroyView() {
-        if(mSaverSystem != null){
-            //mSaverSystem.save();
-        }
         mRecipeFragmentRetriever.release();
         super.onDestroyView();
     }

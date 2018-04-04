@@ -111,7 +111,7 @@ public class DatabaseRetriever{
                     TOKEN,
                     null,
                     uri,
-                    Projection.STEP_PROJECTION,
+                    Projection.RECIPE_PROJECTION,
                     null,
                     null,
                     null

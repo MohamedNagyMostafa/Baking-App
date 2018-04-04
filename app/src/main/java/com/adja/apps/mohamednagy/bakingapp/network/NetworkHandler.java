@@ -33,9 +33,7 @@ public abstract class NetworkHandler {
 
     public void execute(){
         if(testNetwork()) {
-            Log.e("network", "run as well");
             Call<Recipe[]> call = mRecipeClient.recipesResponse();
-            Log.e("network", "start loading...");
 
             call.enqueue(new Callback<Recipe[]>() {
                 @Override
