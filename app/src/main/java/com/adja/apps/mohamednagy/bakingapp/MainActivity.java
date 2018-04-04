@@ -2,17 +2,17 @@ package com.adja.apps.mohamednagy.bakingapp;
 
 import android.databinding.DataBindingUtil;
 import android.os.PersistableBundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.NavigationBottomSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.GradientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
-import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String RECIPE_SAVER_SYSTEM_ID    = "recipe-sv";
     public static final String GRADIENT_SAVER_SYSTEM_ID  = "gradient-sv";
 
-    private static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem(RECIPE_SAVER_SYSTEM_ID);
+    public static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem(RECIPE_SAVER_SYSTEM_ID);
     private static final SaverSystem STEP_SAVER_SYSTEM     = new SaverSystem(STEP_SAVER_SYSTEM_ID);
     private static final SaverSystem GRADIENT_SAVER_SYSTEM = new SaverSystem(GRADIENT_SAVER_SYSTEM_ID);
 
@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        hideActionBar();
+
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
@@ -44,34 +46,45 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addFragmentsToNavigationSys(){
-        RecipeListFragment recipeListFragment = new RecipeListFragment();
-        StepFragment stepFragment             = new StepFragment();
-        GradientFragment gradientFragment     = new GradientFragment();
+        Log.e("add navigation sys", "data aaaaaaaaaaaaaaa");
+        final RecipeListFragment recipeListFragment = new RecipeListFragment();
+        final StepFragment stepFragment             = new StepFragment();
+        final GradientFragment gradientFragment     = new GradientFragment();
 
         final Integer HOME_NAV    = R.id.home_nav;
         final Integer STEP_NAV    = R.id.step_nav;
         final Integer GRADIENT_NV = R.id.gradient_nav;
 
-        final NavigationBottomSystem.FragmentNav RECIPE_FRAGMENT_NAV =
-                new NavigationBottomSystem.FragmentNav(HOME_NAV, recipeListFragment, RECIPE_SAVER_SYSTEM ,RECIPE_FRAGMENT_TAG);
-        final NavigationBottomSystem.FragmentNav STEP_FRAGMENT_NAV =
-                new NavigationBottomSystem.FragmentNav(STEP_NAV, stepFragment, STEP_SAVER_SYSTEM, STEP_FRAGMENT_TAG);
-        final NavigationBottomSystem.FragmentNav GRADIENT_FRAGMENT_NAV = new
-                NavigationBottomSystem.FragmentNav(GRADIENT_NV, gradientFragment, GRADIENT_SAVER_SYSTEM, GRADIENT_FRAGMENT_TAG);
-        // Test block
+        // Connect with Navigation Sys.
+        recipeListFragment.addListener(mNavigationBottomSystem);
+        gradientFragment.addListener(mNavigationBottomSystem);
+        stepFragment.addListener(mNavigationBottomSystem);
+        // Add Data Saver Sys.
+        recipeListFragment.addSaverSystem(RECIPE_SAVER_SYSTEM);
+        gradientFragment.addSaverSystem(STEP_SAVER_SYSTEM);
+        stepFragment.addSaverSystem(GRADIENT_SAVER_SYSTEM);
+        // Navigation Item
+        recipeListFragment.setNavigationItem(HOME_NAV);
+        gradientFragment.setNavigationItem(GRADIENT_NV);
+        stepFragment.setNavigationItem(STEP_NAV);
+
+        mNavigationBottomSystem.put(recipeListFragment, RECIPE_FRAGMENT_TAG);
+        mNavigationBottomSystem.put(gradientFragment, GRADIENT_FRAGMENT_TAG);
+        mNavigationBottomSystem.put(stepFragment, STEP_FRAGMENT_TAG);
+
         {
-            Bundle b = new Bundle();
-            b.putLong(Extras.StepFragmentData.RECIPE_ID, 2);
-            STEP_SAVER_SYSTEM.save(b);
+            NavigationBottomSystem.FragmentIntent fragmentIntent =
+                    new NavigationBottomSystem.FragmentIntent(RecipeListFragment.class);
+
+            mNavigationBottomSystem.startFragment(fragmentIntent);
+
         }
+    }
 
-        recipeListFragment.applySaverSystem(RECIPE_SAVER_SYSTEM);
-        gradientFragment.applySaverSystem(GRADIENT_SAVER_SYSTEM);
-        stepFragment.applySaverSystem(STEP_SAVER_SYSTEM);
-
-        mNavigationBottomSystem.put(RECIPE_FRAGMENT_NAV);
-        mNavigationBottomSystem.put(STEP_FRAGMENT_NAV);
-        mNavigationBottomSystem.put(GRADIENT_FRAGMENT_NAV);
+    private void hideActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null)
+            actionBar.hide();
     }
 
     //    @Override
@@ -97,27 +110,24 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
-        GRADIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(GRADIENT_SAVER_SYSTEM.ID));
-        RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
-    }
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        Log.e("data restore activity","data aaaaaaaaaaaaaaa save fragment");
+//        STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
+//        GRADIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(GRADIENT_SAVER_SYSTEM.ID));
+//        RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
+//    }
+//
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
+//        outState.putBundle(GRADIENT_SAVER_SYSTEM.ID, GRADIENT_SAVER_SYSTEM.savedData());
+//        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
+//        Log.e("data save activity","data aaaaaaaaaaaaaaa save fragment");
+//
+//        super.onSaveInstanceState(outState);
+//    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
-        outState.putBundle(GRADIENT_SAVER_SYSTEM.ID, GRADIENT_SAVER_SYSTEM.savedData());
-        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
-
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState, PersistableBundle outPersistentState) {
-
-        super.onSaveInstanceState(savedInstanceState, outPersistentState);
-    }
 
 }

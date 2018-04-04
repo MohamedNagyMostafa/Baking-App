@@ -21,14 +21,13 @@ import com.adja.apps.mohamednagy.bakingapp.databinding.StepFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.media.Media;
 import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
-import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
+import com.adja.apps.mohamednagy.bakingapp.ui.adapter.stepper.StepperRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 3/27/2018 .
@@ -36,7 +35,7 @@ import java.util.List;
  * Time    3:53 PM
  */
 
-public class StepFragment extends Fragment implements StepperSystem.OnCurrentStepViewListener {
+public class StepFragment extends FragmentNav implements StepperSystem.OnCurrentStepViewListener {
     // Media
     private Media         mMedia;
     // Current time of the running video.
@@ -46,9 +45,6 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     // Save system to handle saving data
     // during rotation and moving through
     // others fragments.
-    private SaverSystem   mSaverSystem;
-    // Handle moving through steps and
-    // set the right state of the recipe steps.
     private StepperSystem mStepperSystem;
     // Handle retrieving data from database on
     // isolated thread.
@@ -68,49 +64,29 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.step_fragment, container, false);
 
-        // Handle fragment orientation.
-        if(savedInstanceState != null){
-            mSaverSystem = new SaverSystem(MainActivity.STEP_SAVER_SYSTEM_ID);
-            Bundle bundle = savedInstanceState.getBundle(MainActivity.STEP_SAVER_SYSTEM_ID);
-            mSaverSystem.save(bundle);
-        }
-
-        // Retrieve data from database.
-        // Handle fragment swap.
-        if(mSaverSystem.savedData() != null){
-            mRecipeId      = mSaverSystem.savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
-            mMediaPosition = mSaverSystem.savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-        }
-
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
 
+        mRecipeId = getSavedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+
         // Get data from database.
-        if(mRecipeId != null)
-            mStepFragmentRetriever.getStepsFromDatabase(
-                    UriController.getStepTableUriByRecipeId(mRecipeId),
-                    steps -> {
+        mStepFragmentRetriever.getStepsFromDatabase(
+                UriController.getStepTableUriByRecipeId(mRecipeId),
+                steps -> {
 
-                            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
-                            StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
-                            // Add Recycle View to Stepper System
-                            // To Handle Stepper Process.
-                            mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
-                                    layoutManager,StepFragment.this );
+                    StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
+                    // Add Recycle View to Stepper System
+                    // To Handle Stepper Process.
+                    mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
+                            layoutManager,StepFragment.this );
 
-                            // Handle rotation
-                            {
-                                Integer currentActiveStep = mSaverSystem.savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
-                                // return zero if there's no value exist.
-                                mStepperSystem.setCurrentActiveStepPosition(currentActiveStep);
-                            }
-
-                            stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
-                            stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
-                            stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
-                        }
-            );
+                    stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
+                    stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
+                    stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
+                }
+        );
 
         return rootView;
     }
@@ -164,24 +140,23 @@ public class StepFragment extends Fragment implements StepperSystem.OnCurrentSte
         }
         return newDescription.trim();
     }
-    // Apply Save System to save data during fragment swap.
-    public void applySaverSystem(SaverSystem saverSystem){
-        mSaverSystem = saverSystem;
-    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(mSaverSystem.ID, getSavedData());
+        outState.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
+
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onDestroyView() {
-        if(mSaverSystem != null){
-            mSaverSystem.save(getSavedData());
-        }
-        super.onDestroyView();
-    }
+//    @Override
+//    public void onDestroyView() {
+//        if(mSaverSystem != null){
+//            mSaverSystem.save(getSavedData());
+//        }
+//
+//        mStepFragmentRetriever.release();
+//        super.onDestroyView();
+//    }
 
     public Bundle getSavedData(){
         Bundle bundle = new Bundle();

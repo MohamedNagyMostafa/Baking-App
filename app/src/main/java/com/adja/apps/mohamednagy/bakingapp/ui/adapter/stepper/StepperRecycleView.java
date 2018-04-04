@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.ui.stepper;
+package com.adja.apps.mohamednagy.bakingapp.ui.adapter.stepper;
 
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;

@@ -13,4 +13,7 @@
     <!-- Step View Strings -->
     <string name="pre_btn">Cancel</string>
     <string name="next_btn">Continue</string>
+
+    <!-- Recipe View Strings -->
+    <string name="serving">Serving</string>
 </resources>

@@ -8,7 +8,8 @@ import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
-import com.adja.apps.mohamednagy.bakingapp.ui.stepper.StepperRecycleView;
+import com.adja.apps.mohamednagy.bakingapp.ui.adapter.stepper.StepperRecycleView;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 
 /**
  * Created by Mohamed Nagy on 3/29/2018 .

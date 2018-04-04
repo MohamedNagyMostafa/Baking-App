@@ -11,6 +11,9 @@ import android.support.annotation.NonNull;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
+import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
+import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
+import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.model.Step;
 
 import java.util.ArrayList;
@@ -86,6 +89,109 @@ public class DatabaseRetriever{
          */
         public interface OnCompletedListener{
             void onCompleted(List<Step> steps);
+        }
+    }
+    /**
+     * Retrieval system for recipe fragment.
+     */
+    public static class RecipeFragmentRetriever extends AsyncQueryHandler{
+        private static final int TOKEN = 0x01B;
+
+        private OnCompletedListener mOnCompletedListener;
+
+        public RecipeFragmentRetriever(ContentResolver contentResolver) {
+            super(contentResolver);
+        }
+
+        // Retrieve all recipes.
+        public synchronized void getRecipesFromDatabase(Uri uri, @NonNull OnCompletedListener onCompletedListener){
+            mOnCompletedListener = onCompletedListener;
+
+            startQuery(
+                    TOKEN,
+                    null,
+                    uri,
+                    Projection.RECIPE_PROJECTION,
+                    null,
+                    null,
+                    null
+            );
+
+        }
+
+        // Insert recipes
+        public synchronized void insertRecipesToDatabase(Uri uri, List<Recipe> recipes){
+            for(Recipe recipe: recipes){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DbContent.Recipe.RECIPE_NAME_COLUMN, recipe.getName());
+                contentValues.put(DbContent.Recipe.RECIPE_IMAGE_COLUMN, recipe.getImageURL());
+                contentValues.put(DbContent.Recipe.RECIPE_SERVING_COLUMN, recipe.getServings());
+                startInsert(TOKEN, null, uri, contentValues);
+            }
+        }
+
+        // Insert steps
+        public synchronized void insertStepsToDatabase(Uri uri, List<Step> steps, long recipeId){
+            for(Step step: steps){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DbContent.Step.STEP_RECIPE_ID_COLUMN, recipeId);
+                contentValues.put(DbContent.Step.STEP_VIDEO_URL_COLUMN, step.getVideoLink());
+                contentValues.put(DbContent.Step.STEP_THUMBNAIL_COLUMN, step.getThumbnailURL());
+                contentValues.put(DbContent.Step.STEP_DESCRIPTION_COLUMN, step.getDescription());
+                contentValues.put(DbContent.Step.STEP_SHORT_DESCRIPTION_COLUMN, step.getShortDescription());
+
+                startInsert(TOKEN, null, uri, contentValues);
+            }
+        }
+
+        // Insert gradient
+        public synchronized void insertIngredientToDatabase(Uri uri, List<Ingredient> ingredients, long recipeId){
+            for(Ingredient ingredient: ingredients){
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(DbContent.Ingredient.INGREDIENT_RECIPE_ID_COLUMN, recipeId);
+                contentValues.put(DbContent.Ingredient.INGREDIENT_MEASURE_COLUMN, ingredient.getMeasure());
+                contentValues.put(DbContent.Ingredient.INGREDIENT_COLUMN, ingredient.getIngredient());
+                contentValues.put(DbContent.Ingredient.INGREDIENT_QUANTITY_COLUMN, ingredient.getQuantity());
+
+                startInsert(TOKEN, null, uri, contentValues);
+            }
+        }
+
+        @Override
+        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            List<Recipe> recipes = new ArrayList<>();
+
+            if(cursor != null) {
+                while (cursor.moveToNext()) {
+                    Recipe recipe = new Recipe(
+                            cursor.getLong(Projection.RECIPE_ID_COLUMN),
+                            cursor.getString(Projection.RECIPE_NAME_COLUMN),
+                            null,
+                            null,
+                            cursor.getInt(Projection.RECIPE_SERVING_COLUMN),
+                            cursor.getString(Projection.RECIPE_IMAGE_COLUMN)
+                    );
+                    recipes.add(recipe);
+                }
+
+                cursor.close();
+            }
+            if(mOnCompletedListener != null)
+                mOnCompletedListener.onCompleted(recipes);
+        }
+
+        /**
+         * Stop Any Working Operation.
+         */
+        public void release(){
+            cancelOperation(TOKEN);
+        }
+
+        /**
+         * Called when operation is completed.
+         */
+        public interface OnCompletedListener{
+            void onCompleted(List<Recipe> recipes);
         }
     }
 }
