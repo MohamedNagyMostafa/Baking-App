@@ -67,7 +67,11 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
 
-        mRecipeId = getSavedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+        mRecipeId = getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+
+        if(savedInstanceState != null) {
+            mMediaPosition = savedInstanceState.getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
+        }
 
         // Get data from database.
         mStepFragmentRetriever.getStepsFromDatabase(
@@ -81,7 +85,10 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     // To Handle Stepper Process.
                     mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
                             layoutManager,StepFragment.this );
-
+                    // Set Active Step (When rotation is happened).
+                    {
+                        mStepperSystem.setCurrentActiveStepPosition(savedInstanceState != null ? savedInstanceState.getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION) : 0);
+                    }
                     stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
                     stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
                     stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
@@ -143,26 +150,20 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
-
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(getSavedData());
     }
 
-//    @Override
-//    public void onDestroyView() {
-//        if(mSaverSystem != null){
-//            mSaverSystem.save(getSavedData());
-//        }
-//
-//        mStepFragmentRetriever.release();
-//        super.onDestroyView();
-//    }
+    @Override
+    public void onDestroyView() {
+        getSaverSystem().save(getSavedData());
+        super.onDestroyView();
+    }
 
     public Bundle getSavedData(){
         Bundle bundle = new Bundle();
         bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
         bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
-        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition);
+        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
 
         return bundle;
     }

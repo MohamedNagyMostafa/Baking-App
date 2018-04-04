@@ -131,10 +131,7 @@ public class RecipeListFragment extends FragmentNav {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, (mCurrentSelectedRecipe!= null)?mCurrentSelectedRecipe: SelectedSystem.DEFAULT_SELECTED_ID);
-        outState.putParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION, mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onSaveInstanceState());
-
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(getSavedData());
     }
 
     @Override
