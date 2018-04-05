@@ -1,6 +1,7 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
 import android.databinding.DataBindingUtil;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -78,6 +79,25 @@ public class MainActivity extends AppCompatActivity {
             mNavigationBottomSystem.startFragment(fragmentIntent);
 
         }
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
+        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
+        outState.putBundle(INGREDIENT_SAVER_SYSTEM.ID, INGREDIENT_SAVER_SYSTEM.savedData());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
+            RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
+            INGREDIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(INGREDIENT_SAVER_SYSTEM.ID));
+        }
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     private void hideActionBar(){
