@@ -13,4 +13,11 @@
     <color name="colorStartShadow">@color/colorIcon</color>
     <color name="colorEndShadow">@color/colorDivider</color>
 
+    <color name="colorIngredientCUP">#F44336</color>
+    <color name="colorIngredientTSP">#9C27B0</color>
+    <color name="colorIngredientTBLSP">#E91E63</color>
+    <color name="colorIngredientK">#3F51B5</color>
+    <color name="colorIngredientG">#2196F3</color>
+    <color name="colorIngredientOZ">#FF9800</color>
+    <color name="colorIngredientUNIT">#4CAF50</color>
 </resources>
