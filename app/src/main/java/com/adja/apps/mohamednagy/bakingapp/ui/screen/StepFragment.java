@@ -70,9 +70,9 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
 
-        mMediaPosition     = getSaverSystem().savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-        mRecipeId          = getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
-        mCurrentActiveStep = getSaverSystem().savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+        mMediaPosition     = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
+        mRecipeId          = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
+        mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
 
         // Get data from database.
         mStepFragmentRetriever.getStepsFromDatabase(
@@ -169,6 +169,16 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
 
         return bundle;
+    }
+
+    private Bundle getPreviousState(Bundle saveInstanceState){
+        if(saveInstanceState == null){
+            // swap through fragments
+            return getSaverSystem().savedData();
+        }else{
+            // Rotation
+            return saveInstanceState;
+        }
     }
 
 }

@@ -44,7 +44,7 @@ public class IngredientFragment extends FragmentNav {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.ingredient_fragment, container, false);
 
-        mRecipeId = getSaverSystem().savedData().getLong(Extras.IngredientData.RECIPE_ID);
+        mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.IngredientData.RECIPE_ID);
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle ListView
@@ -93,6 +93,14 @@ public class IngredientFragment extends FragmentNav {
                 mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
 
         return bundle;
+    }
+
+    private Bundle getPreviousState(Bundle saveInstanceState){
+        if(saveInstanceState == null){
+            return getSaverSystem().savedData();
+        }else{
+            return saveInstanceState;
+        }
     }
 }
 

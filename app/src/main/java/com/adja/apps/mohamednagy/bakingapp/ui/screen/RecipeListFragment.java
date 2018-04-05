@@ -52,11 +52,10 @@ public class RecipeListFragment extends FragmentNav {
         View rootView = inflater.inflate(R.layout.recipe_fragment, container, false);
 
         mRecipeFragmentBinding = DataBindingUtil.bind(rootView);
-
-        // Handle Rotation.
-        if(getSaverSystem().savedData() != null)
-            mCurrentSelectedRecipe = getSaverSystem().savedData().getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
-
+        // Handle Rotation or Swap Through Fragments.
+        Bundle bundle = getPreviousState(savedInstanceState);
+        mCurrentSelectedRecipe =  bundle == null?0L:bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
+        
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecipeRecycleView recipeRecycleView      = new RecipeRecycleView(null, getContext());
@@ -83,6 +82,7 @@ public class RecipeListFragment extends FragmentNav {
             if(recipes.size() > 0){
                 Toast.makeText(getContext(), "data in database", Toast.LENGTH_SHORT).show();
                 recipeRecycleView.swap(recipes);
+
                 // Handle scroll rotation.
                 mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
                         getSaverSystem().savedData() != null ? getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION) : null);
@@ -96,7 +96,7 @@ public class RecipeListFragment extends FragmentNav {
                         insertDataToDatabase(Arrays.asList(recipes));
                         // Handle scroll rotation.
                         mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                                savedInstanceState != null ? savedInstanceState.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION) : null);
+                                getPreviousState(savedInstanceState).getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION));
                     }
 
                     @Override
@@ -172,6 +172,16 @@ public class RecipeListFragment extends FragmentNav {
     // Set current selected recipe to ingredient saver system.
     private void updateIngredientRecipe(){
         new NavigationBottomSystem.FragmentIntent(IngredientFragment.class).putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
+    }
+
+    private Bundle getPreviousState(Bundle saveInstanceState){
+        if(saveInstanceState != null){
+            return saveInstanceState;
+        }else if(getSaverSystem().savedData() != null){
+            return getSaverSystem().savedData();
+        }else{
+            return null;
+        }
     }
 
 }

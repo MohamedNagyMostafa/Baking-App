@@ -44,7 +44,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/quantityNumber"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="dasdasdasdadsdasdasdasdadsdasdasdasdads" />
+            tools:text="Ingredient Name" />
 
         <TextView
             android:id="@+id/textView"
