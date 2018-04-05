@@ -17,13 +17,15 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
  * Created by Mohamed Nagy on 3/27/2018.
  */
 
-public class GradientFragment extends FragmentNav {
+public class IngredientFragment extends FragmentNav {
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("view","called21");
-        return inflater.inflate(R.layout.gradient_fragment, container, false);
+        View rootView =  inflater.inflate(R.layout.ingredient_fragment, container, false);
+
+        return rootView;
     }
 
 

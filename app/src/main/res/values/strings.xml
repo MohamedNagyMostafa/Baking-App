@@ -16,4 +16,15 @@
 
     <!-- Recipe View Strings -->
     <string name="serving">Serving</string>
+    
+    <!-- Ingredient Strings -->
+    <string name="measure_unit_text">Measure Unit</string>
+    <string name="measure_g">G</string>
+    <string name="measure_k">K</string>
+    <string name="measure_cup">Cup</string>
+    <string name="measure_unit">Unit</string>
+    <string name="measure_tsp">TSP</string>
+    <string name="measure_tblsp">TBLSP</string>
+    <string name="measure_oz">OZ</string>
+
 </resources>

@@ -7,7 +7,7 @@
         android:layout_height="wrap_content">
 
         <View
-            android:id="@+id/relativeLayout2"
+            android:id="@+id/measureUnitCircle"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/ingredient_cup_circle"
@@ -64,7 +64,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/ingredientName"
             app:layout_constraintTop_toBottomOf="@+id/ingredientName"
-            tools:text="Measure unit" />
+            android:text="@string/measure_unit_text" />
 
         <TextView
             android:id="@+id/textView"
