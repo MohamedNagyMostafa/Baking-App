@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
         outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
         outState.putBundle(INGREDIENT_SAVER_SYSTEM.ID, INGREDIENT_SAVER_SYSTEM.savedData());
+        mNavigationBottomSystem.onSaveViewInstance(outState);
     }
 
     @Override
@@ -96,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
             STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
             RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
             INGREDIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(INGREDIENT_SAVER_SYSTEM.ID));
+
+            mNavigationBottomSystem.onRestoreViewInstance(savedInstanceState);
         }
         super.onRestoreInstanceState(savedInstanceState);
     }

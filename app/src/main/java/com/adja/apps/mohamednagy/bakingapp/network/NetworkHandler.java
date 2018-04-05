@@ -21,7 +21,7 @@ public abstract class NetworkHandler {
     private RecipeClient mRecipeClient;
     private Context mContext;
 
-    public NetworkHandler(Context context){
+    protected NetworkHandler(Context context){
         mContext = context;
         init();
     }
@@ -64,6 +64,14 @@ public abstract class NetworkHandler {
             PermissionHandler.askPermission(mContext, PermissionHandler.ACCESS_INTERNET_STATE, PermissionHandler.INTERNET_PERMISSION);
         }
         return false;
+    }
+
+    /**
+     * Notify Network Process error.
+     * @param msg   error message
+     */
+    public void notifyError(String msg){
+        onFailure(msg);
     }
 
     protected abstract void onPostExecute(Recipe[] recipes);

@@ -10,6 +10,8 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -86,6 +88,16 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
         loadFragment(fragmentIntent.mFragmentNavHolder);
     }
 
+    public void onSaveViewInstance(Bundle saveInstance){
+        saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, mBottomNavigationView.getSelectedItemId());
+    }
+
+    public void onRestoreViewInstance(Bundle saveInstance){
+        mBottomNavigationView.setSelectedItemId(
+                saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM)
+        );
+
+    }
 
     /**
      * Class used to move through navigation bar fragments

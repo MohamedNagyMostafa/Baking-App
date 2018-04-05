@@ -23,4 +23,8 @@ public class Extras {
         public static final String RECIPE_ID = StepFragmentData.RECIPE_ID;
         public static final String INGREDIENT_LIST_SCROLL_POSITION = "ingredient_list_pos";
     }
+
+    public static class NavigationSystemData{
+        public static final String SELECTED_NAVIGATION_BOTTOM_ITEM = "nav_item";
+    }
 }

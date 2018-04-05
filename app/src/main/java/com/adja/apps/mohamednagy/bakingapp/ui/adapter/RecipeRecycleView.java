@@ -65,7 +65,6 @@ public class RecipeRecycleView extends RecyclerView.Adapter<RecipeRecycleView.Re
         Recipe recipe = mRecipes.get(position);
 
         holder.RECIPE_VIEW.recipeName.setText(recipe.getName());
-        holder.RECIPE_VIEW.recipeNameShadow.setText(recipe.getName());
         holder.RECIPE_VIEW.servings.setText(String.valueOf(recipe.getServings()));
 
         mSelectedSys.checkSelected(recipe.getId(), holder.RECIPE_VIEW.horizontalDividerLineLeft, mContext);

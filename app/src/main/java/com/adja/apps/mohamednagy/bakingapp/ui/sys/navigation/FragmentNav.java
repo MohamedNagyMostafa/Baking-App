@@ -11,9 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 /**
  * Class to hold fragments which will be showed by navigation bar
@@ -62,8 +64,9 @@ public class FragmentNav extends Fragment {
     // Orientation
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, outState);
+        outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, getSaverSystem().savedData());
         outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
+        Log.e("saveeeeeeeed data"," fragment save " + outState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID));
         super.onSaveInstanceState(outState);
     }
 
@@ -71,6 +74,8 @@ public class FragmentNav extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
+            Log.e("saveeeeeeeed data"," fragment retore " + savedInstanceState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID));
+            Toast.makeText(getContext(), String.valueOf(savedInstanceState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID)), Toast.LENGTH_SHORT).show();
             Bundle dataSaverBundle = savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_BUNDLE);
             String dataSaverId     = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
 

@@ -1,9 +1,12 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
 
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +21,7 @@ import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
 import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
+import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
@@ -39,6 +43,7 @@ public class RecipeListFragment extends FragmentNav {
     private DatabaseRetriever.RecipeFragmentRetriever mRecipeFragmentRetriever;
     private RecipeFragmentBinding                     mRecipeFragmentBinding;
     private Long                                      mCurrentSelectedRecipe;
+    private NetworkHandler                            mNetworkHandler;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,8 +59,8 @@ public class RecipeListFragment extends FragmentNav {
         mRecipeFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle Rotation or Swap Through Fragments.
         Bundle bundle = getPreviousState(savedInstanceState);
-        mCurrentSelectedRecipe =  bundle == null?0L:bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
-        
+        mCurrentSelectedRecipe =  bundle == null?1L:bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
+//        Toast.makeText(getContext(), String.valueOf(mCurrentSelectedRecipe), Toast.LENGTH_LONG).show();
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecipeRecycleView recipeRecycleView      = new RecipeRecycleView(null, getContext());
@@ -80,31 +85,42 @@ public class RecipeListFragment extends FragmentNav {
 
         mRecipeFragmentRetriever.getRecipesFromDatabase(UriController.getRecipeTableUri(), recipes -> {
             if(recipes.size() > 0){
-                Toast.makeText(getContext(), "data in database", Toast.LENGTH_SHORT).show();
                 recipeRecycleView.swap(recipes);
-
+                mRecipeFragmentBinding.emptyView.setVisibility(View.GONE);
                 // Handle scroll rotation.
-                mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                        getSaverSystem().savedData() != null ? getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION) : null);
+                if(bundle != null){
+                    Snackbar.make(mRecipeFragmentBinding.getRoot(), "scroll", Snackbar.LENGTH_LONG).show();
+                    mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
+                            bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
+                    );
+                }
 
             }else{
-                NetworkHandler networkHandler = new NetworkHandler(getContext()) {
+                mNetworkHandler = new NetworkHandler(getContext()) {
                     @Override
                     protected void onPostExecute(Recipe[] recipes) {
                         recipeRecycleView.swap(Arrays.asList(recipes));
                         // Save data.
                         insertDataToDatabase(Arrays.asList(recipes));
                         // Handle scroll rotation.
-                        mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                                getPreviousState(savedInstanceState).getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION));
+                        if(bundle != null){
+                            mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
+                                    bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
+                            );
+                        }
+
                     }
 
                     @Override
                     protected void onFailure(String message) {
-
+                        Snackbar.make(mRecipeFragmentBinding.getRoot(), message, Snackbar.LENGTH_INDEFINITE)
+                                .setAction(getString(R.string.retry_action), view -> {
+                                    this.execute();
+                                }).show();
+                        mRecipeFragmentBinding.emptyView.setVisibility(View.VISIBLE);
                     }
                 };
-                networkHandler.execute();
+                mNetworkHandler.execute();
             }
         });
 
@@ -132,18 +148,26 @@ public class RecipeListFragment extends FragmentNav {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        getSaverSystem().save(getSavedData());
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(getSavedData(outState));
     }
 
     @Override
     public void onDestroyView() {
         mRecipeFragmentRetriever.release();
+        getSaverSystem().save(getSavedData());
         super.onDestroyView();
     }
 
     private Bundle getSavedData(){
         Bundle bundle = new Bundle();
+        bundle.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, mCurrentSelectedRecipe != null ?mCurrentSelectedRecipe: SelectedSystem.DEFAULT_SELECTED_ID);
+        bundle.putParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION,
+                mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onSaveInstanceState()
+        );
+
+        return bundle;
+    }
+    private Bundle getSavedData(Bundle bundle){
         bundle.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, mCurrentSelectedRecipe != null ?mCurrentSelectedRecipe: SelectedSystem.DEFAULT_SELECTED_ID);
         bundle.putParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION,
                 mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onSaveInstanceState()
@@ -175,13 +199,21 @@ public class RecipeListFragment extends FragmentNav {
     }
 
     private Bundle getPreviousState(Bundle saveInstanceState){
-        if(saveInstanceState != null){
-            return saveInstanceState;
-        }else if(getSaverSystem().savedData() != null){
-            return getSaverSystem().savedData();
-        }else{
-            return null;
-        }
+        return saveInstanceState == null? getSaverSystem().savedData() :saveInstanceState;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case PermissionHandler.REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    mNetworkHandler.execute();
+                }else{
+                    mNetworkHandler.notifyError(getString(R.string.permission_denied));
+                }
+
+        }
+    }
 }
