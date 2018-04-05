@@ -15,7 +15,7 @@ public class Recipe {
     private long mId;
     @SerializedName("name")
     private String mName;
-    @SerializedName("ingedients")
+    @SerializedName("ingredients")
     private List<Ingredient> mIngredients;
     @SerializedName("steps")
     private List<Step> mSteps;

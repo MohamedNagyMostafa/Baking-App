@@ -8,8 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 
+import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -57,15 +57,16 @@ public class Media{
         prepareMediaPlayer();
     }
 
-
     public void play(){
-        if(mAudioFocusSystem.getState() != AudioFocusSystem.GAINED)
+        if(mAudioFocusSystem != null && mAudioFocusSystem.getState() != AudioFocusSystem.GAINED)
             mAudioFocusSystem.run();
-        mSimpleExoPlayer.setPlayWhenReady(true);
+        else
+            mSimpleExoPlayer.setPlayWhenReady(true);
     }
 
     public void pause(){
-        mSimpleExoPlayer.setPlayWhenReady(false);
+        if(mSimpleExoPlayer != null)
+            mSimpleExoPlayer.setPlayWhenReady(false);
     }
 
     public void release(){
@@ -87,7 +88,8 @@ public class Media{
      * Attach MediaFocusSystem to media
      */
     private void prepareMediaFocus(){
-        mAudioFocusSystem.setMedia(this);
+        if(mAudioFocusSystem != null)
+            mAudioFocusSystem.setMedia(this);
     }
 
     /**
@@ -121,9 +123,6 @@ public class Media{
             @Override
             public void onStateChanged(boolean isPlaying) {
                 mSimpleExoPlayer.setPlayWhenReady(isPlaying);
-                Log.e("session changed","aaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
-
             }
         });
     }
@@ -139,6 +138,14 @@ public class Media{
         );
         mSimpleExoPlayer.prepare(mediaSource);
         mMediaSessionController.start();
+    }
+
+    public long getCurrentMediaPosition(){
+        return mSimpleExoPlayer.getCurrentPosition();
+    }
+
+    public void setCurrentMediaPosition(long position){
+        mSimpleExoPlayer.seekTo(position);
     }
 
     public static class Builder{
@@ -168,7 +175,7 @@ public class Media{
             return this;
         }
 
-        public Builder mediaStateListener(@NonNull OnMediaStateChanged onMediaStateChanged){
+        public Builder mediaStateListener(@Nullable OnMediaStateChanged onMediaStateChanged){
             mOnMediaStateChanged = onMediaStateChanged;
             return this;
         }

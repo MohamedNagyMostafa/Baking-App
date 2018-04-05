@@ -2,6 +2,7 @@ package com.adja.apps.mohamednagy.bakingapp.network;
 
 import android.content.Context;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
@@ -33,6 +34,7 @@ public abstract class NetworkHandler {
     public void execute(){
         if(testNetwork()) {
             Call<Recipe[]> call = mRecipeClient.recipesResponse();
+
             call.enqueue(new Callback<Recipe[]>() {
                 @Override
                 public void onResponse(Call<Recipe[]> call, Response<Recipe[]> response) {
@@ -45,6 +47,8 @@ public abstract class NetworkHandler {
                     NetworkHandler.this.onFailure(t.getMessage());
                 }
             });
+        }else{
+            Log.e("network","not exist");
         }
     }
 

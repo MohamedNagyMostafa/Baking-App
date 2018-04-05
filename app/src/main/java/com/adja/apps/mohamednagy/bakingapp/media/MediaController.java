@@ -33,22 +33,23 @@ public abstract class MediaController implements ExoPlayer.EventListener {
     }
 
     private void handleMediaListener(boolean playWhenReady, int playbackState){
-        assert mOnMediaStateChanged != null;
+        if(mOnMediaStateChanged != null) {
 
-        Media.State state = Media.State.NO_ACTION;
-        switch (playbackState){
-            case ExoPlayer.STATE_ENDED:
-                state = Media.State.ENDED;
-                break;
-            case ExoPlayer.STATE_IDLE:
-                state = Media.State.IDLE;
-                break;
-            case ExoPlayer.STATE_READY:
-                state = Media.State.READY;
-                break;
+            Media.State state = Media.State.NO_ACTION;
+            switch (playbackState) {
+                case ExoPlayer.STATE_ENDED:
+                    state = Media.State.ENDED;
+                    break;
+                case ExoPlayer.STATE_IDLE:
+                    state = Media.State.IDLE;
+                    break;
+                case ExoPlayer.STATE_READY:
+                    state = Media.State.READY;
+                    break;
+            }
+
+            mOnMediaStateChanged.onStateChanged(state, playWhenReady);
         }
-
-        mOnMediaStateChanged.onStateChanged(state, playWhenReady);
     }
 
     /**

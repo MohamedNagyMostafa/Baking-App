@@ -79,6 +79,10 @@ public class ContentProviderDatabase extends ContentProvider{
                         null,
                         sortOrder
                 );
+            case DbUriMatcher.STEP_RECIPE_ID:
+                return getStepByRecipeId(uri, projection);
+            case DbUriMatcher.INGREDIENT_RECIPE_ID:
+                return getIngredientByRecipeId(uri, projection);
             default:
                 throw new UnsupportedOperationException("Unknown Uri : " + uri);
         }
@@ -216,5 +220,41 @@ public class ContentProviderDatabase extends ContentProvider{
         }
 
         return values.length;
+    }
+
+    private Cursor getStepByRecipeId(Uri uri, String[] projection){
+        long recipeId = ContentUris.parseId(uri);
+        String selection = DbContent.Step.STEP_RECIPE_ID_COLUMN + "=?";
+        String[] selectionArgs = {
+                String.valueOf(recipeId)
+        };
+
+        return mDbHelper.getReadableDatabase().query(
+                DbContent.Step.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+    }
+
+    private Cursor getIngredientByRecipeId(Uri uri, String[] projection){
+        long recipeId = ContentUris.parseId(uri);
+        String selection = DbContent.Ingredient.INGREDIENT_RECIPE_ID_COLUMN + "=?";
+        String[] selectionArgs = {
+                String.valueOf(recipeId)
+        };
+
+        return mDbHelper.getReadableDatabase().query(
+                DbContent.Ingredient.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
     }
 }
