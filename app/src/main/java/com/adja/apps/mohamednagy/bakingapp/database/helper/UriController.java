@@ -36,6 +36,13 @@ public class UriController {
                 .build();
     }
 
+    public static Uri getIngredientTableUriByRecipeId(long id){
+        return INGREDIENT_TABLE_URI.buildUpon()
+                .appendPath(DbContent.Recipe.TABLE_NAME)
+                .appendPath(String.valueOf(id))
+                .build();
+    }
+
     public static Uri getRecipeStepIngredientJoinUri(){
         return RECIPE_TABLE_URI.buildUpon().appendPath(DbContent.Step.TABLE_NAME)
                 .appendPath(DbContent.Ingredient.TABLE_NAME).build();

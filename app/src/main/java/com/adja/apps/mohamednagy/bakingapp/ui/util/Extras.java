@@ -18,4 +18,9 @@ public class Extras {
         public static final String SELECTED_RECIPE_ID             = "recipe_selected_id";
         public static final String RECIPE_RECYCLE_SCROLL_POSITION = "recipe_recycle_pos";
     }
+
+    public static class IngredientData{
+        public static final String RECIPE_ID = StepFragmentData.RECIPE_ID;
+        public static final String INGREDIENT_LIST_SCROLL_POSITION = "ingredient_list_pos";
+    }
 }

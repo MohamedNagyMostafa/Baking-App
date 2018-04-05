@@ -27,6 +27,69 @@ import java.util.List;
 
 public class DatabaseRetriever{
     /**
+     * Retrieval system for ingredient fragment.
+     */
+    public static class IngredientFragmentRetriever extends AsyncQueryHandler{
+        private static final int TOKEN = 0x01C;
+
+        private OnCompletedListener mOnCompletedListener;
+
+        public IngredientFragmentRetriever(ContentResolver contentResolver) {
+            super(contentResolver);
+        }
+
+        // Retrieve Ingredients for specific recipe.
+        public synchronized void getIngredientFromDatabase(Uri uri, @NonNull OnCompletedListener onCompletedListener){
+            mOnCompletedListener = onCompletedListener;
+
+            startQuery(
+                    TOKEN,
+                    null,
+                    uri,
+                    Projection.INGREDIENT_PROJECTION,
+                    null,
+                    null,
+                    null
+            );
+
+        }
+
+        @Override
+        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            List<Ingredient> ingredients = new ArrayList<>();
+
+            assert cursor != null;
+            while(cursor.moveToNext()){
+                Ingredient ingredient = new Ingredient(
+                        cursor.getInt(Projection.INGREDIENT_QUANTITY_COLUMN),
+                        cursor.getString(Projection.INGREDIENT_MEASURE_COLUMN),
+                        cursor.getString(Projection.INGREDIENT_COLUMN)
+                );
+
+                ingredients.add(ingredient);
+            }
+
+            cursor.close();
+
+            if(mOnCompletedListener != null)
+                mOnCompletedListener.onCompleted(ingredients);
+        }
+
+        /**
+         * Stop Any Working Operation.
+         */
+        public void release(){
+            cancelOperation(TOKEN);
+        }
+
+        /**
+         * Called when operation is completed.
+         */
+        public interface OnCompletedListener{
+            void onCompleted(List<Ingredient> ingredients);
+        }
+    }
+    /**
      * Retrieval system for step fragment.
      */
     public static class StepFragmentRetriever extends AsyncQueryHandler{
