@@ -16,65 +16,58 @@
             app:layout_constraintStart_toStartOf="@+id/quantityNumber"
             app:layout_constraintTop_toTopOf="@+id/quantityNumber" />
 
-        <View
-            android:id="@+id/view"
-            style="@style/verticalDivider"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/ingredientMeasureUnit"
-            app:layout_constraintEnd_toStartOf="@+id/ingredientName"
-            app:layout_constraintHorizontal_bias="0.74"
-            app:layout_constraintStart_toEndOf="@+id/quantityNumber"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <TextView
             android:id="@+id/quantityNumber"
             style="@style/iconText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:fontFamily="cursive"
             android:padding="@dimen/start_fit_margin"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="100" />
+            tools:text="100.0" />
 
 
         <TextView
             android:id="@+id/ingredientName"
             style="@style/primaryText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/twice_margin"
+            android:layout_width="0dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@+id/quantityNumber"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/quantityNumber"
-            tools:text="Ingredient Name" />
-
-        <TextView
-            android:id="@+id/ingredientMeasureUnit"
-            style="@style/secondaryText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="@+id/ingredientName"
-            app:layout_constraintTop_toBottomOf="@+id/ingredientName"
-            android:text="@string/measure_unit_text" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="dasdasdasdadsdasdasdasdadsdasdasdasdads" />
 
         <TextView
             android:id="@+id/textView"
             style="@style/secondaryText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/measure_unit_text"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/ingredientName"
+            app:layout_constraintTop_toBottomOf="@+id/ingredientName" />
+
+        <TextView
+            android:id="@+id/ingredientMeasureUnit"
+            style="@style/secondaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textSize="14sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/ingredientMeasureUnit"
-            app:layout_constraintStart_toEndOf="@+id/ingredientMeasureUnit"
+            app:layout_constraintBaseline_toBaselineOf="@+id/textView"
+            app:layout_constraintStart_toEndOf="@+id/textView"
             tools:text="Unit" />
 
     </android.support.constraint.ConstraintLayout>

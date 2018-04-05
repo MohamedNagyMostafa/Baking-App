@@ -2,6 +2,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -55,9 +56,9 @@ public class IngredientFragment extends FragmentNav {
                 ingredients -> {
                     if(ingredients.size() > 0){
                         ingredientListAdapter.swap(ingredients);
-                        mIngredientFragmentBinding.ingredientListView.onRestoreInstanceState(
-                                getSaverSystem().savedData().getParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION)
-                        );
+
+                        checkPreviousScroll();
+
                     }
                 }
         );
@@ -68,22 +69,29 @@ public class IngredientFragment extends FragmentNav {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData());
+        getSaverSystem().save(getSavedData());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDestroyView() {
-        getSaverSystem().save(getSavedData());
         mIngredientFragmentRetriever.release();
         super.onDestroyView();
     }
 
-    public Bundle getSavedData(){
+    private void checkPreviousScroll(){
+        Parcelable parcelable = getSaverSystem().savedData().getParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION);
+        if(parcelable != null)
+            mIngredientFragmentBinding.ingredientListView.onRestoreInstanceState(parcelable);
+
+    }
+
+    private Bundle getSavedData(){
         Bundle bundle = new Bundle();
         bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
         bundle.putParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION,
                 mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
-        
+
         return bundle;
     }
 }

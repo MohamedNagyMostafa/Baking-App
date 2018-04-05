@@ -157,6 +157,8 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     @Override
     public void onDestroyView() {
         getSaverSystem().save(getSavedData());
+        mMedia.release();
+        mStepFragmentRetriever.release();
         super.onDestroyView();
     }
 

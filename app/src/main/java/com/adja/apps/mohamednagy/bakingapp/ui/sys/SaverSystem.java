@@ -13,7 +13,12 @@ import android.os.Bundle;
  * on the same activity
  */
 public class SaverSystem {
+    public final String ID;
     private Bundle mSavedData;
+
+    public SaverSystem(String id){
+        ID = id;
+    }
 
     public void save(Bundle data){
         mSavedData = data;

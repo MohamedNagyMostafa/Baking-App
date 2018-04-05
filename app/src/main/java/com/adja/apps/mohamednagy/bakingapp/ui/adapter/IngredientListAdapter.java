@@ -44,7 +44,8 @@ public class IngredientListAdapter extends ArrayAdapter<Ingredient> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        if(convertView == null) {
+        View rootView = convertView;
+        if(rootView == null) {
             IngredientViewBinding ingredientViewBinding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), R.layout.ingredient_view, parent, false);
             Ingredient ingredient = mIngredientList.get(position);
 
@@ -53,9 +54,12 @@ public class IngredientListAdapter extends ArrayAdapter<Ingredient> {
             ingredientViewBinding.quantityNumber.setText(String.valueOf(ingredient.getQuantity()));
 
             measureUnitCircle(ingredientViewBinding.measureUnitCircle, ingredient.getMeasure());
+
+            rootView = ingredientViewBinding.getRoot();
         }
 
-        return super.getView(position, convertView, parent);
+        return rootView;
+
     }
 
     private void measureUnitCircle(View view, String measureUnit){

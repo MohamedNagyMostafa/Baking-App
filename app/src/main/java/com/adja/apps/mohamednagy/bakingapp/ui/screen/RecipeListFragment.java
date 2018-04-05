@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
+import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
@@ -67,6 +68,7 @@ public class RecipeListFragment extends FragmentNav {
                 mCurrentSelectedRecipe = recipeId;
                 // Reset active step position and video mint to initial state
                 openStepFragmentAsNewRecipe();
+                updateIngredientRecipe();
             }else{
                 // Retrieve the previous state of steps/videos
                 openStepFragmentAsSameRecipe();
@@ -130,14 +132,13 @@ public class RecipeListFragment extends FragmentNav {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData());
+        getSaverSystem().save(getSavedData());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDestroyView() {
         mRecipeFragmentRetriever.release();
-        // To Handle Data During Swap.
-        getSaverSystem().save(getSavedData());
         super.onDestroyView();
     }
 
@@ -166,6 +167,11 @@ public class RecipeListFragment extends FragmentNav {
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
 
         startFragment(fragmentIntent);
+    }
+
+    // Set current selected recipe to ingredient saver system.
+    private void updateIngredientRecipe(){
+        new NavigationBottomSystem.FragmentIntent(IngredientFragment.class).putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
     }
 
 }

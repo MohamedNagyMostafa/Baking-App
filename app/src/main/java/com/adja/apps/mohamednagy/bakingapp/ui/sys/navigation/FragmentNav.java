@@ -22,6 +22,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 public class FragmentNav extends Fragment {
 
     private static final String FRAGMENT_DATA_SAVER_BUNDLE = "fragment_data_bundle";
+    private static final String FRAGMENT_DATA_SAVER_ID     = "fragment_data_id";
 
     private SaverSystem         mSaverSystem;
     private FragmentNavListener mFragmentNavListener;
@@ -62,6 +63,7 @@ public class FragmentNav extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, outState);
+        outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
         super.onSaveInstanceState(outState);
     }
 
@@ -70,8 +72,9 @@ public class FragmentNav extends Fragment {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
             Bundle dataSaverBundle = savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_BUNDLE);
+            String dataSaverId     = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
 
-            mSaverSystem = new SaverSystem();
+            mSaverSystem = new SaverSystem(dataSaverId);
             mSaverSystem.save(dataSaverBundle);
         }
     }

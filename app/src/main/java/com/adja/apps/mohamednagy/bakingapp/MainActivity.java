@@ -19,9 +19,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
     private static final String GRADIENT_FRAGMENT_TAG = "gradient-fg";
 
-    public static final SaverSystem RECIPE_SAVER_SYSTEM   = new SaverSystem();
-    private static final SaverSystem STEP_SAVER_SYSTEM     = new SaverSystem();
-    private static final SaverSystem GRADIENT_SAVER_SYSTEM = new SaverSystem();
+    private static final String STEP_FRAGMENT_SAVER_SYSTEM_ID       = "step-id";
+    private static final String RECIPE_FRAGMENT_SAVER_SYSTEM_ID     = "recipe-fg";
+    private static final String INGREDIENT_FRAGMENT_SAVER_SYSTEM_ID = "gradient-fg";
+
+    public static final SaverSystem RECIPE_SAVER_SYSTEM      = new SaverSystem(RECIPE_FRAGMENT_SAVER_SYSTEM_ID);
+    private static final SaverSystem STEP_SAVER_SYSTEM       = new SaverSystem(STEP_FRAGMENT_SAVER_SYSTEM_ID);
+    private static final SaverSystem INGREDIENT_SAVER_SYSTEM = new SaverSystem(INGREDIENT_FRAGMENT_SAVER_SYSTEM_ID);
 
     private NavigationBottomSystem mNavigationBottomSystem;
 
@@ -56,8 +60,8 @@ public class MainActivity extends AppCompatActivity {
         stepFragment.addListener(mNavigationBottomSystem);
         // Add Data Saver Sys.
         recipeListFragment.addSaverSystem(RECIPE_SAVER_SYSTEM);
-        IngredientFragment.addSaverSystem(STEP_SAVER_SYSTEM);
-        stepFragment.addSaverSystem(GRADIENT_SAVER_SYSTEM);
+        IngredientFragment.addSaverSystem(INGREDIENT_SAVER_SYSTEM);
+        stepFragment.addSaverSystem(STEP_SAVER_SYSTEM);
         // Navigation Item
         recipeListFragment.setNavigationItem(HOME_NAV);
         IngredientFragment.setNavigationItem(GRADIENT_NV);
@@ -81,48 +85,5 @@ public class MainActivity extends AppCompatActivity {
         if(actionBar != null)
             actionBar.hide();
     }
-
-    //    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode){
-//            case PermissionHandler.REQUEST_CODE:
-//                if (grantResults.length > 0 &&
-//                        grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-//                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-//
-//                }else{
-//                    // TODO: error msg
-//                    Log.e("error","erro " + String.valueOf(grantResults[0]) + " " + String.valueOf(grantResults[1]));
-//                }
-//        }
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        media.release();
-//        super.onPause();
-//    }
-
-
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        Log.e("data restore activity","data aaaaaaaaaaaaaaa save fragment");
-//        STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
-//        GRADIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(GRADIENT_SAVER_SYSTEM.ID));
-//        RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
-//    }
-//
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
-//        outState.putBundle(GRADIENT_SAVER_SYSTEM.ID, GRADIENT_SAVER_SYSTEM.savedData());
-//        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
-//        Log.e("data save activity","data aaaaaaaaaaaaaaa save fragment");
-//
-//        super.onSaveInstanceState(outState);
-//    }
-
 
 }
