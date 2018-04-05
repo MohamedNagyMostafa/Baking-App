@@ -7,13 +7,11 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
  */
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
@@ -26,9 +24,9 @@ public class FragmentNav extends Fragment {
     private static final String FRAGMENT_DATA_SAVER_BUNDLE = "fragment_data_bundle";
     private static final String FRAGMENT_DATA_SAVER_ID     = "fragment_data_id";
 
-    private SaverSystem         mSaverSystem;
-    private FragmentNavListener mFragmentNavListener;
-    private int                 mNavigationItem;
+    private SaverSystem                 mSaverSystem;
+    private FragmentNavListener         mFragmentNavListener;
+    private int                         mNavigationItem;
 
     public FragmentNav(){}
     // *** Inserting Data Section Start ***
@@ -43,12 +41,14 @@ public class FragmentNav extends Fragment {
     public void addSaverSystem(SaverSystem saverSystem){
         mSaverSystem = saverSystem;
     }
+
     // *** Inserting Data Section End ***
 
     // *** Retrieve Data Section Start***
     public SaverSystem getSaverSystem(){
         return mSaverSystem;
     }
+
 
     int getNavigationItem() {
         return mNavigationItem;
@@ -66,7 +66,6 @@ public class FragmentNav extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, getSaverSystem().savedData());
         outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
-        Log.e("saveeeeeeeed data"," fragment save " + outState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID));
         super.onSaveInstanceState(outState);
     }
 
@@ -74,8 +73,6 @@ public class FragmentNav extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         if(savedInstanceState != null) {
-            Log.e("saveeeeeeeed data"," fragment retore " + savedInstanceState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID));
-            Toast.makeText(getContext(), String.valueOf(savedInstanceState.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID)), Toast.LENGTH_SHORT).show();
             Bundle dataSaverBundle = savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_BUNDLE);
             String dataSaverId     = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
 

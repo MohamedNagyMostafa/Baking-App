@@ -6,8 +6,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
         mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
+
         addFragmentsToNavigationSys();
 
     }
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         IngredientFragment.setNavigationItem(GRADIENT_NV);
         stepFragment.setNavigationItem(STEP_NAV);
 
+
         mNavigationBottomSystem.put(recipeListFragment, RECIPE_FRAGMENT_TAG);
         mNavigationBottomSystem.put(IngredientFragment, GRADIENT_FRAGMENT_TAG);
         mNavigationBottomSystem.put(stepFragment, STEP_FRAGMENT_TAG);
@@ -80,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {

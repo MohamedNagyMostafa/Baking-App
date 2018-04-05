@@ -13,12 +13,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
-import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.network.NetworkHandler;
 import com.adja.apps.mohamednagy.bakingapp.permission.PermissionHandler;
@@ -86,15 +84,17 @@ public class RecipeListFragment extends FragmentNav {
         mRecipeFragmentRetriever.getRecipesFromDatabase(UriController.getRecipeTableUri(), recipes -> {
             if(recipes.size() > 0){
                 recipeRecycleView.swap(recipes);
-                mRecipeFragmentBinding.emptyView.setVisibility(View.GONE);
+                // Handle View upon process.
+                {
+                    mRecipeFragmentBinding.emptyView.setVisibility(View.GONE);
+                    mRecipeFragmentBinding.progressBar.setVisibility(View.GONE);
+                }
                 // Handle scroll rotation.
                 if(bundle != null){
-                    Snackbar.make(mRecipeFragmentBinding.getRoot(), "scroll", Snackbar.LENGTH_LONG).show();
                     mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
                             bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
                     );
                 }
-
             }else{
                 mNetworkHandler = new NetworkHandler(getContext()) {
                     @Override
@@ -108,7 +108,16 @@ public class RecipeListFragment extends FragmentNav {
                                     bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
                             );
                         }
+                        // Handle View Upon Process
+                        {
+                            if (recipes.length > 0) {
+                                mRecipeFragmentBinding.emptyView.setVisibility(View.GONE);
+                            } else {
+                                mRecipeFragmentBinding.emptyView.setVisibility(View.VISIBLE);
 
+                            }
+                            mRecipeFragmentBinding.progressBar.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
@@ -117,9 +126,14 @@ public class RecipeListFragment extends FragmentNav {
                                 .setAction(getString(R.string.retry_action), view -> {
                                     this.execute();
                                 }).show();
-                        mRecipeFragmentBinding.emptyView.setVisibility(View.VISIBLE);
+                        // Handle View upon Process.
+                        {
+                            mRecipeFragmentBinding.emptyView.setVisibility(View.VISIBLE);
+                            mRecipeFragmentBinding.progressBar.setVisibility(View.GONE);
+                        }
                     }
                 };
+                mRecipeFragmentBinding.progressBar.setVisibility(View.VISIBLE);
                 mNetworkHandler.execute();
             }
         });

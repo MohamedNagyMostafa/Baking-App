@@ -6,6 +6,16 @@
         android:layout_width="match_parent"
         android:background="@color/colorIcon">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:background="@color/colorIcon"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_alignParentTop="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
