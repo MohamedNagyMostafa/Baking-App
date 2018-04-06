@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
@@ -122,7 +123,7 @@ public class RecipeListFragment extends FragmentNav {
 
                     @Override
                     protected void onFailure(String message) {
-                        Snackbar.make(mRecipeFragmentBinding.getRoot(), message, Snackbar.LENGTH_INDEFINITE)
+                        Snackbar.make((getActivity()).findViewById(R.id.mainScreen), message, Snackbar.LENGTH_INDEFINITE)
                                 .setAction(getString(R.string.retry_action), view -> {
                                     this.execute();
                                 }).show();
