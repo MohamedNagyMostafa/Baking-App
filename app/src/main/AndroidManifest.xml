@@ -22,14 +22,20 @@
 
         <provider
             android:name=".database.structure.ContentProviderDatabase"
-            android:authorities="com.adja.apps.mohamednagy.bakingapp" />
+            android:authorities="com.adja.apps.mohamednagy.bakingapp"
+            android:exported="false" />
+
+        <service
+            android:name=".widget.ListRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".BakingWidgetProvider">
+
+        <receiver android:name=".widget.BakingWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
