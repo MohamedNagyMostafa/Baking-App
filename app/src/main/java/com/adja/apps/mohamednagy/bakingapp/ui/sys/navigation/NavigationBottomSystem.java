@@ -10,6 +10,11 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 
+import com.adja.apps.mohamednagy.bakingapp.R;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 import java.util.ArrayList;
@@ -93,10 +98,39 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
     }
 
     public void onRestoreViewInstance(Bundle saveInstance){
-        mBottomNavigationView.setSelectedItemId(
-                saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM)
-        );
+        int currentFragmentNav;
+        if(saveInstance != null) {
+            currentFragmentNav = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
+        }else{
+            currentFragmentNav = 0;
+        }
+        FragmentIntent fragmentIntent = new FragmentIntent(mFragmentNavsHolder.get(currentFragmentNav).first.getClass());
 
+        startFragment(fragmentIntent);
+    }
+
+    /**
+     * Launch Previous Selected Fragment After Rotation Or
+     * Set Default Fragment At Initial State.
+     */
+    public void launchCurrentFragment(){
+        int fragmentId = mBottomNavigationView.getSelectedItemId();
+        Log.e("fragment id"," id : " + String.valueOf(fragmentId));
+        Log.e("fragment id","home " + String.valueOf(R.id.home_nav) + " step "  + String.valueOf(R.id.step_nav));
+        FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(fragmentId));
+        startFragment(fragmentIntent);
+    }
+
+    private Class<? extends FragmentNav> getFragmentClassFromId(int fragmentId){
+        switch (fragmentId){
+            case R.id.step_nav:
+                return StepFragment.class;
+            case R.id.ingredient_nav:
+                return IngredientFragment.class;
+            case R.id.home_nav:
+            default:
+                return RecipeListFragment.class;
+        }
     }
 
     /**

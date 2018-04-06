@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -74,10 +75,19 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         mRecipeId          = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
         mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
 
+        stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
+        stepFragmentBinding.progressBar.setVisibility(View.VISIBLE);
         // Get data from database.
         mStepFragmentRetriever.getStepsFromDatabase(
                 UriController.getStepTableUriByRecipeId(mRecipeId),
                 steps -> {
+                    if(steps.size() > 0){
+                        stepFragmentBinding.emptyView.setVisibility(View.GONE);
+                        stepFragmentBinding.progressBar.setVisibility(View.GONE);
+                    }else{
+                        stepFragmentBinding.progressBar.setVisibility(View.GONE);
+                        Snackbar.make(stepFragmentBinding.getRoot(),getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
+                    }
 
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
 
@@ -93,6 +103,8 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
                     stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
                     stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
+
+
                 }
         );
 
@@ -112,7 +124,6 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     .videoLink(step.getVideoLink())
                     .defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image))
                     .build();
-            Log.e("videoLink", "video " + step.getVideoLink());
             // Handle rotation.
             {
                 if(mMediaPosition != null)
@@ -151,14 +162,17 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData());
+
+        super.onSaveInstanceState(getSavedData(outState));
     }
 
     @Override
     public void onDestroyView() {
         getSaverSystem().save(getSavedData());
-        mMedia.release();
-        mStepFragmentRetriever.release();
+        if(mMedia != null)
+            mMedia.release();
+        if(mStepFragmentRetriever != null)
+            mStepFragmentRetriever.release();
         super.onDestroyView();
     }
 
@@ -171,14 +185,16 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         return bundle;
     }
 
+    public Bundle getSavedData(Bundle bundle){
+        bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
+        bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
+        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
+
+        return bundle;
+    }
+
     private Bundle getPreviousState(Bundle saveInstanceState){
-        if(saveInstanceState == null){
-            // swap through fragments
-            return getSaverSystem().savedData();
-        }else{
-            // Rotation
-            return saveInstanceState;
-        }
+        return saveInstanceState == null? getSaverSystem().savedData() :saveInstanceState;
     }
 
 }

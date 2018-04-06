@@ -14,7 +14,7 @@
         android:enabled="true"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/gradient_nav"
+        android:id="@+id/ingredient_nav"
         android:icon="@drawable/ic_restaurant_menu_black_24dp"
         android:title="@string/menu_nav_gradient"
         android:enabled="true"

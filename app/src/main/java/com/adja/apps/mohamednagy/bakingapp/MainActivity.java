@@ -37,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        if(savedInstanceState != null){
+//            STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
+//            RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
+//            INGREDIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(INGREDIENT_SAVER_SYSTEM.ID));
+//        }
+
         hideActionBar();
 
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
@@ -45,18 +51,17 @@ public class MainActivity extends AppCompatActivity {
         mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
 
         addFragmentsToNavigationSys();
-
+        Log.e("onCeate","called");
     }
 
     private void addFragmentsToNavigationSys(){
-        Log.e("add navigation sys", "data aaaaaaaaaaaaaaa");
-        final RecipeListFragment recipeListFragment = new RecipeListFragment();
-        final StepFragment stepFragment             = new StepFragment();
-        final IngredientFragment IngredientFragment = new IngredientFragment();
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
+        StepFragment stepFragment             = new StepFragment();
+        IngredientFragment IngredientFragment = new IngredientFragment();
 
         final Integer HOME_NAV    = R.id.home_nav;
         final Integer STEP_NAV    = R.id.step_nav;
-        final Integer GRADIENT_NV = R.id.gradient_nav;
+        final Integer GRADIENT_NV = R.id.ingredient_nav;
 
         // Connect with Navigation Sys.
         recipeListFragment.addListener(mNavigationBottomSystem);
@@ -75,34 +80,29 @@ public class MainActivity extends AppCompatActivity {
         mNavigationBottomSystem.put(recipeListFragment, RECIPE_FRAGMENT_TAG);
         mNavigationBottomSystem.put(IngredientFragment, GRADIENT_FRAGMENT_TAG);
         mNavigationBottomSystem.put(stepFragment, STEP_FRAGMENT_TAG);
+        // Launch Current Selection Fragment During Rotation.
+    }
 
-        {
-            NavigationBottomSystem.FragmentIntent fragmentIntent =
-                    new NavigationBottomSystem.FragmentIntent(RecipeListFragment.class);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mNavigationBottomSystem.launchCurrentFragment();
 
-            mNavigationBottomSystem.startFragment(fragmentIntent);
-
-        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
-        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
-        outState.putBundle(INGREDIENT_SAVER_SYSTEM.ID, INGREDIENT_SAVER_SYSTEM.savedData());
+//        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
+//        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
+//        outState.putBundle(INGREDIENT_SAVER_SYSTEM.ID, INGREDIENT_SAVER_SYSTEM.savedData());
         mNavigationBottomSystem.onSaveViewInstance(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if(savedInstanceState != null){
-            STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
-            RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
-            INGREDIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(INGREDIENT_SAVER_SYSTEM.ID));
+        mNavigationBottomSystem.onRestoreViewInstance(savedInstanceState);
 
-            mNavigationBottomSystem.onRestoreViewInstance(savedInstanceState);
-        }
         super.onRestoreInstanceState(savedInstanceState);
     }
 
