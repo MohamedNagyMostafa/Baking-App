@@ -44,7 +44,8 @@ public class IngredientFragment extends FragmentNav {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.ingredient_fragment, container, false);
 
-        mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.IngredientData.RECIPE_ID);
+        Bundle bundle = getPreviousState(savedInstanceState);
+        if(bundle != null) mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.IngredientData.RECIPE_ID);
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle ListView
@@ -52,28 +53,29 @@ public class IngredientFragment extends FragmentNav {
         mIngredientFragmentBinding.ingredientListView.setAdapter(ingredientListAdapter);
         // Retrieve Data From Database
         {
-            mIngredientFragmentBinding.progressBar.setVisibility(View.VISIBLE);
             mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
+            mIngredientFragmentBinding.progressBar.setVisibility(View.VISIBLE);
         }
-        mIngredientFragmentRetriever.getIngredientFromDatabase(
-                UriController.getIngredientTableUriByRecipeId(mRecipeId),
-                ingredients -> {
-                    if(ingredients.size() > 0){
-                        mIngredientFragmentBinding.emptyView.setVisibility(View.GONE);
-                        ingredientListAdapter.swap(ingredients);
+        if(mRecipeId != null)
+            mIngredientFragmentRetriever.getIngredientFromDatabase(
+                    UriController.getIngredientTableUriByRecipeId(mRecipeId),
+                    ingredients -> {
+                        if(ingredients.size() > 0){
+                            mIngredientFragmentBinding.emptyView.setVisibility(View.GONE);
+                            ingredientListAdapter.swap(ingredients);
 
-                        checkPreviousScroll();
+                            checkPreviousScroll();
 
-                    }else{
-                        mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
+                        }else{
+                            mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
+                        }
+
+                        mIngredientFragmentBinding.progressBar.setVisibility(View.GONE);
+
                     }
-
-                    mIngredientFragmentBinding.progressBar.setVisibility(View.GONE);
-
-                }
-        );
-
-
+            );
+        else
+            mIngredientFragmentBinding.progressBar.setVisibility(View.GONE);
         return rootView;
     }
 
@@ -98,7 +100,7 @@ public class IngredientFragment extends FragmentNav {
 
     private Bundle getSavedData(){
         Bundle bundle = new Bundle();
-        bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
+        if(mRecipeId != null) bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
         bundle.putParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION,
                 mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
 
@@ -106,7 +108,7 @@ public class IngredientFragment extends FragmentNav {
     }
 
     private Bundle getSavedData(Bundle bundle){
-        bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
+        if(mRecipeId != null) bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
         bundle.putParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION,
                 mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
 

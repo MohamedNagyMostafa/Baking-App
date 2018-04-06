@@ -70,43 +70,49 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
 
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
-
-        mMediaPosition     = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-        mRecipeId          = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
-        mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+        // Get Saving Data-Transmitted data.
+        Bundle bundle = getPreviousState(savedInstanceState);
+        if(bundle != null) {
+            mMediaPosition = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
+            mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
+            mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+        }
 
         stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
         stepFragmentBinding.progressBar.setVisibility(View.VISIBLE);
         // Get data from database.
-        mStepFragmentRetriever.getStepsFromDatabase(
-                UriController.getStepTableUriByRecipeId(mRecipeId),
-                steps -> {
-                    if(steps.size() > 0){
-                        stepFragmentBinding.emptyView.setVisibility(View.GONE);
-                        stepFragmentBinding.progressBar.setVisibility(View.GONE);
-                    }else{
-                        stepFragmentBinding.progressBar.setVisibility(View.GONE);
-                        Snackbar.make(stepFragmentBinding.getRoot(),getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
+        if(mRecipeId != null)
+            mStepFragmentRetriever.getStepsFromDatabase(
+                    UriController.getStepTableUriByRecipeId(mRecipeId),
+                    steps -> {
+                        if(steps.size() > 0){
+                            stepFragmentBinding.emptyView.setVisibility(View.GONE);
+                            stepFragmentBinding.progressBar.setVisibility(View.GONE);
+                        }else{
+                            stepFragmentBinding.progressBar.setVisibility(View.GONE);
+                            Snackbar.make(stepFragmentBinding.getRoot(),getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
+                        }
+
+                        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+
+                        StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
+                        // Add Recycle View to Stepper System
+                        // To Handle Stepper Process.
+                        mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
+                                layoutManager,StepFragment.this );
+                        // Set Active Step (When rotation/Fragments-Swap is happened).
+                        {
+                            mStepperSystem.setCurrentActiveStepPosition(mCurrentActiveStep);
+                        }
+                        stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
+                        stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
+                        stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
+
+
                     }
-
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-
-                    StepperRecycleView stepperRecycleView = new StepperRecycleView(steps);
-                    // Add Recycle View to Stepper System
-                    // To Handle Stepper Process.
-                    mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
-                            layoutManager,StepFragment.this );
-                    // Set Active Step (When rotation/Fragments-Swap is happened).
-                    {
-                        mStepperSystem.setCurrentActiveStepPosition(mCurrentActiveStep);
-                    }
-                    stepFragmentBinding.stepperRecycleView.setLayoutManager(layoutManager);
-                    stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
-                    stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
-
-
-                }
-        );
+            );
+        else
+            stepFragmentBinding.progressBar.setVisibility(View.GONE);
 
         return rootView;
     }
@@ -179,16 +185,16 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
 
     public Bundle getSavedData(){
         Bundle bundle = new Bundle();
-        bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
-        bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
+        if(mStepperSystem != null) bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
+        if(mRecipeId      != null) bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
         bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
 
         return bundle;
     }
 
     public Bundle getSavedData(Bundle bundle){
-        bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
-        bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
+        if(mStepperSystem != null) bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
+        if(mRecipeId      != null) bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
         bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
 
         return bundle;

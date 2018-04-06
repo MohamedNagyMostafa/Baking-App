@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
@@ -234,6 +235,7 @@ public class DatabaseRetriever{
                             cursor.getInt(Projection.RECIPE_SERVING_COLUMN),
                             cursor.getString(Projection.RECIPE_IMAGE_COLUMN)
                     );
+                    Log.e("ids", "id = " + String.valueOf(recipe.getId()));
                     recipes.add(recipe);
                 }
 

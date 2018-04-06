@@ -12,7 +12,6 @@ import com.adja.apps.mohamednagy.bakingapp.R;
  */
 
 public class SelectedSystem {
-    public static final Long DEFAULT_SELECTED_ID = 1L;
     private Long mId;
     private View mView;
 
@@ -24,7 +23,7 @@ public class SelectedSystem {
     }
 
     public Long getId() {
-        return (mId == null)?DEFAULT_SELECTED_ID: mId;
+        return mId;
     }
 
     public View getView() {
@@ -40,7 +39,7 @@ public class SelectedSystem {
     }
 
     public void checkSelected(long id, View view, Context context){
-        if(id == getId()){
+        if(mId != null && id == mId){
             mId = id;
             mView = view;
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,8 @@ public class RecipeRecycleView extends RecyclerView.Adapter<RecipeRecycleView.Re
     }
 
     public void setSelectedView(Long id){
-        mSelectedSys.setId(id);
+        if(id != null)
+            mSelectedSys.setId(id);
     }
 
     @Override
@@ -63,7 +65,7 @@ public class RecipeRecycleView extends RecyclerView.Adapter<RecipeRecycleView.Re
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         Recipe recipe = mRecipes.get(position);
-
+        Log.e("recipe id",String.valueOf(recipe.getId()));
         holder.RECIPE_VIEW.recipeName.setText(recipe.getName());
         holder.RECIPE_VIEW.servings.setText(String.valueOf(recipe.getServings()));
 
