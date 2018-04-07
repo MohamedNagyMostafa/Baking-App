@@ -17,10 +17,10 @@ import java.util.List;
 
 public class NavigationSystem{
     // Holds Fragment with NavigationItem
-    private static List<Pair<FragmentNav, String>> mFragmentNavsHolder;
+    static List<Pair<FragmentNav, String>> mFragmentNavsHolder;
     private FragmentManager mFragmentManager;
 
-    public NavigationSystem(FragmentManager fragmentManager){
+    NavigationSystem(FragmentManager fragmentManager){
         mFragmentNavsHolder = new ArrayList<>();
         mFragmentManager = fragmentManager;
     }
@@ -28,7 +28,6 @@ public class NavigationSystem{
     public void put(@NonNull FragmentNav fragmentNav, String tag){
         mFragmentNavsHolder.add(new Pair<>(fragmentNav, tag));
     }
-
 
     /**
      * Replace current fragment with the new fragment based on navigation bar.
@@ -48,7 +47,7 @@ public class NavigationSystem{
         }
     }
 
-    protected void startFragment(NavigationSystem.FragmentIntent fragmentIntent, int frameId) {
+    void startFragment(NavigationSystem.FragmentIntent fragmentIntent, int frameId) {
         loadFragment(fragmentIntent.mFragmentNavHolder, frameId);
     }
 
@@ -58,7 +57,7 @@ public class NavigationSystem{
      */
     public static class FragmentIntent{
         private Class<? extends FragmentNav> mFragmentClass;
-        private Pair<FragmentNav, String> mFragmentNavHolder;
+        Pair<FragmentNav, String> mFragmentNavHolder;
 
         public FragmentIntent(Class<? extends FragmentNav> fragmentClass){
             mFragmentClass = fragmentClass;

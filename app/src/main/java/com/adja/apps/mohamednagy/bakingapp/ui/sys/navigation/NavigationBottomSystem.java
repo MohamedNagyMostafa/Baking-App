@@ -29,19 +29,12 @@ import java.util.List;
 
 public class NavigationBottomSystem extends NavigationSystem
         implements FragmentNav.FragmentNavListener {
-    // Holds Fragment with NavigationItem
-    private static List<Pair<FragmentNav, String>> mFragmentNavsHolder;
     private BottomNavigationView mBottomNavigationView;
     private final Integer FRAME_ID;
 
     public NavigationBottomSystem(FragmentManager fragmentManager, Integer frameId){
         super(fragmentManager);
-        mFragmentNavsHolder = new ArrayList<>();
         FRAME_ID = frameId;
-    }
-
-    public void put(@NonNull FragmentNav fragmentNav, String tag){
-        mFragmentNavsHolder.add(new Pair<>(fragmentNav, tag));
     }
 
     public void addView(BottomNavigationView bottomNavigationView){
@@ -60,7 +53,7 @@ public class NavigationBottomSystem extends NavigationSystem
 
             for (Pair<FragmentNav, String> pair : mFragmentNavsHolder) {
                 if (pair.first.getNavigationItem() == id) {
-                    loadFragment(pair, FRAME_ID);
+                    super.loadFragment(pair, FRAME_ID);
                     break;
                 }
             }
@@ -110,6 +103,6 @@ public class NavigationBottomSystem extends NavigationSystem
 
     @Override
     public void startFragment(FragmentIntent fragmentIntent) {
-        startFragment(fragmentIntent, FRAME_ID);
+        super.startFragment(fragmentIntent, FRAME_ID);
     }
 }
