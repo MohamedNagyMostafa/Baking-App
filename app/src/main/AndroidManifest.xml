@@ -23,7 +23,7 @@
         <provider
             android:name=".database.structure.ContentProviderDatabase"
             android:authorities="com.adja.apps.mohamednagy.bakingapp"
-            android:exported="false" />
+            android:exported="true" />
 
         <service
             android:name=".widget.ListRemoteViewsService"

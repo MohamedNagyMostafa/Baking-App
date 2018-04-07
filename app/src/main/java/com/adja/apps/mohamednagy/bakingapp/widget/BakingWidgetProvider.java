@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
@@ -17,7 +18,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
+        Log.e("update", " done");
         // Construct the RemoteViews object
         RemoteViews views = getRecipeRemoteViews(context);
 
