@@ -100,6 +100,7 @@ public class DatabaseRetriever{
 
         public StepFragmentRetriever(ContentResolver contentResolver) {
             super(contentResolver);
+            Log.e("created re","retrieve is ready");
         }
 
         // Retrieve Steps for specific recipe.

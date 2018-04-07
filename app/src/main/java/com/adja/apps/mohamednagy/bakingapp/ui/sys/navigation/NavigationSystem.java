@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.util.Pair;
 
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +54,12 @@ public class NavigationSystem{
     private void loadFragmentOrReattachFragment(Pair<FragmentNav, String> fragmentNavHolder, int frameId){
         // Check If the fragment is created before.
         Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNavHolder.second);
-
         if(fragment != null) {
+            FragmentNav fragmentNav = (FragmentNav) fragment;
+            Log.e("data",String.valueOf(fragmentNav.getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID)));
             mFragmentManager.beginTransaction().detach(fragment).attach(fragment).commit();
-        }else {
             Log.e("fargment","update framgnet");
+        }else {
             mFragmentManager.beginTransaction().replace(
                     frameId,
                     fragmentNavHolder.first,

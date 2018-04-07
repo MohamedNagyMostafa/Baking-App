@@ -79,6 +79,25 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         }else{
             Log.e("step fragment","no data");
         }
+        Log.e("start test block","****************88");
+        {
+            if(getSaverSystem() == null)
+                Log.e("saver system","null");
+            if(getSaverSystem().savedData() == null)
+                Log.e("saver system save data","null");
+            else
+                Log.e(String.valueOf(getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID)), "recipe id");
+
+            if(savedInstanceState == null)
+                Log.e("saveinstance","null");
+            if(mRecipeId == null)
+                Log.e("recipe id", " null");
+            else if(getSaverSystem().savedData() != null)
+                Log.e("recipe id", String.valueOf(getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID)));
+
+        }
+
+        Log.e("end test block","****************88");
 
         stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
         stepFragmentBinding.progressBar.setVisibility(View.VISIBLE);
@@ -174,7 +193,6 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
         super.onSaveInstanceState(getSavedData(outState));
     }
 

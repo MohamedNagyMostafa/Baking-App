@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBindingSw640dpImpl;
+import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
@@ -17,6 +18,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -135,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         switch (getScreenType()){
             case TABLET_SCREEN_WIDTH:
-                mNavigationPaneSystem.launchFragments();
+                mNavigationPaneSystem.startFragment(new NavigationSystem.FragmentIntent(RecipeListFragment.class));
                 break;
             case PHONE_SCREEN_WIDTH:
                 mNavigationBottomSystem.launchCurrentFragment();
