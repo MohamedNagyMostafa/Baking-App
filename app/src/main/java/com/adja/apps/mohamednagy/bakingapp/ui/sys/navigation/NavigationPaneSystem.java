@@ -4,6 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
 
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,7 +22,7 @@ public class NavigationPaneSystem extends NavigationSystem
 
     private HashMap<String, Integer> mFrames;
 
-    NavigationPaneSystem(FragmentManager fragmentManager) {
+    public NavigationPaneSystem(FragmentManager fragmentManager) {
         super(fragmentManager);
         mFrames = new HashMap<>();
     }
@@ -27,6 +31,15 @@ public class NavigationPaneSystem extends NavigationSystem
         mFrames.put(fragmentTag, frameId);
     }
 
+    public void launchFragments(){
+        FragmentIntent recipeListFragment = new FragmentIntent(RecipeListFragment.class);
+        FragmentIntent stepFragment       = new FragmentIntent(StepFragment.class);
+        FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);
+
+        startFragment(recipeListFragment);
+        startFragment(stepFragment);
+        startFragment(IngredientFragment);
+    }
 
     @Override
     public void startFragment(FragmentIntent fragmentIntent) {

@@ -16,22 +16,28 @@ import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSystem;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int TABLET_SCREEN_WIDTH = 0xAB;
+    private static final int PHONE_SCREEN_WIDTH  = 0xAC;
+
     private static final String STEP_FRAGMENT_TAG     = "step-fg";
     private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
-    private static final String GRADIENT_FRAGMENT_TAG = "gradient-fg";
+    private static final String INGREDIENT_FRAGMENT_TAG = "gradient-fg";
 
     private static final String STEP_FRAGMENT_SAVER_SYSTEM_ID       = "step-id";
     private static final String RECIPE_FRAGMENT_SAVER_SYSTEM_ID     = "recipe-fg";
     private static final String INGREDIENT_FRAGMENT_SAVER_SYSTEM_ID = "gradient-fg";
 
-    public static final SaverSystem RECIPE_SAVER_SYSTEM      = new SaverSystem(RECIPE_FRAGMENT_SAVER_SYSTEM_ID);
+    private static final SaverSystem RECIPE_SAVER_SYSTEM      = new SaverSystem(RECIPE_FRAGMENT_SAVER_SYSTEM_ID);
     private static final SaverSystem STEP_SAVER_SYSTEM       = new SaverSystem(STEP_FRAGMENT_SAVER_SYSTEM_ID);
     private static final SaverSystem INGREDIENT_SAVER_SYSTEM = new SaverSystem(INGREDIENT_FRAGMENT_SAVER_SYSTEM_ID);
 
     private NavigationBottomSystem mNavigationBottomSystem;
+    private NavigationPaneSystem   mNavigationPaneSystem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +46,33 @@ public class MainActivity extends AppCompatActivity {
 
         hideActionBar();
 
+        switch (getScreenType()){
+            case PHONE_SCREEN_WIDTH:
+                initializeScreenAsPhone();
+                break;
+            case TABLET_SCREEN_WIDTH:
+                initializeScreenAsTablet();
+                break;
+        }
+    }
+
+    private void initializeScreenAsPhone(){
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
         mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
 
-        addFragmentsToNavigationSys();
-        Log.e("onCeate","called");
+        addFragmentsToNavigationBottomSys();
     }
 
-    private void addFragmentsToNavigationSys(){
+    private void initializeScreenAsTablet(){
+        mNavigationPaneSystem = new NavigationPaneSystem(getSupportFragmentManager());
+
+        addFragmentsToNavigationPaneSys();
+    }
+
+    // Setup Navigation Bottom System
+    private void addFragmentsToNavigationBottomSys(){
         RecipeListFragment recipeListFragment = new RecipeListFragment();
         StepFragment stepFragment             = new StepFragment();
         IngredientFragment IngredientFragment = new IngredientFragment();
@@ -73,28 +96,57 @@ public class MainActivity extends AppCompatActivity {
 
 
         mNavigationBottomSystem.put(recipeListFragment, RECIPE_FRAGMENT_TAG);
-        mNavigationBottomSystem.put(IngredientFragment, GRADIENT_FRAGMENT_TAG);
+        mNavigationBottomSystem.put(IngredientFragment, INGREDIENT_FRAGMENT_TAG);
         mNavigationBottomSystem.put(stepFragment, STEP_FRAGMENT_TAG);
-        // Launch Current Selection Fragment During Rotation.
+    }
+
+    // Setup Navigation Pane System
+    private void addFragmentsToNavigationPaneSys(){
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
+        StepFragment stepFragment             = new StepFragment();
+        IngredientFragment IngredientFragment = new IngredientFragment();
+
+        // Add Data Saver Sys.
+        recipeListFragment.addSaverSystem(RECIPE_SAVER_SYSTEM);
+        IngredientFragment.addSaverSystem(INGREDIENT_SAVER_SYSTEM);
+        stepFragment.addSaverSystem(STEP_SAVER_SYSTEM);
+
+        mNavigationPaneSystem.put(recipeListFragment, RECIPE_FRAGMENT_TAG);
+        mNavigationPaneSystem.put(IngredientFragment, INGREDIENT_FRAGMENT_TAG);
+        mNavigationPaneSystem.put(stepFragment,       STEP_FRAGMENT_TAG);
+
+        // Add Frames
+        mNavigationPaneSystem.addFrameToFragmentByTag(R.id.recipeListFrame, RECIPE_FRAGMENT_TAG);
+        mNavigationPaneSystem.addFrameToFragmentByTag(R.id.stepFrame, STEP_FRAGMENT_TAG);
+        mNavigationPaneSystem.addFrameToFragmentByTag(R.id.ingredientListFrame, INGREDIENT_FRAGMENT_TAG);
+    }
+
+    private int getScreenType(){
+        return findViewById(R.id.recipeListFrame) != null?TABLET_SCREEN_WIDTH:PHONE_SCREEN_WIDTH;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mNavigationBottomSystem.launchCurrentFragment();
-
+        switch (getScreenType()){
+            case TABLET_SCREEN_WIDTH:
+                mNavigationPaneSystem.launchFragments();
+                break;
+            case PHONE_SCREEN_WIDTH:
+                mNavigationBottomSystem.launchCurrentFragment();
+                break;
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        mNavigationBottomSystem.onSaveViewInstance(outState);
+        if(mNavigationBottomSystem != null) mNavigationBottomSystem.onSaveViewInstance(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mNavigationBottomSystem.onRestoreViewInstance(savedInstanceState);
-
+        if(mNavigationBottomSystem != null) mNavigationBottomSystem.onRestoreViewInstance(savedInstanceState);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
