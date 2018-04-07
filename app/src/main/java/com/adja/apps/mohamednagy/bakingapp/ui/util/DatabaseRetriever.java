@@ -121,7 +121,7 @@ public class DatabaseRetriever{
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
             List<Step> steps = new ArrayList<>();
-
+            Log.e("cursor",String.valueOf(cursor.getCount()));
             assert cursor != null;
             while(cursor.moveToNext()){
                 Step step = new Step(

@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (getScreenType()){
             case PHONE_SCREEN_WIDTH:
+                Log.e("phone","detect");
                 initializeScreenAsPhone();
                 break;
             case TABLET_SCREEN_WIDTH:
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity {
         StepFragment stepFragment             = new StepFragment();
         IngredientFragment IngredientFragment = new IngredientFragment();
 
+        // Connect with Navigation Sys.
+        recipeListFragment.addListener(mNavigationPaneSystem);
+        IngredientFragment.addListener(mNavigationPaneSystem);
+        stepFragment.addListener(mNavigationPaneSystem);
         // Add Data Saver Sys.
         recipeListFragment.addSaverSystem(RECIPE_SAVER_SYSTEM);
         IngredientFragment.addSaverSystem(INGREDIENT_SAVER_SYSTEM);

@@ -103,6 +103,7 @@ public class NavigationBottomSystem extends NavigationSystem
 
     @Override
     public void startFragment(FragmentIntent fragmentIntent) {
+        mBottomNavigationView.setSelectedItemId(fragmentIntent.mFragmentNavHolder.first.getNavigationItem());
         super.startFragment(fragmentIntent, FRAME_ID);
     }
 }

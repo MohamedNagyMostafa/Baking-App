@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -39,6 +40,23 @@ public class NavigationSystem{
         if(fragment != null) {
             mFragmentManager.beginTransaction().show(fragment).commit();
         }else {
+            Log.e("fargment","update framgnet");
+            mFragmentManager.beginTransaction().replace(
+                    frameId,
+                    fragmentNavHolder.first,
+                    fragmentNavHolder.second
+            ).commit();
+        }
+    }
+
+    private void loadFragmentOrReattachFragment(Pair<FragmentNav, String> fragmentNavHolder, int frameId){
+        // Check If the fragment is created before.
+        Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNavHolder.second);
+
+        if(fragment != null) {
+            mFragmentManager.beginTransaction().detach(fragment).attach(fragment).commit();
+        }else {
+            Log.e("fargment","update framgnet");
             mFragmentManager.beginTransaction().replace(
                     frameId,
                     fragmentNavHolder.first,
@@ -49,6 +67,10 @@ public class NavigationSystem{
 
     void startFragment(NavigationSystem.FragmentIntent fragmentIntent, int frameId) {
         loadFragment(fragmentIntent.mFragmentNavHolder, frameId);
+    }
+
+    void startFragmentOrReattach(NavigationSystem.FragmentIntent fragmentIntent, int frameId) {
+        loadFragmentOrReattachFragment(fragmentIntent.mFragmentNavHolder, frameId);
     }
 
     /**

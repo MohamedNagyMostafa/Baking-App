@@ -3,6 +3,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.Pair;
+import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
@@ -36,14 +37,15 @@ public class NavigationPaneSystem extends NavigationSystem
         FragmentIntent stepFragment       = new FragmentIntent(StepFragment.class);
         FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);
 
-        startFragment(recipeListFragment);
-        startFragment(stepFragment);
-        startFragment(IngredientFragment);
+        super.startFragmentOrReattach(recipeListFragment, getFragmentFrame(recipeListFragment.mFragmentNavHolder.second));
+        super.startFragmentOrReattach(stepFragment, getFragmentFrame(stepFragment.mFragmentNavHolder.second));
+        super.startFragmentOrReattach(IngredientFragment, getFragmentFrame(IngredientFragment.mFragmentNavHolder.second));
     }
 
     @Override
     public void startFragment(FragmentIntent fragmentIntent) {
-        super.startFragment(fragmentIntent, getFragmentFrame(fragmentIntent.mFragmentNavHolder.second));
+        Log.e("starting","update Fragments");
+        launchFragments();
     }
 
     private Integer getFragmentFrame(String fragmentTag){

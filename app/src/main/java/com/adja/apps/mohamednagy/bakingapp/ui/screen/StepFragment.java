@@ -76,6 +76,8 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
             mMediaPosition = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
             mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
             mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+        }else{
+            Log.e("step fragment","no data");
         }
 
         stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
@@ -86,9 +88,11 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     UriController.getStepTableUriByRecipeId(mRecipeId),
                     steps -> {
                         if(steps.size() > 0){
+                            Log.e("data is here"," done");
                             stepFragmentBinding.emptyView.setVisibility(View.GONE);
                             stepFragmentBinding.progressBar.setVisibility(View.GONE);
                         }else{
+                            Log.e("no data is here"," done");
                             stepFragmentBinding.progressBar.setVisibility(View.GONE);
                             Snackbar.make(stepFragmentBinding.getRoot(),getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
                         }
@@ -113,6 +117,8 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
             );
         else
             stepFragmentBinding.progressBar.setVisibility(View.GONE);
+
+        Log.e("fragment created", "step");
 
         return rootView;
     }

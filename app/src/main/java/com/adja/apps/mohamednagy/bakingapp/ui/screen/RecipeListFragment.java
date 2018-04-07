@@ -48,6 +48,7 @@ public class RecipeListFragment extends FragmentNav {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.e("fragment created", "recipe");
         mRecipeFragmentRetriever = new DatabaseRetriever.RecipeFragmentRetriever(getActivity().getContentResolver());
     }
 

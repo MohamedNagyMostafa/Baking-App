@@ -76,6 +76,7 @@ public class IngredientFragment extends FragmentNav {
             );
         else
             mIngredientFragmentBinding.progressBar.setVisibility(View.GONE);
+
         return rootView;
     }
 
