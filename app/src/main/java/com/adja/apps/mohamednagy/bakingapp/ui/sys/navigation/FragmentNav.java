@@ -57,7 +57,7 @@ public class FragmentNav extends Fragment {
 
     // *** Fragment Services Section Start ***
     // Launch new fragment
-    public void startFragment(NavigationBottomSystem.FragmentIntent fragmentIntent){
+    public void startFragment(NavigationSystem.FragmentIntent fragmentIntent){
         mFragmentNavListener.startFragment(fragmentIntent);
     }
 
@@ -85,7 +85,7 @@ public class FragmentNav extends Fragment {
      * Listen to start new fragment.
      */
     interface FragmentNavListener{
-        void startFragment(NavigationBottomSystem.FragmentIntent fragmentIntent);
+        void startFragment(NavigationSystem.FragmentIntent fragmentIntent);
     }
 
 }

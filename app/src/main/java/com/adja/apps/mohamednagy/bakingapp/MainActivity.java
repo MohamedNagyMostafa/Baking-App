@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
+import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBindingSw640dpImpl;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
@@ -36,12 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        if(savedInstanceState != null){
-//            STEP_SAVER_SYSTEM.save(savedInstanceState.getBundle(STEP_SAVER_SYSTEM.ID));
-//            RECIPE_SAVER_SYSTEM.save(savedInstanceState.getBundle(RECIPE_SAVER_SYSTEM.ID));
-//            INGREDIENT_SAVER_SYSTEM.save(savedInstanceState.getBundle(INGREDIENT_SAVER_SYSTEM.ID));
-//        }
 
         hideActionBar();
 
@@ -93,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-//        outState.putBundle(STEP_SAVER_SYSTEM.ID, STEP_SAVER_SYSTEM.savedData());
-//        outState.putBundle(RECIPE_SAVER_SYSTEM.ID, RECIPE_SAVER_SYSTEM.savedData());
-//        outState.putBundle(INGREDIENT_SAVER_SYSTEM.ID, INGREDIENT_SAVER_SYSTEM.savedData());
         mNavigationBottomSystem.onSaveViewInstance(outState);
     }
 
