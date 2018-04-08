@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +76,6 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         {
             Bundle arguments = getArguments();
             if (arguments != null &&  getSaverSystem() != null) {
-                Log.e("args", "founded");
                 getSaverSystem().save(arguments);
             }
         }
@@ -91,7 +89,6 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
             mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
             mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
         }else{
-            Log.e("step fragment","no data");
         }
 
 
@@ -103,11 +100,9 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                     UriController.getStepTableUriByRecipeId(mRecipeId),
                     steps -> {
                         if(steps.size() > 0){
-                            Log.e("data is here"," done");
                             stepFragmentBinding.emptyView.setVisibility(View.GONE);
                             stepFragmentBinding.progressBar.setVisibility(View.GONE);
                         }else{
-                            Log.e("no data is here"," done");
                             stepFragmentBinding.progressBar.setVisibility(View.GONE);
                             Snackbar.make(stepFragmentBinding.getRoot(),getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
                         }
@@ -133,7 +128,6 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         else
             stepFragmentBinding.progressBar.setVisibility(View.GONE);
 
-        Log.e("fragment created", "step");
 
         return rootView;
     }

@@ -4,19 +4,14 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.IngredientFragmentBinding;
-import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.IngredientListAdapter;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
@@ -24,7 +19,9 @@ import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 import java.util.List;
 
 /**
- * Created by Mohamed Nagy on 3/27/2018.
+ * Created by Mohamed Nagy on 3/27/2018 .
+ * Project projects submission
+ * Time    10:56 AM
  */
 
 public class IngredientFragment extends FragmentNav {
@@ -53,7 +50,6 @@ public class IngredientFragment extends FragmentNav {
         {
             Bundle arguments = getArguments();
             if (arguments != null && getSaverSystem() != null) {
-                Log.e("args", "founded");
                 getSaverSystem().save(arguments);
             }
         }
@@ -61,7 +57,6 @@ public class IngredientFragment extends FragmentNav {
         Bundle bundle = getPreviousState(savedInstanceState);
         if(bundle != null) mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.IngredientData.RECIPE_ID);
         if(mRecipeId != null){
-            Log.e("not null","ingredient exist " + String.valueOf(mRecipeId));
         }
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
@@ -78,14 +73,12 @@ public class IngredientFragment extends FragmentNav {
                     UriController.getIngredientTableUriByRecipeId(mRecipeId),
                     ingredients -> {
                         if(ingredients.size() > 0){
-                            Log.e("ingredient","there's data");
                             mIngredientFragmentBinding.emptyView.setVisibility(View.GONE);
                             ingredientListAdapter.swap(ingredients);
 
                             checkPreviousScroll();
 
                         }else{
-                            Log.e("ingredient","no data");
                             mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
                         }
 

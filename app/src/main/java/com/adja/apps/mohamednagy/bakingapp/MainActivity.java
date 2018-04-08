@@ -6,19 +6,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
-import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBindingSw640dpImpl;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSystem;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 
 public class MainActivity extends AppCompatActivity {
 

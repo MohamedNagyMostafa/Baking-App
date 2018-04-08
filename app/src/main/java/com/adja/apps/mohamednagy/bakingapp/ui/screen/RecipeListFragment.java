@@ -10,12 +10,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
@@ -48,7 +46,6 @@ public class RecipeListFragment extends FragmentNav {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("fragment created", "recipe");
         mRecipeFragmentRetriever = new DatabaseRetriever.RecipeFragmentRetriever(getActivity().getContentResolver());
     }
 
@@ -71,7 +68,6 @@ public class RecipeListFragment extends FragmentNav {
         recipeRecycleView.setRecipeClickListener(((recipeId) -> {
             if(mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
                 mCurrentSelectedRecipe = recipeId;
-                Log.e("id",String.valueOf(mCurrentSelectedRecipe));
                 // Reset active step position and video mint to initial state
                 openStepFragmentAsNewRecipe();
                 updateIngredientRecipe();

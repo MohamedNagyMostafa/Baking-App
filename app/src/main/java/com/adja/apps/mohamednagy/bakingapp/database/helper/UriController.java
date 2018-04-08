@@ -1,12 +1,13 @@
 package com.adja.apps.mohamednagy.bakingapp.database.helper;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    11:01 AM
  */
 
 public class UriController {
@@ -28,7 +29,6 @@ public class UriController {
     }
 
     public static Uri getStepTableUriByRecipeId(long id){
-        Log.e("recipe","step for recipe id " + String.valueOf(id));
         return STEP_TABLE_URI.buildUpon()
                 .appendPath(DbContent.Recipe.TABLE_NAME)
                 .appendPath(String.valueOf(id))

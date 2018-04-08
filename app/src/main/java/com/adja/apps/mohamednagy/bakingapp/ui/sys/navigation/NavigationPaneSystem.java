@@ -2,15 +2,13 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.Pair;
-import android.util.Log;
+
 
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 4/7/2018 .

@@ -1,6 +1,7 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
-/**
+/*
+ *
  * Created by Mohamed Nagy on 4/2/2018 .
  * Project projects submission
  * Time    10:11 AM
@@ -9,11 +10,8 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
-import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 /**
  * Class to hold fragments which will be showed by navigation bar

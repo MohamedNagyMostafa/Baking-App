@@ -1,17 +1,13 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.util;
 
-import android.annotation.SuppressLint;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
-import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
 import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
@@ -100,7 +96,7 @@ public class DatabaseRetriever{
 
         public StepFragmentRetriever(ContentResolver contentResolver) {
             super(contentResolver);
-            Log.e("created re","retrieve is ready");
+
         }
 
         // Retrieve Steps for specific recipe.
@@ -122,7 +118,6 @@ public class DatabaseRetriever{
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
             List<Step> steps = new ArrayList<>();
-            Log.e("cursor",String.valueOf(cursor.getCount()));
             assert cursor != null;
             while(cursor.moveToNext()){
                 Step step = new Step(
@@ -236,7 +231,6 @@ public class DatabaseRetriever{
                             cursor.getInt(Projection.RECIPE_SERVING_COLUMN),
                             cursor.getString(Projection.RECIPE_IMAGE_COLUMN)
                     );
-                    Log.e("ids", "id = " + String.valueOf(recipe.getId()));
                     recipes.add(recipe);
                 }
 

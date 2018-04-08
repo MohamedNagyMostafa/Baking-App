@@ -4,10 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.util.Pair;
 
-import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ public class NavigationSystem{
         if(fragment != null) {
             mFragmentManager.beginTransaction().show(fragment).commit();
         }else {
-            Log.e("fargment","update framgnet");
             mFragmentManager.beginTransaction().replace(
                     frameId,
                     fragmentNavHolder.first,
@@ -62,8 +59,6 @@ public class NavigationSystem{
             // I Hope If there's a logically answer for this situation I get it
             // at project reviewer's comment or reply on the forum
             // Thanks.
-            if(fragmentNav.getSaverSystem() != null && fragmentNav.getSaverSystem().savedData() != null)
-                Log.e("incoming data","data : "+ fragmentNav.getSaverSystem().savedData().getLong(Extras.IngredientData.RECIPE_ID));
             fragment.setArguments(fragmentNav.getSaverSystem().savedData());
 
             mFragmentManager.beginTransaction().detach(fragment).attach(fragment).commit();

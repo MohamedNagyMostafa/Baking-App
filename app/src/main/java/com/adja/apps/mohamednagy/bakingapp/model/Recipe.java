@@ -7,7 +7,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    10:59 AM
  */
 
 public class Recipe {

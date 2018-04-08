@@ -2,11 +2,8 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 
@@ -14,12 +11,7 @@ import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 3/27/2018 .
@@ -83,8 +75,6 @@ public class NavigationBottomSystem extends NavigationSystem
      */
     public void launchCurrentFragment(){
         int fragmentId = mBottomNavigationView.getSelectedItemId();
-        Log.e("fragment id"," id : " + String.valueOf(fragmentId));
-        Log.e("fragment id","home " + String.valueOf(R.id.home_nav) + " step "  + String.valueOf(R.id.step_nav));
         FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(fragmentId));
         startFragment(fragmentIntent);
     }
