@@ -1,6 +1,5 @@
 package com.adja.apps.mohamednagy.bakingapp.widget.widget_container;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,12 +12,8 @@ import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
-import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 4/6/2018 .
@@ -27,10 +22,10 @@ import java.util.List;
  */
 
 public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-    private DatabaseRetriever.WidgetRetriever mWidgetRetriever;
     private final String PACKAGE_NAME;
     private Long mRecipeId;
-    private List<Ingredient> mIngredientList;
+    private Cursor mCursor;
+    private Context mContext;
 
     ListRemoteViewsFactory(Context applicationContext, Intent intent){
         PACKAGE_NAME     = applicationContext.getPackageName();
@@ -38,8 +33,7 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
     }
 
     private void init(Context context, Intent intent){
-        mWidgetRetriever = new DatabaseRetriever.WidgetRetriever(context.getContentResolver());
-        mIngredientList      = new ArrayList<>();
+        mContext = context;
         // Set Recipe Data
         {
             Bundle bundle = intent.getExtras();
@@ -62,36 +56,44 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
     @Override
     public void onDataSetChanged() {
         if(mRecipeId != null)
-            mWidgetRetriever.getIngredientFromDatabase(
+            mCursor = mContext.getContentResolver().query(
                     UriController.getIngredientTableUriByRecipeId(mRecipeId),
-                    data -> mIngredientList = (List<Ingredient>)data);
+                    Projection.INGREDIENT_PROJECTION,
+                    null,
+                    null,
+                    null
+            );
     }
 
     @Override
     public void onDestroy() {
-        if(mWidgetRetriever != null) mWidgetRetriever.release();
+        if(mCursor != null)  mCursor.close();
     }
 
     @Override
     public int getCount() {
-        return mIngredientList.size();
+        return mCursor == null?0:mCursor.getCount();
     }
 
     @Override
     public RemoteViews getViewAt(int position) {
-        Log.e("getViewAt","done");
-        if(mIngredientList.size() == 0) return null;
-
-        return getRemoteViews(mIngredientList.get(position));
+        if(mCursor == null || mCursor.getCount() == 0) return null;
+        return getRemoteViews(position);
     }
 
-    private RemoteViews getRemoteViews(Ingredient ingredient){
-        Log.e("datapter view","called");
+    private RemoteViews getRemoteViews(int position){
+        mCursor.moveToPosition(position);
+
+        Ingredient ingredient = new Ingredient(
+                mCursor.getInt(Projection.INGREDIENT_QUANTITY_COLUMN),
+                mCursor.getString(Projection.INGREDIENT_MEASURE_COLUMN),
+                mCursor.getString(Projection.INGREDIENT_COLUMN)
+        );
+
         RemoteViews remoteViews = new RemoteViews(PACKAGE_NAME, R.layout.widget_item_view);
         remoteViews.setTextViewText(R.id.wd_ingredient_name, ingredient.getIngredient());
         remoteViews.setTextViewText(R.id.wd_measure_unit, ingredient.getMeasure());
         remoteViews.setTextViewText(R.id.wd_measure_quantity, String.valueOf(ingredient.getQuantity()));
-
         return remoteViews;
     }
 

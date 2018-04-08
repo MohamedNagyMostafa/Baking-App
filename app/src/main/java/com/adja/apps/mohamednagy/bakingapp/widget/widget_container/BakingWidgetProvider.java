@@ -1,27 +1,20 @@
 package com.adja.apps.mohamednagy.bakingapp.widget.widget_container;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
+import com.adja.apps.mohamednagy.bakingapp.database.helper.Projection;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
-import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
-import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
-import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
-import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.widget.widget_helpers.WidgetBroadcastHandler;
 import com.adja.apps.mohamednagy.bakingapp.widget.widget_helpers.WidgetSharedPreferences;
-
-import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
@@ -43,14 +36,11 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         RemoteViews views;
 
         if(height >= BEST_WIDGET_APP_HEIGHT && width >= BEST_WIDGET_APP_WIDTH){
-            Log.e("best wedget","done");
             views = handleWidgetView(context, BEST_WIDGET_APP_LAYOUT_ID, recipeId);
         }else{
-            Log.e("normal wedget","done");
             views = handleWidgetView(context, NORMAL_WIDGET_APP_LAYOUT_ID, recipeId);
         }
         // Instruct the widget manager to update the widget
-        Log.e("widget","updated");
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -82,24 +72,23 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.e("data recieved","done");
-        if(intent != null){
+        if(intent != null) {
             String action = intent.getAction();
             assert action != null;
 
-            switch (action){
+            switch (action) {
                 case WidgetBroadcastHandler.SELECTED_RECIPE_ACTION:
-                    Log.e("same action","detect right intent");
                     Bundle bundle = intent.getExtras();
-                    if(bundle != null){
+                    if (bundle != null) {
                         Long recipeId = bundle.getLong(WidgetBroadcastHandler.WIDGET_SAVED_DATA);
-                        Log.e("intent","recipe id "+ String.valueOf(recipeId));
                         WidgetSharedPreferences.saveData(recipeId, context);
-                        updateAppWidgetsWithNewData(recipeId, context);
                     }
                     break;
             }
         }
+            // To update data during rescale.
+            updateAppWidgetsWithNewData( WidgetSharedPreferences.getData(context), context);
+
     }
 
     private void updateAppWidgetsWithNewData(Long recipeId, Context context){
@@ -114,17 +103,7 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
 
         if(recipeId != null){
-            new DatabaseRetriever.WidgetRetriever(context.getContentResolver())
-                    .getRecipeFromDatabase(UriController.getRecipeTableUriByRecipeId(recipeId),
-                            data -> {
-                                Recipe recipe = (Recipe) data;
-                                if(recipe != null){
-                                    Log.e("recipe data widget","inserted " + recipe.getName());
-                                    remoteViews.setTextViewText(R.id.wd_recipe_name, recipe.getName());
-                                    remoteViews.setTextViewText(R.id.wd_serving_size, String.valueOf(recipe.getServings()));
-                                }
-                            }
-                    );
+            getAndSetRecipeData(remoteViews, recipeId, context);
             Intent intent = new Intent(context, ListRemoteViewsService.class);
             intent.putExtra(Extras.WidgetData.WIDGET_DATA_SELECTED_RECIPE, recipeId);
 
@@ -135,5 +114,20 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         return remoteViews;
     }
 
+    private static void getAndSetRecipeData(RemoteViews remoteViews, Long recipeId, Context context){
+        Cursor cursor = context.getContentResolver().query(
+                UriController.getRecipeTableUriByRecipeId(recipeId),
+                Projection.RECIPE_PROJECTION,
+                null,
+                null,
+                null
+        );
+        if(cursor != null){
+            cursor.moveToNext();
+            remoteViews.setTextViewText(R.id.wd_recipe_name, cursor.getString(Projection.RECIPE_NAME_COLUMN));
+            remoteViews.setTextViewText(R.id.wd_serving_size, String.valueOf(Projection.RECIPE_SERVING_COLUMN));
+            cursor.close();
+        }
+    }
 }
 

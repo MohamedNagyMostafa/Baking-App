@@ -12,15 +12,17 @@
             android:gravity="center_horizontal"
             android:layout_height="wrap_content"
             tools:text="Recipe Name"
+            android:background="@drawable/widget_background"
             android:textSize="26sp"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"
             android:fontFamily="cursive" />
 
-    <GridView
+    <ListView
         android:id="@+id/wd_ingredient_grid_view"
         android:layout_width="match_parent"
-        android:numColumns="2"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:layout_height="wrap_content"/>
 
     <LinearLayout

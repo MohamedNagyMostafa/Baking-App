@@ -66,10 +66,11 @@
 
     </LinearLayout>
 
-    <GridView
+    <ListView
         android:id="@+id/wd_ingredient_grid_view"
         android:layout_width="match_parent"
-        android:numColumns="2"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
         android:background="@color/colorIcon"
         android:layout_height="wrap_content"/>
 
