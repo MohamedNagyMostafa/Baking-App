@@ -45,7 +45,9 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
             Bundle bundle = intent.getExtras();
             if(bundle != null){
                 mRecipeId = bundle.getLong(Extras.WidgetData.WIDGET_DATA_SELECTED_RECIPE);
+                Log.e("widget adapter get id","right");
             }else{
+                Log.e("data no detected"," not");
                 mRecipeId = null;
             }
         }
@@ -77,12 +79,14 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     @Override
     public RemoteViews getViewAt(int position) {
+        Log.e("getViewAt","done");
         if(mIngredientList.size() == 0) return null;
 
         return getRemoteViews(mIngredientList.get(position));
     }
 
     private RemoteViews getRemoteViews(Ingredient ingredient){
+        Log.e("datapter view","called");
         RemoteViews remoteViews = new RemoteViews(PACKAGE_NAME, R.layout.widget_item_view);
         remoteViews.setTextViewText(R.id.wd_ingredient_name, ingredient.getIngredient());
         remoteViews.setTextViewText(R.id.wd_measure_unit, ingredient.getMeasure());

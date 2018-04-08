@@ -50,9 +50,9 @@ public class SelectedSystem {
     }
 
     public Long updateSelected(long id, View view, Context context){
-        long previousId = mId;
+        Long previousId = mId;
         mId = id;
-        if(mView != null)
+        if(mView != null && previousId != null)
             checkSelected(previousId, mView, context);
         checkSelected(id, view, context);
         mView = view;

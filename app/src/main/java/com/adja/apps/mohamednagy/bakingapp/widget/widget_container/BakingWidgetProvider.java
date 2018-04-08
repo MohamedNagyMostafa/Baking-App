@@ -43,11 +43,14 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         RemoteViews views;
 
         if(height >= BEST_WIDGET_APP_HEIGHT && width >= BEST_WIDGET_APP_WIDTH){
+            Log.e("best wedget","done");
             views = handleWidgetView(context, BEST_WIDGET_APP_LAYOUT_ID, recipeId);
         }else{
+            Log.e("normal wedget","done");
             views = handleWidgetView(context, NORMAL_WIDGET_APP_LAYOUT_ID, recipeId);
         }
         // Instruct the widget manager to update the widget
+        Log.e("widget","updated");
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
@@ -79,15 +82,18 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
+        Log.e("data recieved","done");
         if(intent != null){
             String action = intent.getAction();
             assert action != null;
 
             switch (action){
                 case WidgetBroadcastHandler.SELECTED_RECIPE_ACTION:
+                    Log.e("same action","detect right intent");
                     Bundle bundle = intent.getExtras();
                     if(bundle != null){
                         Long recipeId = bundle.getLong(WidgetBroadcastHandler.WIDGET_SAVED_DATA);
+                        Log.e("intent","recipe id "+ String.valueOf(recipeId));
                         WidgetSharedPreferences.saveData(recipeId, context);
                         updateAppWidgetsWithNewData(recipeId, context);
                     }
@@ -109,10 +115,11 @@ public class BakingWidgetProvider extends AppWidgetProvider {
 
         if(recipeId != null){
             new DatabaseRetriever.WidgetRetriever(context.getContentResolver())
-                    .getIngredientFromDatabase(UriController.getRecipeTableUriByRecipeId(recipeId),
+                    .getRecipeFromDatabase(UriController.getRecipeTableUriByRecipeId(recipeId),
                             data -> {
                                 Recipe recipe = (Recipe) data;
                                 if(recipe != null){
+                                    Log.e("recipe data widget","inserted " + recipe.getName());
                                     remoteViews.setTextViewText(R.id.wd_recipe_name, recipe.getName());
                                     remoteViews.setTextViewText(R.id.wd_serving_size, String.valueOf(recipe.getServings()));
                                 }
