@@ -27,4 +27,8 @@ public class Extras {
     public static class NavigationSystemData{
         public static final String SELECTED_NAVIGATION_BOTTOM_ITEM = "nav_item";
     }
+
+    public static class WidgetData{
+        public static final String WIDGET_SHARD_PREFERENCES_SELECTED_RECIPE = "pre_shr_selected_recipe";
+    }
 }

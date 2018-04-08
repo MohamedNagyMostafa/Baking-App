@@ -5,6 +5,7 @@
     <string name="no_network_connection">Please check your network connection and try again</string>
     <string name="permission_denied">Network permissions are denied</string>
     <string name="no_recipe_empty">There\'s no recipe to show</string>
+    <string name="no_selected_recipe_empty">There\'s no selected recipe to show</string>
     <string name="no_step_empty">There\'s no step to show</string>
     <string name="no_ingredient_empty">There\'s no ingredient to show</string>
     <string name="retry_action">Retry</string>

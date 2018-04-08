@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.widget;
+package com.adja.apps.mohamednagy.bakingapp.widget.widget_container;
 
 import android.content.Intent;
 import android.widget.RemoteViewsService;

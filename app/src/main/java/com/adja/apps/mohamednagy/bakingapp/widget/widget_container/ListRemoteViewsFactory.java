@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp.widget;
+package com.adja.apps.mohamednagy.bakingapp.widget.widget_container;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -70,7 +70,7 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
         if(cursor == null || cursor.getCount() == 0) return null;
         cursor.moveToPosition(i);
         RemoteViews remoteViews = new RemoteViews(PACKAGE_NAME, R.layout.widget_item_view);
-        remoteViews.setTextViewText(R.id.recipe_name_text_view, cursor.getString(Projection.RECIPE_NAME_COLUMN));
+//        remoteViews.setTextViewText(R.id.recipe_name_text_view, cursor.getString(Projection.RECIPE_NAME_COLUMN));
         return remoteViews;
     }
 
