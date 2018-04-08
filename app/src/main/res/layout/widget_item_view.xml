@@ -3,27 +3,58 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="@drawable/widget_background"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imageView3"
+    <LinearLayout
+        android:layout_margin="@dimen/start_fit_margin"
         android:layout_width="match_parent"
-        android:layout_height="98dp"
-        android:src="@drawable/default_image" />
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ingredient_cup_circle">
+
+            <TextView
+                android:id="@+id/measure_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/start_fit_margin"
+                android:textColor="@color/colorIcon"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                tools:text="100.0" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/measure_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Unit"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:textSize="16sp"
+            android:layout_margin="@dimen/start_fit_margin"/>
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/recipe_name_text_view"
+        android:id="@+id/ingredient_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_margin="@dimen/start_fit_margin"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/colorPrimaryText"
+        android:textStyle="bold"
         android:textSize="18sp"
-        android:textStyle="bold|italic"
-        tools:text="Recipe Name" />
+        tools:text="Ingredient Name" />
 
 </LinearLayout>

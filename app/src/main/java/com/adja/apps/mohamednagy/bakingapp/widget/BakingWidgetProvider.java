@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -15,13 +16,21 @@ import com.adja.apps.mohamednagy.bakingapp.R;
  * Implementation of App Widget functionality.
  */
 public class BakingWidgetProvider extends AppWidgetProvider {
+    public static final int FIT_WIDGET_APP_SIZE = 300;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
         Log.e("update", " done");
-        // Construct the RemoteViews object
-        RemoteViews views = getRecipeRemoteViews(context);
+        Bundle option = appWidgetManager.getAppWidgetOptions(appWidgetId);
+        int height = option.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+        RemoteViews views;
 
+        if(height >= FIT_WIDGET_APP_SIZE){
+            Log.e("done","300 more");
+            views = getRecipeRemoteViews(context, R.layout.widget_recipe_ingredient);
+        }else{
+            views = getRecipeRemoteViews(context, R.layout.widget_recipe__serving_ingredient);
+        }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -44,8 +53,8 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    private static RemoteViews getRecipeRemoteViews(Context context){
-        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_view_sm300);
+    private static RemoteViews getRecipeRemoteViews(Context context, int layout){
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
         // Connect Adapter
         Intent remoteViewAdapterListService = new Intent(context, ListRemoteViewsService.class);
         remoteViews.setRemoteAdapter(R.id.widget_list_view, remoteViewAdapterListService);
