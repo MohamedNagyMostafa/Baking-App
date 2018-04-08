@@ -68,6 +68,20 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.step_fragment, container, false);
 
+        // This Block of code Is Added To Solve Strange Problem I Faced
+        // Link : https://discussions.udacity.com/t/refresh-fragment/657570
+        // I Hope If there's a logically answer for this situation I get it
+        // at project reviewer's comment or reply on the forum
+        // Thanks.
+        // To Handle Tablet Mode.
+        {
+            Bundle arguments = getArguments();
+            if (arguments != null &&  getSaverSystem() != null) {
+                Log.e("args", "founded");
+                getSaverSystem().save(arguments);
+            }
+        }
+
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
         // Get Saving Data-Transmitted data.
@@ -79,25 +93,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         }else{
             Log.e("step fragment","no data");
         }
-        Log.e("start test block","****************88");
-        {
-            if(getSaverSystem() == null)
-                Log.e("saver system","null");
-            if(getSaverSystem().savedData() == null)
-                Log.e("saver system save data","null");
-            else
-                Log.e(String.valueOf(getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID)), "recipe id");
 
-            if(savedInstanceState == null)
-                Log.e("saveinstance","null");
-            if(mRecipeId == null)
-                Log.e("recipe id", " null");
-            else if(getSaverSystem().savedData() != null)
-                Log.e("recipe id", String.valueOf(getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID)));
-
-        }
-
-        Log.e("end test block","****************88");
 
         stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
         stepFragmentBinding.progressBar.setVisibility(View.VISIBLE);

@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         switch (getScreenType()){
             case TABLET_SCREEN_WIDTH:
-                mNavigationPaneSystem.startFragment(new NavigationSystem.FragmentIntent(RecipeListFragment.class));
+                mNavigationPaneSystem.launchFragments();
                 break;
             case PHONE_SCREEN_WIDTH:
                 mNavigationBottomSystem.launchCurrentFragment();

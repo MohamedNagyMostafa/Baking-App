@@ -44,8 +44,25 @@ public class IngredientFragment extends FragmentNav {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.ingredient_fragment, container, false);
 
+        // This Block of code Is Added To Solve Strange Problem I Faced
+        // Link : https://discussions.udacity.com/t/refresh-fragment/657570
+        // I Hope If there's a logically answer for this situation I get it
+        // at project reviewer's comment or reply on the forum
+        // Thanks.
+        // To Handle Tablet Mode.
+        {
+            Bundle arguments = getArguments();
+            if (arguments != null && getSaverSystem() != null) {
+                Log.e("args", "founded");
+                getSaverSystem().save(arguments);
+            }
+        }
+
         Bundle bundle = getPreviousState(savedInstanceState);
         if(bundle != null) mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.IngredientData.RECIPE_ID);
+        if(mRecipeId != null){
+            Log.e("not null","ingredient exist " + String.valueOf(mRecipeId));
+        }
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle ListView
@@ -61,12 +78,14 @@ public class IngredientFragment extends FragmentNav {
                     UriController.getIngredientTableUriByRecipeId(mRecipeId),
                     ingredients -> {
                         if(ingredients.size() > 0){
+                            Log.e("ingredient","there's data");
                             mIngredientFragmentBinding.emptyView.setVisibility(View.GONE);
                             ingredientListAdapter.swap(ingredients);
 
                             checkPreviousScroll();
 
                         }else{
+                            Log.e("ingredient","no data");
                             mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
                         }
 
@@ -87,7 +106,7 @@ public class IngredientFragment extends FragmentNav {
 
     @Override
     public void onDestroyView() {
-        getSaverSystem().save(getSavedData());
+        getSaverSystem().save(getSavedData()); // Phone Mode
         mIngredientFragmentRetriever.release();
         super.onDestroyView();
     }
@@ -112,7 +131,6 @@ public class IngredientFragment extends FragmentNav {
         if(mRecipeId != null) bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
         bundle.putParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION,
                 mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
-
         return bundle;
     }
 
