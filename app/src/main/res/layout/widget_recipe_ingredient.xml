@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
         <TextView
-            android:id="@+id/recipe_name"
+            android:id="@+id/wd_recipe_name"
             android:layout_width="match_parent"
             android:gravity="center_horizontal"
             android:layout_height="wrap_content"
@@ -18,13 +18,13 @@
             android:fontFamily="cursive" />
 
     <GridView
-        android:id="@+id/ingredient_grid_view"
+        android:id="@+id/wd_ingredient_grid_view"
         android:layout_width="match_parent"
         android:numColumns="2"
         android:layout_height="wrap_content"/>
 
     <LinearLayout
-        android:id="@+id/empty_view"
+        android:id="@+id/wd_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

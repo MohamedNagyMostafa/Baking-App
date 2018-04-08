@@ -29,6 +29,8 @@ public class Extras {
     }
 
     public static class WidgetData{
-        public static final String WIDGET_SHARD_PREFERENCES_SELECTED_RECIPE = "pre_shr_selected_recipe";
+        public static final String WIDGET_SHARD_PREFERENCES_SELECTED_RECIPE = "wd_pre_shr_selected_recipe";
+        public static final String WIDGET_DATA_SELECTED_RECIPE              = "wd_selected_recipe_data";
+
     }
 }

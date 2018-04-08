@@ -22,7 +22,7 @@
             android:background="@drawable/ingredient_cup_circle">
 
             <TextView
-                android:id="@+id/measure_quantity"
+                android:id="@+id/wd_measure_quantity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/start_fit_margin"
@@ -34,7 +34,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/measure_unit"
+            android:id="@+id/wd_measure_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Unit"
@@ -47,7 +47,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/ingredient_name"
+        android:id="@+id/wd_ingredient_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/start_fit_margin"

@@ -22,6 +22,9 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     public static final int BEST_WIDGET_APP_HEIGHT = 230;
     public static final int BEST_WIDGET_APP_WIDTH = 280;
 
+    public static final int BEST_WIDGET_APP_LAYOUT_ID = R.layout.widget_recipe__serving_ingredient;
+    public static final int NORMAL_WIDGET_APP_LAYOUT_ID = R.layout.widget_recipe_ingredient;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, Long recipeId) {
         Bundle option = appWidgetManager.getAppWidgetOptions(appWidgetId);
@@ -29,12 +32,12 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         int height = option.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
         int width = option.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_recipe_ingredient);
+        RemoteViews views;
 
         if(height >= BEST_WIDGET_APP_HEIGHT && width >= BEST_WIDGET_APP_WIDTH){
-            views = getRecipeRemoteViews(context, R.layout.widget_recipe_ingredient);
+            views = handleWidgetView(context, BEST_WIDGET_APP_LAYOUT_ID, recipeId);
         }else{
-           views = getRecipeRemoteViews(context, R.layout.widget_recipe__serving_ingredient);
+            views = handleWidgetView(context, NORMAL_WIDGET_APP_LAYOUT_ID, recipeId);
         }
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

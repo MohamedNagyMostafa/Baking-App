@@ -272,15 +272,15 @@ public class DatabaseRetriever{
             super(contentResolver);
         }
 
-        // Retrieve all recipes.
-        public synchronized void getRecipesFromDatabase(Uri uri, @NonNull OnCompletedListener onCompletedListener){
+        // Retrieve Ingredients for specific recipe.
+        public synchronized void getIngredientFromDatabase(Uri uri, @NonNull WidgetRetriever.OnCompletedListener onCompletedListener){
             mOnCompletedListener = onCompletedListener;
 
             startQuery(
                     TOKEN,
                     null,
                     uri,
-                    Projection.RECIPE_PROJECTION,
+                    Projection.INGREDIENT_PROJECTION,
                     null,
                     null,
                     null
@@ -290,25 +290,23 @@ public class DatabaseRetriever{
 
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
-            List<Recipe> recipes = new ArrayList<>();
+            List<Ingredient> ingredients = new ArrayList<>();
 
-            if(cursor != null) {
-                while (cursor.moveToNext()) {
-                    Recipe recipe = new Recipe(
-                            cursor.getLong(Projection.RECIPE_ID_COLUMN),
-                            cursor.getString(Projection.RECIPE_NAME_COLUMN),
-                            null,
-                            null,
-                            cursor.getInt(Projection.RECIPE_SERVING_COLUMN),
-                            cursor.getString(Projection.RECIPE_IMAGE_COLUMN)
-                    );
-                    recipes.add(recipe);
-                }
+            assert cursor != null;
+            while(cursor.moveToNext()){
+                Ingredient ingredient = new Ingredient(
+                        cursor.getInt(Projection.INGREDIENT_QUANTITY_COLUMN),
+                        cursor.getString(Projection.INGREDIENT_MEASURE_COLUMN),
+                        cursor.getString(Projection.INGREDIENT_COLUMN)
+                );
 
-                cursor.close();
+                ingredients.add(ingredient);
             }
+
+            cursor.close();
+
             if(mOnCompletedListener != null)
-                mOnCompletedListener.onCompleted(recipes);
+                mOnCompletedListener.onCompleted(ingredients);
         }
 
         /**
@@ -322,7 +320,7 @@ public class DatabaseRetriever{
          * Called when operation is completed.
          */
         public interface OnCompletedListener{
-            void onCompleted(List<Recipe> recipes);
+            void onCompleted(List<Ingredient> recipes);
         }
     }
 }
