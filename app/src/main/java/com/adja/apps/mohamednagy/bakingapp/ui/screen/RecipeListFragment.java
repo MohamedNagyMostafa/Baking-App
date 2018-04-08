@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,14 +67,16 @@ public class RecipeListFragment extends FragmentNav {
         recipeRecycleView.setSelectedView(mCurrentSelectedRecipe);
 
         recipeRecycleView.setRecipeClickListener(((recipeId) -> {
+            Log.e(getClass().getName(), "recipe is clicked\n" + "recipe value is "+ String.valueOf(recipeId));
             if(mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
                 mCurrentSelectedRecipe = recipeId;
                 // Reset active step position and video mint to initial state
-                openStepFragmentAsNewRecipe();
                 updateIngredientRecipe();
+                openStepFragmentAsNewRecipe();
             }else{
                 // Retrieve the previous state of steps/videos
                 openStepFragmentAsSameRecipe();
+
             }
         }));
 
@@ -200,6 +203,8 @@ public class RecipeListFragment extends FragmentNav {
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
 
         startFragment(fragmentIntent);
+        Log.e(getClass().getName(), "set data to saver system at step" +"\n value is "
+                + String.valueOf(mCurrentSelectedRecipe));
     }
 
     private void openStepFragmentAsSameRecipe(){
@@ -208,11 +213,16 @@ public class RecipeListFragment extends FragmentNav {
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
 
         startFragment(fragmentIntent);
+        Log.e(getClass().getName(), "set data to saver system at step" +"\n value is "
+                + String.valueOf(mCurrentSelectedRecipe));
     }
 
     // Set current selected recipe to ingredient saver system.
     private void updateIngredientRecipe(){
-        new NavigationBottomSystem.FragmentIntent(IngredientFragment.class).putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
+        new NavigationBottomSystem.FragmentIntent(IngredientFragment.class)
+                .putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
+        Log.e(getClass().getName(), "set data to saver system at ingredient" +"\n value is "
+                + String.valueOf(mCurrentSelectedRecipe));
     }
 
     private Bundle getPreviousState(Bundle saveInstanceState){

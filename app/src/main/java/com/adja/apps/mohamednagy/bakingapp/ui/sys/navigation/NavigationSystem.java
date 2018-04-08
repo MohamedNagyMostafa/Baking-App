@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.util.Pair;
 
+import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class NavigationSystem{
             ).commit();
         }
     }
+
     // Called At Tablet Mode
     private void loadFragmentOrReattachFragment(Pair<FragmentNav, String> fragmentNavHolder, int frameId){
         // Check If the fragment is created before.
@@ -59,6 +62,34 @@ public class NavigationSystem{
             // I Hope If there's a logically answer for this situation I get it
             // at project reviewer's comment or reply on the forum
             // Thanks.
+            if(fragmentNav instanceof IngredientFragment) {
+                /**
+                 * Start Test Block
+                 */
+                {
+                    Log.e(getClass().getName(), "navigation sytem detect ingredient fragment\n" +
+                            "Start Testing to save system data ");
+                    if (fragmentNav.getSaverSystem() != null) {
+                        Log.e(getClass().getName(), "detect ingredient saver system");
+                        if (fragmentNav.getSaverSystem().savedData() != null) {
+                            Log.e(getClass().getName(), "detect saved data at saver system");
+                            Long recipeId = fragmentNav.getSaverSystem().savedData().getLong(Extras.IngredientData.RECIPE_ID);
+                            if (recipeId != null && recipeId != 0) {
+                                Log.e(getClass().getName(), " detect data at recipe id\n" + "data value is :" + recipeId);
+                            } else {
+                                Log.e(getClass().getName(), "there's no data for recipe id extra");
+                            }
+                        } else {
+                            Log.e(getClass().getName(), "saver system is empty");
+                        }
+                    } else {
+                        Log.e(getClass().getName(), "no ingredient saver system .. error");
+                    }
+                }
+            }
+            /**
+             * End test block
+             */
             fragment.setArguments(fragmentNav.getSaverSystem().savedData());
 
             mFragmentManager.beginTransaction().detach(fragment).attach(fragment).commit();
