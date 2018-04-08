@@ -29,6 +29,12 @@ public class UriController {
         return STEP_TABLE_URI;
     }
 
+    public static Uri getRecipeTableUriByRecipeId(long id){
+        return RECIPE_TABLE_URI.buildUpon()
+                .appendPath(String.valueOf(id))
+                .build();
+    }
+
     public static Uri getStepTableUriByRecipeId(long id){
         return STEP_TABLE_URI.buildUpon()
                 .appendPath(DbContent.Recipe.TABLE_NAME)

@@ -56,13 +56,13 @@ public class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onDataSetChanged() {
         if(mRecipeId != null)
             mWidgetRetriever.getIngredientFromDatabase(
                     UriController.getIngredientTableUriByRecipeId(mRecipeId),
-                    ingredients->mIngredientList = ingredients
-            );
+                    data -> mIngredientList = (List<Ingredient>)data);
     }
 
     @Override

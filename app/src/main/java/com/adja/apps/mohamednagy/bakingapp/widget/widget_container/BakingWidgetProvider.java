@@ -12,8 +12,16 @@ import android.widget.RemoteViews;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
+import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
+import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
+import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
+import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
+import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.widget.widget_helpers.WidgetBroadcastHandler;
 import com.adja.apps.mohamednagy.bakingapp.widget.widget_helpers.WidgetSharedPreferences;
+
+import java.util.List;
 
 /**
  * Implementation of App Widget functionality.
@@ -95,6 +103,30 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         BakingWidgetProvider.updateBakingWidgets(context, appWidgetManager, widgetIds, recipeId);
     }
 
+    @SuppressWarnings("unchecked")
+    private static RemoteViews handleWidgetView(Context context, int layout, Long recipeId){
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), layout);
+
+        if(recipeId != null){
+            new DatabaseRetriever.WidgetRetriever(context.getContentResolver())
+                    .getIngredientFromDatabase(UriController.getRecipeTableUriByRecipeId(recipeId),
+                            data -> {
+                                Recipe recipe = (Recipe) data;
+                                if(recipe != null){
+                                    remoteViews.setTextViewText(R.id.wd_recipe_name, recipe.getName());
+                                    remoteViews.setTextViewText(R.id.wd_serving_size, String.valueOf(recipe.getServings()));
+                                }
+                            }
+                    );
+            Intent intent = new Intent(context, ListRemoteViewsService.class);
+            intent.putExtra(Extras.WidgetData.WIDGET_DATA_SELECTED_RECIPE, recipeId);
+
+            remoteViews.setRemoteAdapter(R.id.wd_ingredient_grid_view, intent);
+            remoteViews.setEmptyView(R.id.wd_ingredient_grid_view, R.id.wd_empty_view);
+        }
+
+        return remoteViews;
+    }
 
 }
 

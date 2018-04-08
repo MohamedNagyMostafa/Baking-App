@@ -263,21 +263,22 @@ public class DatabaseRetriever{
     /**
      * Retrieval system for recipe fragment.
      */
-    public static class WidgetRetriever extends AsyncQueryHandler{
-        private static final int TOKEN = 0x01D;
+    public static class WidgetRetriever<T> extends AsyncQueryHandler{
+        private static final int TOKEN_INGREDIENT_QUERY = 0x01D;
+        private static final int TOKEN_RECIPE_QUERY = 0x02D;
 
-        private OnCompletedListener mOnCompletedListener;
+        private OnCompletedListener<T> mOnCompletedListener;
 
         public WidgetRetriever(ContentResolver contentResolver) {
             super(contentResolver);
         }
 
         // Retrieve Ingredients for specific recipe.
-        public synchronized void getIngredientFromDatabase(Uri uri, @NonNull WidgetRetriever.OnCompletedListener onCompletedListener){
+        public synchronized void getIngredientFromDatabase(Uri uri, @NonNull WidgetRetriever.OnCompletedListener<T> onCompletedListener){
             mOnCompletedListener = onCompletedListener;
 
             startQuery(
-                    TOKEN,
+                    TOKEN_INGREDIENT_QUERY,
                     null,
                     uri,
                     Projection.INGREDIENT_PROJECTION,
@@ -288,8 +289,35 @@ public class DatabaseRetriever{
 
         }
 
+        public synchronized void getRecipeFromDatabase(Uri uri, @NonNull WidgetRetriever.OnCompletedListener<T> onCompletedListener){
+            mOnCompletedListener = onCompletedListener;
+
+            startQuery(
+                    TOKEN_RECIPE_QUERY,
+                    null,
+                    uri,
+                    Projection.RECIPE_PROJECTION,
+                    null,
+                    null,
+                    null
+            );
+        }
+
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            if(mOnCompletedListener != null)
+                switch (token){
+                    case TOKEN_INGREDIENT_QUERY:
+                        mOnCompletedListener.onCompleted(getIngredientData(cursor));
+                        break;
+                    case TOKEN_RECIPE_QUERY:
+                        mOnCompletedListener.onCompleted(getRecipeData(cursor));
+                        break;
+                }
+        }
+        // Get Data From Cursor
+        @SuppressWarnings("unchecked")
+        private T getIngredientData(Cursor cursor){
             List<Ingredient> ingredients = new ArrayList<>();
 
             assert cursor != null;
@@ -305,22 +333,41 @@ public class DatabaseRetriever{
 
             cursor.close();
 
-            if(mOnCompletedListener != null)
-                mOnCompletedListener.onCompleted(ingredients);
+            return (T)ingredients;
+        }
+
+        @SuppressWarnings("unchecked")
+        private T getRecipeData(Cursor cursor){
+            Recipe recipe;
+            if(cursor != null){
+                cursor.moveToNext();
+                recipe = new Recipe(
+                        cursor.getLong(Projection.RECIPE_ID_COLUMN),
+                        cursor.getString(Projection.RECIPE_NAME_COLUMN),
+                        null,
+                        null,
+                        cursor.getInt(Projection.RECIPE_SERVING_COLUMN),
+                        null
+                );
+                return (T)recipe;
+            }
+
+            return null;
         }
 
         /**
          * Stop Any Working Operation.
          */
         public void release(){
-            cancelOperation(TOKEN);
+            cancelOperation(TOKEN_INGREDIENT_QUERY);
+            cancelOperation(TOKEN_RECIPE_QUERY);
         }
 
         /**
          * Called when operation is completed.
          */
-        public interface OnCompletedListener{
-            void onCompleted(List<Ingredient> recipes);
+        public interface OnCompletedListener<T>{
+            void onCompleted(T data);
         }
     }
 }

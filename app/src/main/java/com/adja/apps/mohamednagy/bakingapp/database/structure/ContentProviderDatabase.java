@@ -83,6 +83,8 @@ public class ContentProviderDatabase extends ContentProvider{
                 return getStepByRecipeId(uri, projection);
             case DbUriMatcher.INGREDIENT_RECIPE_ID:
                 return getIngredientByRecipeId(uri, projection);
+            case DbUriMatcher.RECIPE_WITH_ID:
+                return getRecipeById(uri, projection);
             default:
                 throw new UnsupportedOperationException("Unknown Uri : " + uri);
         }
@@ -249,6 +251,24 @@ public class ContentProviderDatabase extends ContentProvider{
 
         return mDbHelper.getReadableDatabase().query(
                 DbContent.Ingredient.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+    }
+
+    private Cursor getRecipeById(Uri uri, String[] projection){
+        long recipeId = ContentUris.parseId(uri);
+        String selection = DbContent.Recipe._ID +"=?";
+        String[] selectionArgs= {
+                String.valueOf(recipeId)
+        };
+
+        return mDbHelper.getReadableDatabase().query(
+                DbContent.Recipe.TABLE_NAME,
                 projection,
                 selection,
                 selectionArgs,
