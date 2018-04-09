@@ -6,10 +6,11 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import java.util.jar.Manifest;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    10:57 AM
  */
 
 public class PermissionHandler {

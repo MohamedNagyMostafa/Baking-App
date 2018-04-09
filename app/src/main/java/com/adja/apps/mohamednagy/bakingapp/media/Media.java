@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.media.sys.AudioFocusSystem;
 import com.google.android.exoplayer2.DefaultLoadControl;

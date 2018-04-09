@@ -5,13 +5,12 @@ import android.net.Uri;
 import com.adja.apps.mohamednagy.bakingapp.database.structure.DbContent;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    11:01 AM
  */
 
 public class UriController {
-
-    private static final String NUMBER = "#";
-    private static final String TEXT   = "*";
 
     private static final Uri RECIPE_TABLE_URI = DbContent.Recipe.CONTENT_URI;
     private static final Uri INGREDIENT_TABLE_URI = DbContent.Ingredient.CONTENT_URI;

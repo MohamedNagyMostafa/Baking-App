@@ -1,20 +1,21 @@
 package com.adja.apps.mohamednagy.bakingapp.network;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    10:58 AM
  */
 
-public class ApiClient {
+class ApiClient {
 
-    public static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
+    private static final String BASE_URL = "https://d17h27t6h515a5.cloudfront.net/";
 
     private static Retrofit retrofit = null;
 
-    public static Retrofit getClient(){
+    static Retrofit getClient(){
         if(retrofit == null){
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)

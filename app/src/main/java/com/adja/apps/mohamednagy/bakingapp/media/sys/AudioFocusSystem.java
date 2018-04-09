@@ -7,13 +7,13 @@ import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 
 import com.adja.apps.mohamednagy.bakingapp.media.Media;
 
 /**
- * Created by Mohamed Nagy on 3/24/2018.
+ * Created by Mohamed Nagy on 3/24/2018 .
+ * Project projects submission
+ * Time    11:00 AM
  */
 
 public class AudioFocusSystem {

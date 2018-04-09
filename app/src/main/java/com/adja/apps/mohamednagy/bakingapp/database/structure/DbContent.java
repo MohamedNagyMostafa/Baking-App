@@ -1,11 +1,12 @@
 package com.adja.apps.mohamednagy.bakingapp.database.structure;
 
-import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    11:00 AM
  */
 
 public class DbContent {

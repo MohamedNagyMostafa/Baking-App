@@ -1,35 +1,33 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
-/**
+/*
+ *
  * Created by Mohamed Nagy on 4/2/2018 .
  * Project projects submission
  * Time    10:11 AM
  */
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.Toast;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
-import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
+import com.adja.apps.mohamednagy.bakingapp.MainActivity;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystem;
 
 /**
  * Class to hold fragments which will be showed by navigation bar
  * and holds fragment details.
  */
-public class FragmentNav extends Fragment {
+public abstract class FragmentNav extends Fragment {
 
-    private static final String FRAGMENT_DATA_SAVER_BUNDLE = "fragment_data_bundle";
-    private static final String FRAGMENT_DATA_SAVER_ID     = "fragment_data_id";
-
-    private SaverSystem                 mSaverSystem;
-    private FragmentNavListener         mFragmentNavListener;
-    private int                         mNavigationItem;
+    private FragmentNavListener mFragmentNavListener;
+    private int                 mNavigationItem;
 
     public FragmentNav(){}
-    // *** Inserting Data Section Start ***
+
     public void setNavigationItem(int mNavigationItem) {
         this.mNavigationItem = mNavigationItem;
     }
@@ -38,54 +36,43 @@ public class FragmentNav extends Fragment {
         mFragmentNavListener = fragmentNavListener;
     }
 
-    public void addSaverSystem(SaverSystem saverSystem){
-        mSaverSystem = saverSystem;
-    }
-
-    // *** Inserting Data Section End ***
-
-    // *** Retrieve Data Section Start***
-    public SaverSystem getSaverSystem(){
-        return mSaverSystem;
-    }
-
-
     int getNavigationItem() {
         return mNavigationItem;
     }
-    // *** Retrieve Data Section Start ***
 
-    // *** Fragment Services Section Start ***
     // Launch new fragment
-    public void startFragment(NavigationBottomSystem.FragmentIntent fragmentIntent){
+    public void startFragment(NavigationSystem.FragmentIntent fragmentIntent){
         mFragmentNavListener.startFragment(fragmentIntent);
     }
 
-    // Orientation
+
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(FRAGMENT_DATA_SAVER_BUNDLE, getSaverSystem().savedData());
-        outState.putString(FRAGMENT_DATA_SAVER_ID, mSaverSystem.ID);
-        super.onSaveInstanceState(outState);
+    public void onDestroy() {
+        onSaveData(getSaverSystem().savedData());
+        super.onDestroy();
     }
 
+    @Nullable
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null) {
-            Bundle dataSaverBundle = savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_BUNDLE);
-            String dataSaverId     = savedInstanceState.getString(FRAGMENT_DATA_SAVER_ID);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.e("view","created");
+        if(getSaverSystem() != null)
+            onRestoreData(getSaverSystem().savedData());
+        return this.onCreateView(inflater, container);
+    }
 
-            mSaverSystem = new SaverSystem(dataSaverId);
-            mSaverSystem.save(dataSaverBundle);
-        }
+    public SaverSystem getSaverSystem(){
+        return ((MainActivity)getActivity()).SAVER_SYSTEM_CONTROLLER.getSaverSystemInstance(this);
     }
 
     /**
      * Listen to start new fragment.
      */
     interface FragmentNavListener{
-        void startFragment(NavigationBottomSystem.FragmentIntent fragmentIntent);
+        void startFragment(NavigationSystem.FragmentIntent fragmentIntent);
     }
 
+    public abstract View onCreateView(LayoutInflater layoutInflater, ViewGroup container);
+    public abstract void onSaveData(Bundle bundle);
+    public abstract void onRestoreData(Bundle bundle);
 }

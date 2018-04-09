@@ -2,25 +2,17 @@ package com.adja.apps.mohamednagy.bakingapp.ui.adapter;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeViewBinding;
 import com.adja.apps.mohamednagy.bakingapp.model.Recipe;
-import com.adja.apps.mohamednagy.bakingapp.model.Step;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.squareup.picasso.Picasso;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Mohamed Nagy on 3/31/2018 .
@@ -65,7 +57,6 @@ public class RecipeRecycleView extends RecyclerView.Adapter<RecipeRecycleView.Re
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         Recipe recipe = mRecipes.get(position);
-        Log.e("recipe id",String.valueOf(recipe.getId()));
         holder.RECIPE_VIEW.recipeName.setText(recipe.getName());
         holder.RECIPE_VIEW.servings.setText(String.valueOf(recipe.getServings()));
 
