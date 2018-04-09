@@ -60,12 +60,13 @@ public class NavigationBottomSystem extends NavigationSystem {
 
     public void onSaveViewInstance(Bundle saveInstance){
         int selected = mBottomNavigationView.getSelectedItemId();
-        Log.e("fragment","save :" + String.valueOf(selected));
+        Log.e(getClass().getName(),"save fragment:" + String.valueOf(selected));
         saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, selected);
     }
 
     public void onRestoreViewInstance(Bundle saveInstance){
         if(saveInstance != null) {
+            Log.e(getClass().getName(),"restore fragment:" + String.valueOf(mCurrentSelectedFragment));
             mCurrentSelectedFragment = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
         }
     }
@@ -75,6 +76,7 @@ public class NavigationBottomSystem extends NavigationSystem {
      * Set Default Fragment At Initial State.
      */
     public void launchCurrentFragment(){
+        Log.e(getClass().getName(), "current fragment " + String.valueOf(mCurrentSelectedFragment));
         mBottomNavigationView.setSelectedItemId(mCurrentSelectedFragment);
         try {
             FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(mCurrentSelectedFragment));
