@@ -13,7 +13,7 @@
             android:layout_height="0dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/IngredientListFrame"
+            app:layout_constraintBottom_toTopOf="@+id/ingredientListFrame"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -27,7 +27,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <FrameLayout
-                android:id="@+id/StepFrame"
+                android:id="@+id/stepFrame"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2" />
@@ -36,7 +36,7 @@
 
 
         <FrameLayout
-            android:id="@+id/IngredientListFrame"
+            android:id="@+id/ingredientListFrame"
             android:layout_width="0dp"
             android:layout_height="300dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -1,11 +1,12 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
@@ -14,12 +15,7 @@ import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by Mohamed Nagy on 3/27/2018 .
@@ -27,21 +23,15 @@ import java.util.List;
  * Time    3:51 PM
  */
 
-public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
-    // Holds Fragment with NavigationItem
-    private static List<Pair<FragmentNav, String>> mFragmentNavsHolder;
-    private FragmentManager mFragmentManager;
+public class NavigationBottomSystem extends NavigationSystem {
     private BottomNavigationView mBottomNavigationView;
+    private Integer mCurrentSelectedFragment;
     private final Integer FRAME_ID;
 
-    public NavigationBottomSystem(FragmentManager fragmentManager, Integer frameId){
-        mFragmentNavsHolder = new ArrayList<>();
-        mFragmentManager = fragmentManager;
+    public NavigationBottomSystem(AppCompatActivity appCompatActivity, Integer frameId, int defaultFragmentId){
+        super(appCompatActivity);
         FRAME_ID = frameId;
-    }
-
-    public void put(@NonNull FragmentNav fragmentNav, String tag){
-        mFragmentNavsHolder.add(new Pair<>(fragmentNav, tag));
+        mCurrentSelectedFragment = defaultFragmentId;
     }
 
     public void addView(BottomNavigationView bottomNavigationView){
@@ -60,7 +50,7 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
 
             for (Pair<FragmentNav, String> pair : mFragmentNavsHolder) {
                 if (pair.first.getNavigationItem() == id) {
-                    loadFragment(pair);
+                    super.loadFragment(pair, FRAME_ID);
                     break;
                 }
             }
@@ -68,45 +58,17 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
         });
     }
 
-    /**
-     * Replace current fragment with the new fragment based on navigation bar.
-     */
-    private void loadFragment(Pair<FragmentNav, String> fragmentNavHolder){
-        // Check If the fragment is created before.
-        Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNavHolder.second);
-
-        if(fragment != null) {
-            Log.e("existance","aaaaaaaaaaaaaaa");
-            mFragmentManager.beginTransaction().show(fragment).commit();
-        }else {
-            mFragmentManager.beginTransaction().replace(
-                    FRAME_ID,
-                    fragmentNavHolder.first,
-                    fragmentNavHolder.second
-            ).commit();
-        }
-    }
-
-    @Override
-    public void startFragment(FragmentIntent fragmentIntent) {
-        mBottomNavigationView.setSelectedItemId(fragmentIntent.mFragmentNavHolder.first.getNavigationItem());
-        loadFragment(fragmentIntent.mFragmentNavHolder);
-    }
-
     public void onSaveViewInstance(Bundle saveInstance){
-        saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, mBottomNavigationView.getSelectedItemId());
+        int selected = mBottomNavigationView.getSelectedItemId();
+        Log.e(getClass().getName(),"save fragment:" + String.valueOf(selected));
+        saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, selected);
     }
 
     public void onRestoreViewInstance(Bundle saveInstance){
-        int currentFragmentNav;
         if(saveInstance != null) {
-            currentFragmentNav = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
-        }else{
-            currentFragmentNav = 0;
+            Log.e(getClass().getName(),"restore fragment:" + String.valueOf(mCurrentSelectedFragment));
+            mCurrentSelectedFragment = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
         }
-        FragmentIntent fragmentIntent = new FragmentIntent(mFragmentNavsHolder.get(currentFragmentNav).first.getClass());
-
-        startFragment(fragmentIntent);
     }
 
     /**
@@ -114,14 +76,19 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
      * Set Default Fragment At Initial State.
      */
     public void launchCurrentFragment(){
-        int fragmentId = mBottomNavigationView.getSelectedItemId();
-        Log.e("fragment id"," id : " + String.valueOf(fragmentId));
-        Log.e("fragment id","home " + String.valueOf(R.id.home_nav) + " step "  + String.valueOf(R.id.step_nav));
-        FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(fragmentId));
-        startFragment(fragmentIntent);
+        Log.e(getClass().getName(), "current fragment " + String.valueOf(mCurrentSelectedFragment));
+        mBottomNavigationView.setSelectedItemId(mCurrentSelectedFragment);
+        try {
+            FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(mCurrentSelectedFragment));
+            startFragment(fragmentIntent);
+
+        } catch (FragmentIntent.InValidIntentException e) {
+            e.printStackTrace();
+        }
     }
 
     private Class<? extends FragmentNav> getFragmentClassFromId(int fragmentId){
+        Log.e("fragment",String.valueOf(fragmentId));
         switch (fragmentId){
             case R.id.step_nav:
                 return StepFragment.class;
@@ -133,63 +100,9 @@ public class NavigationBottomSystem implements FragmentNav.FragmentNavListener {
         }
     }
 
-    /**
-     * Class used to move through navigation bar fragments
-     * and passing data through its fragments
-     */
-    public static class FragmentIntent{
-        private Class<? extends FragmentNav> mFragmentClass;
-        private Pair<FragmentNav, String> mFragmentNavHolder;
-
-        public FragmentIntent(Class<? extends FragmentNav> fragmentClass){
-            mFragmentClass = fragmentClass;
-            init();
-        }
-
-        private void init(){
-            for (Pair<FragmentNav, String> fragmentNavHolder : mFragmentNavsHolder) {
-                if(mFragmentClass.isInstance(fragmentNavHolder.first)){
-                    mFragmentNavHolder = fragmentNavHolder;
-                    break;
-                }
-            }
-        }
-
-        /**
-         * Save data for specific fragment of Bottom Navigation Fragments.
-         */
-        public <T>void putExtra(String extraName, T data){
-            Bundle previousSavedData = mFragmentNavHolder.first.getSaverSystem().savedData();
-
-            if(data instanceof Integer){
-                if(previousSavedData != null) {
-                    previousSavedData.putInt(extraName, (Integer) data);
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(extraName, (Integer) data);
-
-                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
-                }
-            }else if(data instanceof Long){
-                if(previousSavedData != null) {
-                    previousSavedData.putLong(extraName, (Long) data);
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putLong(extraName, (Long) data);
-
-                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
-                }
-
-            }else if(data instanceof String){
-                if(previousSavedData != null) {
-                    previousSavedData.putString(extraName, (String) data);
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putString(extraName, (String) data);
-
-                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
-                }
-            }
-        }
+    @Override
+    public void startFragment(FragmentIntent fragmentIntent) {
+        mBottomNavigationView.setSelectedItemId(fragmentIntent.mFragmentNavHolder.first.getNavigationItem());
+        super.startFragment(fragmentIntent, FRAME_ID);
     }
 }

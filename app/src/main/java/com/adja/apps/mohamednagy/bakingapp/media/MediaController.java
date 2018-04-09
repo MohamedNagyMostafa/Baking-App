@@ -1,8 +1,5 @@
 package com.adja.apps.mohamednagy.bakingapp.media;
 
-import android.media.session.MediaSession;
-import android.util.Log;
-
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Timeline;
@@ -10,7 +7,9 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 
 /**
- * Created by Mohamed Nagy on 3/23/2018.
+ * Created by Mohamed Nagy on 3/23/2018 .
+ * Project projects submission
+ * Time    11:00 AM
  */
 
 public abstract class MediaController implements ExoPlayer.EventListener {
@@ -26,7 +25,6 @@ public abstract class MediaController implements ExoPlayer.EventListener {
 
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-        Log.e("state changed","aaaaaaaaaaaaaaaaaaaaaaaaaaa");
         handleMediaListener(playWhenReady, playbackState);
         handleSessionListener(playWhenReady, playbackState);
 
@@ -58,7 +56,6 @@ public abstract class MediaController implements ExoPlayer.EventListener {
      * @param playbackState
      */
     private void handleSessionListener(boolean playWhenReady, int playbackState){
-        Log.e("session","called");
         if(playbackState == ExoPlayer.STATE_READY){
             if(playWhenReady)
                 mMediaControllerListener.onStateChanged(true);

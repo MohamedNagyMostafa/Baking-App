@@ -1,7 +1,6 @@
 package com.adja.apps.mohamednagy.bakingapp.network;
 
 import android.content.Context;
-import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.R;

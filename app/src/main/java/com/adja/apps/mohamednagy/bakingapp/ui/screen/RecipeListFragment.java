@@ -4,6 +4,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -15,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
 import com.adja.apps.mohamednagy.bakingapp.databinding.RecipeFragmentBinding;
@@ -26,6 +26,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
@@ -43,6 +44,7 @@ public class RecipeListFragment extends FragmentNav {
     private DatabaseRetriever.RecipeFragmentRetriever mRecipeFragmentRetriever;
     private RecipeFragmentBinding                     mRecipeFragmentBinding;
     private Long                                      mCurrentSelectedRecipe;
+    private Parcelable                                mRecycleListScrollPosition;
     private NetworkHandler                            mNetworkHandler;
 
     @Override
@@ -51,16 +53,12 @@ public class RecipeListFragment extends FragmentNav {
         mRecipeFragmentRetriever = new DatabaseRetriever.RecipeFragmentRetriever(getActivity().getContentResolver());
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipe_fragment, container, false);
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup container) {
+        View rootView = layoutInflater.inflate(R.layout.recipe_fragment, container, false);
 
         mRecipeFragmentBinding = DataBindingUtil.bind(rootView);
-        // Handle Rotation or Swap Through Fragments.
-        Bundle bundle = getPreviousState(savedInstanceState);
-        if(bundle != null) mCurrentSelectedRecipe = bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
-//        Toast.makeText(getContext(), String.valueOf(mCurrentSelectedRecipe), Toast.LENGTH_LONG).show();
+
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecipeRecycleView recipeRecycleView      = new RecipeRecycleView(null, getContext());
@@ -68,15 +66,20 @@ public class RecipeListFragment extends FragmentNav {
         recipeRecycleView.setSelectedView(mCurrentSelectedRecipe);
 
         recipeRecycleView.setRecipeClickListener(((recipeId) -> {
-            if(mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
-                mCurrentSelectedRecipe = recipeId;
-                Log.e("id",String.valueOf(mCurrentSelectedRecipe));
-                // Reset active step position and video mint to initial state
-                openStepFragmentAsNewRecipe();
-                updateIngredientRecipe();
-            }else{
-                // Retrieve the previous state of steps/videos
-                openStepFragmentAsSameRecipe();
+            Log.e(getClass().getName(), "recipe is clicked\n" + "recipe value is "+ String.valueOf(recipeId));
+            try {
+                if (mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
+                    mCurrentSelectedRecipe = recipeId;
+                    // Reset active step position and video mint to initial state
+                    updateIngredientRecipe();
+                    openStepFragmentAsNewRecipe();
+                } else {
+                    // Retrieve the previous state of steps/videos
+                    openStepFragmentAsSameRecipe();
+
+                }
+            }catch (Exception e){
+                Log.e(getClass().getName(), e.getMessage());
             }
         }));
 
@@ -93,11 +96,8 @@ public class RecipeListFragment extends FragmentNav {
                     mRecipeFragmentBinding.progressBar.setVisibility(View.GONE);
                 }
                 // Handle scroll rotation.
-                if(bundle != null){
-                    mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                            bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
-                    );
-                }
+                    mRecipeFragmentBinding.recipeRecycleView.getLayoutManager()
+                            .onRestoreInstanceState(mRecycleListScrollPosition);
             }else{
                 mNetworkHandler = new NetworkHandler(getContext()) {
                     @Override
@@ -106,11 +106,9 @@ public class RecipeListFragment extends FragmentNav {
                         // Save data.
                         insertDataToDatabase(Arrays.asList(recipes));
                         // Handle scroll rotation.
-                        if(bundle != null){
-                            mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                                    bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
-                            );
-                        }
+                        mRecipeFragmentBinding.recipeRecycleView.getLayoutManager()
+                                .onRestoreInstanceState(mRecycleListScrollPosition);
+
                         // Handle View Upon Process
                         {
                             if (recipes.length > 0) {
@@ -164,26 +162,20 @@ public class RecipeListFragment extends FragmentNav {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData(outState));
+    public void onSaveData(Bundle bundle) {
+        getSavedData(bundle);
+    }
+
+    @Override
+    public void onRestoreData(Bundle bundle) {
+        mCurrentSelectedRecipe     = bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
+        mRecycleListScrollPosition = bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION);
     }
 
     @Override
     public void onDestroyView() {
         mRecipeFragmentRetriever.release();
-        getSaverSystem().save(getSavedData());
         super.onDestroyView();
-    }
-
-    private Bundle getSavedData(){
-        Bundle bundle = new Bundle();
-        if(mCurrentSelectedRecipe != null) bundle.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, mCurrentSelectedRecipe);
-
-        bundle.putParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION,
-                mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onSaveInstanceState()
-        );
-
-        return bundle;
     }
 
     private Bundle getSavedData(Bundle bundle){
@@ -196,7 +188,7 @@ public class RecipeListFragment extends FragmentNav {
         return bundle;
     }
 
-    private void openStepFragmentAsNewRecipe(){
+    private void openStepFragmentAsNewRecipe() throws NavigationSystem.FragmentIntent.InValidIntentException {
         NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
         fragmentIntent.putExtra(Extras.StepFragmentData.CURRENT_MEDIA_MINT, 0L);
         fragmentIntent.putExtra(Extras.StepFragmentData.CURRENT_STEP_POSITION, 0);
@@ -205,7 +197,7 @@ public class RecipeListFragment extends FragmentNav {
         startFragment(fragmentIntent);
     }
 
-    private void openStepFragmentAsSameRecipe(){
+    private void openStepFragmentAsSameRecipe() throws NavigationSystem.FragmentIntent.InValidIntentException {
         NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
 
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
@@ -214,13 +206,11 @@ public class RecipeListFragment extends FragmentNav {
     }
 
     // Set current selected recipe to ingredient saver system.
-    private void updateIngredientRecipe(){
-        new NavigationBottomSystem.FragmentIntent(IngredientFragment.class).putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
+    private void updateIngredientRecipe() throws NavigationSystem.FragmentIntent.InValidIntentException {
+        new NavigationBottomSystem.FragmentIntent(IngredientFragment.class)
+                .putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
     }
 
-    private Bundle getPreviousState(Bundle saveInstanceState){
-        return saveInstanceState == null? getSaverSystem().savedData() :saveInstanceState;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
