@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,33 +63,18 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                 getContext().getContentResolver());
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.step_fragment, container, false);
-
-        // This Block of code Is Added To Solve Strange Problem I Faced
-        // Link : https://discussions.udacity.com/t/refresh-fragment/657570
-        // I Hope If there's a logically answer for this situation I get it
-        // at project reviewer's comment or reply on the forum
-        // Thanks.
-        // To Handle Tablet Mode.
-        {
-            Bundle arguments = getArguments();
-            if (arguments != null &&  getSaverSystem() != null) {
-                getSaverSystem().save(arguments);
-            }
-        }
-
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup container) {
+        final View rootView = layoutInflater.inflate(R.layout.step_fragment, container, false);
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
         // Get Saving Data-Transmitted data.
-        Bundle bundle = getPreviousState(savedInstanceState);
-        if(bundle != null) {
-            mMediaPosition = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-            mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.StepFragmentData.RECIPE_ID);
-            mCurrentActiveStep = getPreviousState(savedInstanceState).getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
-        }else{
+        if(getSaverSystem().hasData()) {
+            mMediaPosition     = getSaverSystem().savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
+            mRecipeId          = getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+            mCurrentActiveStep = getSaverSystem().savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+            Log.e("data","existed");
+
         }
 
 

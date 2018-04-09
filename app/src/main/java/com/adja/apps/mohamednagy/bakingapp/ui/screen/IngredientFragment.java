@@ -36,28 +36,12 @@ public class IngredientFragment extends FragmentNav {
         mIngredientFragmentRetriever = new DatabaseRetriever.IngredientFragmentRetriever(getActivity().getContentResolver());
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView =  inflater.inflate(R.layout.ingredient_fragment, container, false);
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup container) {
+        View rootView =  layoutInflater.inflate(R.layout.ingredient_fragment, container, false);
+        if(getSaverSystem().hasData())
+            mRecipeId = getSaverSystem().savedData().getLong(Extras.IngredientData.RECIPE_ID);
 
-        // This Block of code Is Added To Solve Strange Problem I Faced
-        // Link : https://discussions.udacity.com/t/refresh-fragment/657570
-        // I Hope If there's a logically answer for this situation I get it
-        // at project reviewer's comment or reply on the forum
-        // Thanks.
-        // To Handle Tablet Mode.
-        {
-            Bundle arguments = getArguments();
-            if (arguments != null && getSaverSystem() != null) {
-                getSaverSystem().save(arguments);
-            }
-        }
-
-        Bundle bundle = getPreviousState(savedInstanceState);
-        if(bundle != null) mRecipeId = getPreviousState(savedInstanceState).getLong(Extras.IngredientData.RECIPE_ID);
-        if(mRecipeId != null){
-        }
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle ListView
@@ -91,6 +75,7 @@ public class IngredientFragment extends FragmentNav {
 
         return rootView;
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

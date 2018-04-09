@@ -40,7 +40,9 @@ public class NavigationPaneSystem extends NavigationSystem
         super.startFragmentOrReattach(IngredientFragment, getFragmentFrame(IngredientFragment.mFragmentNavHolder.second));
     }
 
-
+    /**
+     * At Tablet Case There are just step and ingredient fragments need to update.
+     */
     private void updateFragments(){
         FragmentIntent stepFragment       = new FragmentIntent(StepFragment.class);
         FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);

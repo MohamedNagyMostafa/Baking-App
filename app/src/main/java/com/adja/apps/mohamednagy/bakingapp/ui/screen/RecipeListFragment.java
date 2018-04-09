@@ -50,16 +50,14 @@ public class RecipeListFragment extends FragmentNav {
         mRecipeFragmentRetriever = new DatabaseRetriever.RecipeFragmentRetriever(getActivity().getContentResolver());
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recipe_fragment, container, false);
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup container) {
+        View rootView = layoutInflater.inflate(R.layout.recipe_fragment, container, false);
 
         mRecipeFragmentBinding = DataBindingUtil.bind(rootView);
-        // Handle Rotation or Swap Through Fragments.
-        Bundle bundle = getPreviousState(savedInstanceState);
-        if(bundle != null) mCurrentSelectedRecipe = bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
-//        Toast.makeText(getContext(), String.valueOf(mCurrentSelectedRecipe), Toast.LENGTH_LONG).show();
+
+        if(getSaverSystem().hasData())
+            mCurrentSelectedRecipe = getSaverSystem().savedData().getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecipeRecycleView recipeRecycleView      = new RecipeRecycleView(null, getContext());
@@ -93,9 +91,9 @@ public class RecipeListFragment extends FragmentNav {
                     mRecipeFragmentBinding.progressBar.setVisibility(View.GONE);
                 }
                 // Handle scroll rotation.
-                if(bundle != null){
+                if(getSaverSystem().hasData()){
                     mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                            bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
+                            getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
                     );
                 }
             }else{
@@ -106,9 +104,9 @@ public class RecipeListFragment extends FragmentNav {
                         // Save data.
                         insertDataToDatabase(Arrays.asList(recipes));
                         // Handle scroll rotation.
-                        if(bundle != null){
+                        if(getSaverSystem().hasData()){
                             mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                                    bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
+                                    getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
                             );
                         }
                         // Handle View Upon Process

@@ -13,12 +13,8 @@ import android.os.Bundle;
  * on the same activity
  */
 public class SaverSystem {
-    public final String ID;
     private Bundle mSavedData;
-
-    public SaverSystem(String id){
-        ID = id;
-    }
+    public SaverSystem(){}
 
     public void save(Bundle data){
         mSavedData = data;
@@ -26,5 +22,9 @@ public class SaverSystem {
 
     public Bundle savedData(){
         return mSavedData;
+    }
+
+    public boolean hasData(){
+        return mSavedData != null;
     }
 }

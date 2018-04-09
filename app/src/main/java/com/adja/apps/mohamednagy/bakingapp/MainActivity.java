@@ -17,20 +17,16 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSyste
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int TABLET_SCREEN_WIDTH = 0xAB;
-    private static final int PHONE_SCREEN_WIDTH  = 0xAC;
+    public static final int TABLET_SCREEN_WIDTH = 0xAB;
+    public static final int PHONE_SCREEN_WIDTH  = 0xAC;
 
     private static final String STEP_FRAGMENT_TAG     = "step-fg";
     private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
     private static final String INGREDIENT_FRAGMENT_TAG = "gradient-fg";
 
-    private static final String STEP_FRAGMENT_SAVER_SYSTEM_ID       = "step-id";
-    private static final String RECIPE_FRAGMENT_SAVER_SYSTEM_ID     = "recipe-fg";
-    private static final String INGREDIENT_FRAGMENT_SAVER_SYSTEM_ID = "gradient-fg";
-
-    private static final SaverSystem RECIPE_SAVER_SYSTEM      = new SaverSystem(RECIPE_FRAGMENT_SAVER_SYSTEM_ID);
-    private static final SaverSystem STEP_SAVER_SYSTEM       = new SaverSystem(STEP_FRAGMENT_SAVER_SYSTEM_ID);
-    private static final SaverSystem INGREDIENT_SAVER_SYSTEM = new SaverSystem(INGREDIENT_FRAGMENT_SAVER_SYSTEM_ID);
+    private static final SaverSystem RECIPE_SAVER_SYSTEM      = new SaverSystem();
+    private static final SaverSystem STEP_SAVER_SYSTEM       = new SaverSystem();
+    private static final SaverSystem INGREDIENT_SAVER_SYSTEM = new SaverSystem();
 
     private NavigationBottomSystem mNavigationBottomSystem;
     private NavigationPaneSystem   mNavigationPaneSystem;
@@ -123,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
         mNavigationPaneSystem.addFrameToFragmentByTag(R.id.ingredientListFrame, INGREDIENT_FRAGMENT_TAG);
     }
 
-    private int getScreenType(){
+    public int getScreenType(){
         return findViewById(R.id.recipeListFrame) != null?TABLET_SCREEN_WIDTH:PHONE_SCREEN_WIDTH;
     }
 
