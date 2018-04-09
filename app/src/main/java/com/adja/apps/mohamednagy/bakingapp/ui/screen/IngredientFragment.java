@@ -28,7 +28,9 @@ public class IngredientFragment extends FragmentNav {
 
     private DatabaseRetriever.IngredientFragmentRetriever mIngredientFragmentRetriever;
     private IngredientFragmentBinding mIngredientFragmentBinding;
+
     private Long mRecipeId;
+    private Parcelable mListScrollPosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,9 +41,6 @@ public class IngredientFragment extends FragmentNav {
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container) {
         View rootView =  layoutInflater.inflate(R.layout.ingredient_fragment, container, false);
-        if(getSaverSystem().hasData())
-            mRecipeId = getSaverSystem().savedData().getLong(Extras.IngredientData.RECIPE_ID);
-
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle ListView
@@ -76,33 +75,26 @@ public class IngredientFragment extends FragmentNav {
         return rootView;
     }
 
+    @Override
+    public void onSaveData(Bundle bundle) {
+        getSavedData(bundle);
+    }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData(outState));
+    public void onRestoreData(Bundle bundle) {
+        mListScrollPosition = bundle.getParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION);
+        mRecipeId           = bundle.getLong(Extras.IngredientData.RECIPE_ID);
     }
 
     @Override
     public void onDestroyView() {
-        getSaverSystem().save(getSavedData()); // Phone Mode
         mIngredientFragmentRetriever.release();
         super.onDestroyView();
     }
 
     private void checkPreviousScroll(){
-        Parcelable parcelable = getSaverSystem().savedData().getParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION);
-        if(parcelable != null)
-            mIngredientFragmentBinding.ingredientListView.onRestoreInstanceState(parcelable);
-
-    }
-
-    private Bundle getSavedData(){
-        Bundle bundle = new Bundle();
-        if(mRecipeId != null) bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
-        bundle.putParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION,
-                mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
-
-        return bundle;
+        if(mListScrollPosition != null)
+            mIngredientFragmentBinding.ingredientListView.onRestoreInstanceState(mListScrollPosition);
     }
 
     private Bundle getSavedData(Bundle bundle){
@@ -112,12 +104,5 @@ public class IngredientFragment extends FragmentNav {
         return bundle;
     }
 
-    private Bundle getPreviousState(Bundle saveInstanceState){
-        if(saveInstanceState == null){
-            return getSaverSystem().savedData();
-        }else{
-            return saveInstanceState;
-        }
-    }
 }
 

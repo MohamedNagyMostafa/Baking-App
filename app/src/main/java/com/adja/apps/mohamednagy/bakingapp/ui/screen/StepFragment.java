@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 
-import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.R;
 
 import com.adja.apps.mohamednagy.bakingapp.database.helper.UriController;
@@ -28,7 +25,6 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.stepper.StepperRecycleView;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
 
 
@@ -69,14 +65,6 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         // Set data binding view
         final StepFragmentBinding stepFragmentBinding = DataBindingUtil.bind(rootView);
         // Get Saving Data-Transmitted data.
-        if(getSaverSystem().hasData()) {
-            mMediaPosition     = getSaverSystem().savedData().getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
-            mRecipeId          = getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
-            mCurrentActiveStep = getSaverSystem().savedData().getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
-            Log.e("data","existed");
-
-        }
-
 
         stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
         stepFragmentBinding.progressBar.setVisibility(View.VISIBLE);
@@ -168,14 +156,22 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData(outState));
+    public void onSaveData(Bundle bundle) {
+        if(mRecipeId != 0) {
+            Log.e("recipe","not null");
+            getSavedData(bundle);
+        }
+    }
+
+    @Override
+    public void onRestoreData(Bundle bundle) {
+        mMediaPosition     = bundle.getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
+        mRecipeId          = bundle.getLong(Extras.StepFragmentData.RECIPE_ID);
+        mCurrentActiveStep = bundle.getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
     }
 
     @Override
     public void onDestroyView() {
-        getSaverSystem().save(getSavedData());
-
         if(mMedia != null)
             mMedia.release();
         if(mStepFragmentRetriever != null)
@@ -183,25 +179,9 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         super.onDestroyView();
     }
 
-    public Bundle getSavedData(){
-        Bundle bundle = new Bundle();
+    public void getSavedData(Bundle bundle){
         if(mStepperSystem != null) bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
         if(mRecipeId      != null) bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
         bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
-
-        return bundle;
     }
-
-    public Bundle getSavedData(Bundle bundle){
-        if(mStepperSystem != null) bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
-        if(mRecipeId      != null) bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
-        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
-
-        return bundle;
-    }
-
-    private Bundle getPreviousState(Bundle saveInstanceState){
-        return saveInstanceState == null? getSaverSystem().savedData() :saveInstanceState;
-    }
-
 }

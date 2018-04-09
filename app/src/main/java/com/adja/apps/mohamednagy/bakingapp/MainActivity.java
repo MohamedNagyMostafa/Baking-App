@@ -2,20 +2,25 @@ package com.adja.apps.mohamednagy.bakingapp;
 
 import android.databinding.DataBindingUtil;
 import android.os.PersistableBundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystemController;
 
 public class MainActivity extends AppCompatActivity {
+
+    public final SaverSystemController SAVER_SYSTEM_CONTROLLER = new SaverSystemController(this.getSupportFragmentManager());
 
     public static final int TABLET_SCREEN_WIDTH = 0xAB;
     public static final int PHONE_SCREEN_WIDTH  = 0xAC;
@@ -24,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String RECIPE_FRAGMENT_TAG   = "recipe-fg";
     private static final String INGREDIENT_FRAGMENT_TAG = "gradient-fg";
 
-    private static final SaverSystem RECIPE_SAVER_SYSTEM      = new SaverSystem();
-    private static final SaverSystem STEP_SAVER_SYSTEM       = new SaverSystem();
-    private static final SaverSystem INGREDIENT_SAVER_SYSTEM = new SaverSystem();
+    private static final String RECIPE_SAVER_SYSTEM_ID = "recipe_sv.sys";
+    private static final String STEP_SAVER_SYSTEM_ID = "step_sv.sys";
+    private static final String INGREDIENT_SAVER_SYSTEM_ID = "ingredient_sv.sys";
 
     private NavigationBottomSystem mNavigationBottomSystem;
     private NavigationPaneSystem   mNavigationPaneSystem;
@@ -38,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         hideActionBar();
-
         switch (getScreenType()){
             case PHONE_SCREEN_WIDTH:
                 Log.e("phone","detect");
@@ -53,14 +57,14 @@ public class MainActivity extends AppCompatActivity {
     private void initializeScreenAsPhone(){
         ActivityMainBinding activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
-        mNavigationBottomSystem = new NavigationBottomSystem(getSupportFragmentManager(), R.id.fragment);
+        mNavigationBottomSystem = new NavigationBottomSystem(this, R.id.fragment);
         mNavigationBottomSystem.addView(activityMainBinding.bottomNavigation);
 
         addFragmentsToNavigationBottomSys();
     }
 
     private void initializeScreenAsTablet(){
-        mNavigationPaneSystem = new NavigationPaneSystem(getSupportFragmentManager());
+        mNavigationPaneSystem = new NavigationPaneSystem(this);
 
         addFragmentsToNavigationPaneSys();
     }
@@ -79,10 +83,7 @@ public class MainActivity extends AppCompatActivity {
         recipeListFragment.addListener(mNavigationBottomSystem);
         IngredientFragment.addListener(mNavigationBottomSystem);
         stepFragment.addListener(mNavigationBottomSystem);
-        // Add Data Saver Sys.
-        recipeListFragment.addSaverSystem(RECIPE_SAVER_SYSTEM);
-        IngredientFragment.addSaverSystem(INGREDIENT_SAVER_SYSTEM);
-        stepFragment.addSaverSystem(STEP_SAVER_SYSTEM);
+
         // Navigation Item
         recipeListFragment.setNavigationItem(HOME_NAV);
         IngredientFragment.setNavigationItem(GRADIENT_NV);
@@ -104,10 +105,6 @@ public class MainActivity extends AppCompatActivity {
         recipeListFragment.addListener(mNavigationPaneSystem);
         IngredientFragment.addListener(mNavigationPaneSystem);
         stepFragment.addListener(mNavigationPaneSystem);
-        // Add Data Saver Sys.
-        recipeListFragment.addSaverSystem(RECIPE_SAVER_SYSTEM);
-        IngredientFragment.addSaverSystem(INGREDIENT_SAVER_SYSTEM);
-        stepFragment.addSaverSystem(STEP_SAVER_SYSTEM);
 
         mNavigationPaneSystem.put(recipeListFragment, RECIPE_FRAGMENT_TAG);
         mNavigationPaneSystem.put(IngredientFragment, INGREDIENT_FRAGMENT_TAG);
@@ -123,17 +120,32 @@ public class MainActivity extends AppCompatActivity {
         return findViewById(R.id.recipeListFrame) != null?TABLET_SCREEN_WIDTH:PHONE_SCREEN_WIDTH;
     }
 
+
     @Override
     protected void onResume() {
+        handleSaverSystem();
         super.onResume();
         switch (getScreenType()){
             case TABLET_SCREEN_WIDTH:
                 mNavigationPaneSystem.launchFragments();
+                initializeState(mNavigationPaneSystem);
                 break;
             case PHONE_SCREEN_WIDTH:
                 mNavigationBottomSystem.launchCurrentFragment();
+                initializeState(mNavigationBottomSystem);
                 break;
         }
+    }
+
+    public void initializeState(NavigationSystem navigationSystemClass){
+        FragmentNav recipeListFragment = (FragmentNav) getSupportFragmentManager().findFragmentByTag(RECIPE_FRAGMENT_TAG);
+        FragmentNav IngredientFragment = (FragmentNav) getSupportFragmentManager().findFragmentByTag(RECIPE_FRAGMENT_TAG);
+        FragmentNav stepFragment       = (FragmentNav) getSupportFragmentManager().findFragmentByTag(RECIPE_FRAGMENT_TAG);
+
+        // Connect with Navigation Sys.
+        recipeListFragment.addListener(navigationSystemClass);
+        IngredientFragment.addListener(navigationSystemClass);
+        stepFragment.addListener(navigationSystemClass);
     }
 
     @Override
@@ -144,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.e("caaaaaaaaled","dasdasdasdasdas");
         if(mNavigationBottomSystem != null) mNavigationBottomSystem.onRestoreViewInstance(savedInstanceState);
         super.onRestoreInstanceState(savedInstanceState);
     }
@@ -152,6 +165,12 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if(actionBar != null)
             actionBar.hide();
+    }
+
+    private void handleSaverSystem(){
+        SAVER_SYSTEM_CONTROLLER.generateNewInstance(StepFragment.class, STEP_SAVER_SYSTEM_ID);
+        SAVER_SYSTEM_CONTROLLER.generateNewInstance(RecipeListFragment.class, RECIPE_SAVER_SYSTEM_ID);
+        SAVER_SYSTEM_CONTROLLER.generateNewInstance(IngredientFragment.class, INGREDIENT_SAVER_SYSTEM_ID);
     }
 
 }

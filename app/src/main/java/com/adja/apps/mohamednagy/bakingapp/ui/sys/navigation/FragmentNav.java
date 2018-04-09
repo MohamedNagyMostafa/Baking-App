@@ -6,8 +6,6 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
  * Project projects submission
  * Time    10:11 AM
  */
-
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,8 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.SaverSystem;
-import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystem;
 
 /**
  * Class to hold fragments which will be showed by navigation bar
@@ -26,11 +23,8 @@ import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
  */
 public abstract class FragmentNav extends Fragment {
 
-    private static final String FRAGMENT_DATA_SAVER_ID  = "fragment_data_id";
-
-    private SaverSystem                 mSaverSystem;
-    private FragmentNavListener         mFragmentNavListener;
-    private int                         mNavigationItem;
+    private FragmentNavListener mFragmentNavListener;
+    private int                 mNavigationItem;
 
     public FragmentNav(){}
 
@@ -40,14 +34,6 @@ public abstract class FragmentNav extends Fragment {
 
     public void addListener(FragmentNavListener fragmentNavListener){
         mFragmentNavListener = fragmentNavListener;
-    }
-
-    public void addSaverSystem(SaverSystem saverSystem){
-        mSaverSystem = saverSystem;
-    }
-
-    public SaverSystem getSaverSystem(){
-        return mSaverSystem;
     }
 
     int getNavigationItem() {
@@ -60,50 +46,24 @@ public abstract class FragmentNav extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(FRAGMENT_DATA_SAVER_ID, outState);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-        if(savedInstanceState != null)
-            mSaverSystem.save(savedInstanceState.getBundle(FRAGMENT_DATA_SAVER_ID));
-    }
-
-    @Override
-    public void onPause() {
-        try {
-            if (mSaverSystem != null && mSaverSystem.savedData() != null && isTabletMode()) {
-                setArguments(mSaverSystem.savedData());
-            }
-        }catch (IllegalStateException e){
-            Log.e(getClass().getName(), e.getLocalizedMessage());
-        }
-        super.onPause();
+    public void onDestroy() {
+        onSaveData(getSaverSystem().savedData());
+        super.onDestroy();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        try {
-            if(mSaverSystem == null) {
-                mSaverSystem = new SaverSystem();
-            }
-            if(isTabletMode()) {
-                mSaverSystem.save(getArguments());
-            }
-
-        }catch (IllegalStateException e){
-            Log.e(getClass().getName(), e.getLocalizedMessage());
-        }
+        Log.e("view","created");
+        if(getSaverSystem() != null)
+            onRestoreData(getSaverSystem().savedData());
         return this.onCreateView(inflater, container);
     }
 
-    private boolean isTabletMode(){
-        return ((MainActivity)getActivity()).getScreenType() == MainActivity.TABLET_SCREEN_WIDTH;
+    private SaverSystem getSaverSystem(){
+        return ((MainActivity)getActivity()).SAVER_SYSTEM_CONTROLLER.getSaverSystemInstance(this);
     }
+
     /**
      * Listen to start new fragment.
      */
@@ -112,4 +72,6 @@ public abstract class FragmentNav extends Fragment {
     }
 
     public abstract View onCreateView(LayoutInflater layoutInflater, ViewGroup container);
+    public abstract void onSaveData(Bundle bundle);
+    public abstract void onRestoreData(Bundle bundle);
 }

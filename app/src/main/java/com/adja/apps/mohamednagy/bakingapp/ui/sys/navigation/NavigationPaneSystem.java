@@ -2,6 +2,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
 
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
@@ -16,13 +17,12 @@ import java.util.HashMap;
  * Time    7:06 AM
  */
 
-public class NavigationPaneSystem extends NavigationSystem
-        implements FragmentNav.FragmentNavListener{
+public class NavigationPaneSystem extends NavigationSystem {
 
     private HashMap<String, Integer> mFrames;
 
-    public NavigationPaneSystem(FragmentManager fragmentManager) {
-        super(fragmentManager);
+    public NavigationPaneSystem(AppCompatActivity appCompatActivity) {
+        super(appCompatActivity);
         mFrames = new HashMap<>();
     }
 

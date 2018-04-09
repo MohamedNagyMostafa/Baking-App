@@ -4,6 +4,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.MenuItem;
 
@@ -19,13 +20,12 @@ import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
  * Time    3:51 PM
  */
 
-public class NavigationBottomSystem extends NavigationSystem
-        implements FragmentNav.FragmentNavListener {
+public class NavigationBottomSystem extends NavigationSystem {
     private BottomNavigationView mBottomNavigationView;
     private final Integer FRAME_ID;
 
-    public NavigationBottomSystem(FragmentManager fragmentManager, Integer frameId){
-        super(fragmentManager);
+    public NavigationBottomSystem(AppCompatActivity appCompatActivity, Integer frameId){
+        super(appCompatActivity);
         FRAME_ID = frameId;
     }
 

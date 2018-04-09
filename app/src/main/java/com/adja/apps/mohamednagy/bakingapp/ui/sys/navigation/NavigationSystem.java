@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Pair;
 
+import com.adja.apps.mohamednagy.bakingapp.MainActivity;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystemController;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 import java.util.ArrayList;
@@ -19,14 +23,17 @@ import java.util.List;
  * Time    6:01 AM
  */
 
-public class NavigationSystem{
+abstract public class NavigationSystem implements FragmentNav.FragmentNavListener{
     // Holds Fragment with NavigationItem
     static List<Pair<FragmentNav, String>> mFragmentNavsHolder;
+    static SaverSystemController mSaverSystemController;
+
     private FragmentManager mFragmentManager;
 
-    NavigationSystem(FragmentManager fragmentManager){
+    NavigationSystem(AppCompatActivity appCompatActivity){
         mFragmentNavsHolder = new ArrayList<>();
-        mFragmentManager = fragmentManager;
+        mFragmentManager = appCompatActivity.getSupportFragmentManager();
+        mSaverSystemController = ((MainActivity)appCompatActivity).SAVER_SYSTEM_CONTROLLER;
     }
 
     public void put(@NonNull FragmentNav fragmentNav, String tag){
@@ -47,21 +54,22 @@ public class NavigationSystem{
                     frameId,
                     fragmentNavHolder.first,
                     fragmentNavHolder.second
-            ).commit();
+            ).commitNow();
         }
     }
 
     // Called At Tablet Mode
     private void loadFragmentOrReattachFragment(Pair<FragmentNav, String> fragmentNavHolder, int frameId){
         Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNavHolder.second);
-        if(fragment != null)
-            mFragmentManager.beginTransaction().detach(fragment).attach(fragment).commit();
-        else
+        if(fragment != null) {
+            mFragmentManager.beginTransaction().detach(fragment).commit();
+            mFragmentManager.beginTransaction().attach(fragment).commit();
+        }else
             mFragmentManager.beginTransaction().replace(
                     frameId,
                     fragmentNavHolder.first,
                     fragmentNavHolder.second
-            ).commit();
+            ).commitNow();
 
     }
 
@@ -99,36 +107,14 @@ public class NavigationSystem{
          * Save data for specific fragment of Bottom Navigation Fragments.
          */
         public <T>void putExtra(String extraName, T data){
-            Bundle previousSavedData = mFragmentNavHolder.first.getSaverSystem().savedData();
+            SaverSystem saverSystem = mSaverSystemController.getSaverSystemInstance(mFragmentNavHolder.first);
 
             if(data instanceof Integer){
-                if(previousSavedData != null) {
-                    previousSavedData.putInt(extraName, (Integer) data);
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(extraName, (Integer) data);
-
-                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
-                }
+                saverSystem.savedData().putInt(extraName, (Integer) data);
             }else if(data instanceof Long){
-                if(previousSavedData != null) {
-                    previousSavedData.putLong(extraName, (Long) data);
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putLong(extraName, (Long) data);
-
-                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
-                }
-
+                saverSystem.savedData().putLong(extraName, (Long) data);
             }else if(data instanceof String){
-                if(previousSavedData != null) {
-                    previousSavedData.putString(extraName, (String) data);
-                }else{
-                    Bundle bundle = new Bundle();
-                    bundle.putString(extraName, (String) data);
-
-                    mFragmentNavHolder.first.getSaverSystem().save(bundle);
-                }
+                saverSystem.savedData().putString(extraName, (String) data);
             }
         }
     }

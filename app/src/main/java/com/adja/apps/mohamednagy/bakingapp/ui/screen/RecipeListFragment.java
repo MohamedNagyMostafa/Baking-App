@@ -4,6 +4,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -42,6 +43,7 @@ public class RecipeListFragment extends FragmentNav {
     private DatabaseRetriever.RecipeFragmentRetriever mRecipeFragmentRetriever;
     private RecipeFragmentBinding                     mRecipeFragmentBinding;
     private Long                                      mCurrentSelectedRecipe;
+    private Parcelable                                mRecycleListScrollPosition;
     private NetworkHandler                            mNetworkHandler;
 
     @Override
@@ -56,8 +58,6 @@ public class RecipeListFragment extends FragmentNav {
 
         mRecipeFragmentBinding = DataBindingUtil.bind(rootView);
 
-        if(getSaverSystem().hasData())
-            mCurrentSelectedRecipe = getSaverSystem().savedData().getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
         //Handle Recycle View
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         RecipeRecycleView recipeRecycleView      = new RecipeRecycleView(null, getContext());
@@ -91,11 +91,8 @@ public class RecipeListFragment extends FragmentNav {
                     mRecipeFragmentBinding.progressBar.setVisibility(View.GONE);
                 }
                 // Handle scroll rotation.
-                if(getSaverSystem().hasData()){
-                    mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                            getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
-                    );
-                }
+                    mRecipeFragmentBinding.recipeRecycleView.getLayoutManager()
+                            .onRestoreInstanceState(mRecycleListScrollPosition);
             }else{
                 mNetworkHandler = new NetworkHandler(getContext()) {
                     @Override
@@ -104,11 +101,9 @@ public class RecipeListFragment extends FragmentNav {
                         // Save data.
                         insertDataToDatabase(Arrays.asList(recipes));
                         // Handle scroll rotation.
-                        if(getSaverSystem().hasData()){
-                            mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onRestoreInstanceState(
-                                    getSaverSystem().savedData().getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION)
-                            );
-                        }
+                        mRecipeFragmentBinding.recipeRecycleView.getLayoutManager()
+                                .onRestoreInstanceState(mRecycleListScrollPosition);
+
                         // Handle View Upon Process
                         {
                             if (recipes.length > 0) {
@@ -162,26 +157,20 @@ public class RecipeListFragment extends FragmentNav {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(getSavedData(outState));
+    public void onSaveData(Bundle bundle) {
+        getSavedData(bundle);
+    }
+
+    @Override
+    public void onRestoreData(Bundle bundle) {
+        mCurrentSelectedRecipe     = bundle.getLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID);
+        mRecycleListScrollPosition = bundle.getParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION);
     }
 
     @Override
     public void onDestroyView() {
         mRecipeFragmentRetriever.release();
-        getSaverSystem().save(getSavedData());
         super.onDestroyView();
-    }
-
-    private Bundle getSavedData(){
-        Bundle bundle = new Bundle();
-        if(mCurrentSelectedRecipe != null) bundle.putLong(Extras.RecipeListFragmentData.SELECTED_RECIPE_ID, mCurrentSelectedRecipe);
-
-        bundle.putParcelable(Extras.RecipeListFragmentData.RECIPE_RECYCLE_SCROLL_POSITION,
-                mRecipeFragmentBinding.recipeRecycleView.getLayoutManager().onSaveInstanceState()
-        );
-
-        return bundle;
     }
 
     private Bundle getSavedData(Bundle bundle){
@@ -201,8 +190,6 @@ public class RecipeListFragment extends FragmentNav {
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
 
         startFragment(fragmentIntent);
-        Log.e(getClass().getName(), "set data to saver system at step" +"\n value is "
-                + String.valueOf(mCurrentSelectedRecipe));
     }
 
     private void openStepFragmentAsSameRecipe(){
@@ -211,21 +198,14 @@ public class RecipeListFragment extends FragmentNav {
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
 
         startFragment(fragmentIntent);
-        Log.e(getClass().getName(), "set data to saver system at step" +"\n value is "
-                + String.valueOf(mCurrentSelectedRecipe));
     }
 
     // Set current selected recipe to ingredient saver system.
     private void updateIngredientRecipe(){
         new NavigationBottomSystem.FragmentIntent(IngredientFragment.class)
                 .putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
-        Log.e(getClass().getName(), "set data to saver system at ingredient" +"\n value is "
-                + String.valueOf(mCurrentSelectedRecipe));
     }
 
-    private Bundle getPreviousState(Bundle saveInstanceState){
-        return saveInstanceState == null? getSaverSystem().savedData() :saveInstanceState;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
