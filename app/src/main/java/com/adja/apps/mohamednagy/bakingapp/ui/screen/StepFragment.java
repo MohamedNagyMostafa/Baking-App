@@ -158,7 +158,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     @Override
     public void onSaveData(Bundle bundle) {
         if(mRecipeId != 0) {
-            Log.e("recipe","not null");
+            Log.e("recipe","not null  save" + String.valueOf(mRecipeId));
             getSavedData(bundle);
         }
     }
@@ -168,6 +168,8 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         mMediaPosition     = bundle.getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
         mRecipeId          = bundle.getLong(Extras.StepFragmentData.RECIPE_ID);
         mCurrentActiveStep = bundle.getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+        Log.e("recipe","not null  restore" + String.valueOf(mRecipeId));
+
     }
 
     @Override

@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         if(mNavigationBottomSystem != null)
             mNavigationBottomSystem.launchCurrentFragment();
+        else
+            mNavigationPaneSystem.launchFragments();
+
         super.onResume();
 
     }
@@ -140,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
         mNavigationPaneSystem.addFrameToFragmentByTag(R.id.stepFrame          , STEP_FRAGMENT_TAG);
         mNavigationPaneSystem.addFrameToFragmentByTag(R.id.ingredientListFrame, INGREDIENT_FRAGMENT_TAG);
 
-        // Launch Fragments
-        mNavigationPaneSystem.launchFragments();
     }
 
     /**
@@ -152,8 +153,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentNav[] fragmentNavs = new FragmentNav[FRAGMENT_NUMBER];
 
         FragmentNav recipeListFragment = (FragmentNav) getSupportFragmentManager().findFragmentByTag(RECIPE_FRAGMENT_TAG);
-        FragmentNav ingredientFragment = (FragmentNav) getSupportFragmentManager().findFragmentByTag(RECIPE_FRAGMENT_TAG);
-        FragmentNav stepFragment       = (FragmentNav) getSupportFragmentManager().findFragmentByTag(RECIPE_FRAGMENT_TAG);
+        FragmentNav ingredientFragment = (FragmentNav) getSupportFragmentManager().findFragmentByTag(INGREDIENT_FRAGMENT_TAG);
+        FragmentNav stepFragment       = (FragmentNav) getSupportFragmentManager().findFragmentByTag(STEP_FRAGMENT_TAG);
 
         if(recipeListFragment != null && ingredientFragment != null && stepFragment != null){
             fragmentNavs[RECIPE_FRAGMENT_INDEX]     = recipeListFragment;

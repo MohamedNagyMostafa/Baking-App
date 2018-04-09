@@ -3,6 +3,7 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
@@ -31,24 +32,32 @@ public class NavigationPaneSystem extends NavigationSystem {
     }
 
     public void launchFragments(){
-        FragmentIntent recipeListFragment = new FragmentIntent(RecipeListFragment.class);
-        FragmentIntent stepFragment       = new FragmentIntent(StepFragment.class);
-        FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);
+        try {
+            FragmentIntent recipeListFragment = new FragmentIntent(RecipeListFragment.class);
+            FragmentIntent stepFragment       = new FragmentIntent(StepFragment.class);
+            FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);
+            super.startFragmentOrReattach(recipeListFragment, getFragmentFrame(recipeListFragment.mFragmentNavHolder.second));
+            super.startFragmentOrReattach(stepFragment, getFragmentFrame(stepFragment.mFragmentNavHolder.second));
+            super.startFragmentOrReattach(IngredientFragment, getFragmentFrame(IngredientFragment.mFragmentNavHolder.second));
 
-        super.startFragmentOrReattach(recipeListFragment, getFragmentFrame(recipeListFragment.mFragmentNavHolder.second));
-        super.startFragmentOrReattach(stepFragment, getFragmentFrame(stepFragment.mFragmentNavHolder.second));
-        super.startFragmentOrReattach(IngredientFragment, getFragmentFrame(IngredientFragment.mFragmentNavHolder.second));
+        } catch (FragmentIntent.InValidIntentException e) {
+            Log.e(getClass().getName(), e.getMessage());
+        }
     }
 
     /**
      * At Tablet Case There are just step and ingredient fragments need to update.
      */
     private void updateFragments(){
-        FragmentIntent stepFragment       = new FragmentIntent(StepFragment.class);
-        FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);
+        try {
+            FragmentIntent stepFragment = new FragmentIntent(StepFragment.class);
+            FragmentIntent IngredientFragment = new FragmentIntent(IngredientFragment.class);
 
-        super.startFragmentOrReattach(stepFragment, getFragmentFrame(stepFragment.mFragmentNavHolder.second));
-        super.startFragmentOrReattach(IngredientFragment, getFragmentFrame(IngredientFragment.mFragmentNavHolder.second));
+            super.startFragmentOrReattach(stepFragment, getFragmentFrame(stepFragment.mFragmentNavHolder.second));
+            super.startFragmentOrReattach(IngredientFragment, getFragmentFrame(IngredientFragment.mFragmentNavHolder.second));
+        }catch (Exception e){
+            Log.e(getClass().getName(), e.getMessage());
+        }
     }
 
     @Override

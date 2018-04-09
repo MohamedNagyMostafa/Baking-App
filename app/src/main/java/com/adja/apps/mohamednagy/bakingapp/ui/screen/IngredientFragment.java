@@ -77,13 +77,15 @@ public class IngredientFragment extends FragmentNav {
 
     @Override
     public void onSaveData(Bundle bundle) {
-        getSavedData(bundle);
+        if(mRecipeId != 0)
+            getSavedData(bundle);
     }
 
     @Override
     public void onRestoreData(Bundle bundle) {
         mListScrollPosition = bundle.getParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION);
-        mRecipeId           = bundle.getLong(Extras.IngredientData.RECIPE_ID);
+        mRecipeId = bundle.getLong(Extras.IngredientData.RECIPE_ID);
+
     }
 
     @Override
@@ -97,11 +99,10 @@ public class IngredientFragment extends FragmentNav {
             mIngredientFragmentBinding.ingredientListView.onRestoreInstanceState(mListScrollPosition);
     }
 
-    private Bundle getSavedData(Bundle bundle){
+    private void getSavedData(Bundle bundle){
         if(mRecipeId != null) bundle.putLong(Extras.IngredientData.RECIPE_ID, mRecipeId);
         bundle.putParcelable(Extras.IngredientData.INGREDIENT_LIST_SCROLL_POSITION,
                 mIngredientFragmentBinding.ingredientListView.onSaveInstanceState());
-        return bundle;
     }
 
 }

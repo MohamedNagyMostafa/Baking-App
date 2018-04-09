@@ -70,6 +70,10 @@ abstract public class NavigationSystem implements FragmentNav.FragmentNavListene
     private void loadFragmentOrReattachFragment(Pair<FragmentNav, String> fragmentNavHolder, int frameId){
         Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNavHolder.second);
         if(fragment != null) {
+            FragmentNav fragmentNav = (FragmentNav) fragment;
+            Long recipe = fragmentNav.getSaverSystem().savedData().getLong(Extras.StepFragmentData.RECIPE_ID);
+            Log.e("recipe","fragment value " + String.valueOf(recipe));
+
             mFragmentManager.beginTransaction().detach(fragment).commit();
             mFragmentManager.beginTransaction().attach(fragment).commit();
         }else
@@ -97,18 +101,24 @@ abstract public class NavigationSystem implements FragmentNav.FragmentNavListene
         private Class<? extends FragmentNav> mFragmentClass;
         Pair<FragmentNav, String> mFragmentNavHolder;
 
-        public FragmentIntent(Class<? extends FragmentNav> fragmentClass){
+        public FragmentIntent(Class<? extends FragmentNav> fragmentClass) throws InValidIntentException {
             mFragmentClass = fragmentClass;
             init();
         }
 
-        private void init(){
+        private void init() throws InValidIntentException {
+            Log.e(getClass().getName(),"Fragment navs holders size "+ String.valueOf(mFragmentNavsHolder.size()));
             for (Pair<FragmentNav, String> fragmentNavHolder : mFragmentNavsHolder) {
+                Log.e(getClass().getName(),"fragment class : " + fragmentNavHolder.first.getClass().getName()
+                        +" wanted " + mFragmentClass.getName());
+
                 if(mFragmentClass.isInstance(fragmentNavHolder.first)){
                     mFragmentNavHolder = fragmentNavHolder;
                     break;
                 }
             }
+            if(mFragmentNavHolder == null)
+                throw new InValidIntentException(InValidIntentException.INVALID_FRAGMENT_INTENT);
         }
 
         /**
@@ -124,6 +134,20 @@ abstract public class NavigationSystem implements FragmentNav.FragmentNavListene
             }else if(data instanceof String){
                 saverSystem.savedData().putString(extraName, (String) data);
             }
+        }
+
+
+        public class InValidIntentException extends Exception{
+            private static final String INVALID_FRAGMENT_INTENT = "Fragment isn't supported by navigation system";
+
+            InValidIntentException(){
+                super();
+            }
+
+            InValidIntentException(String message){
+                super(message);
+            }
+
         }
     }
 }

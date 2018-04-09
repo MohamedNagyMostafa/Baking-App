@@ -45,10 +45,11 @@ public abstract class FragmentNav extends Fragment {
         mFragmentNavListener.startFragment(fragmentIntent);
     }
 
+
     @Override
-    public void onDestroyView() {
+    public void onDestroy() {
         onSaveData(getSaverSystem().savedData());
-        super.onDestroyView();
+        super.onDestroy();
     }
 
     @Nullable
@@ -60,7 +61,7 @@ public abstract class FragmentNav extends Fragment {
         return this.onCreateView(inflater, container);
     }
 
-    private SaverSystem getSaverSystem(){
+    public SaverSystem getSaverSystem(){
         return ((MainActivity)getActivity()).SAVER_SYSTEM_CONTROLLER.getSaverSystemInstance(this);
     }
 

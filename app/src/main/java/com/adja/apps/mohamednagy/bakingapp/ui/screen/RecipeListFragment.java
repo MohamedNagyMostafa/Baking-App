@@ -26,6 +26,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.adapter.RecipeRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.SelectedSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
+import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
@@ -66,15 +67,19 @@ public class RecipeListFragment extends FragmentNav {
 
         recipeRecycleView.setRecipeClickListener(((recipeId) -> {
             Log.e(getClass().getName(), "recipe is clicked\n" + "recipe value is "+ String.valueOf(recipeId));
-            if(mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
-                mCurrentSelectedRecipe = recipeId;
-                // Reset active step position and video mint to initial state
-                updateIngredientRecipe();
-                openStepFragmentAsNewRecipe();
-            }else{
-                // Retrieve the previous state of steps/videos
-                openStepFragmentAsSameRecipe();
+            try {
+                if (mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
+                    mCurrentSelectedRecipe = recipeId;
+                    // Reset active step position and video mint to initial state
+                    updateIngredientRecipe();
+                    openStepFragmentAsNewRecipe();
+                } else {
+                    // Retrieve the previous state of steps/videos
+                    openStepFragmentAsSameRecipe();
 
+                }
+            }catch (Exception e){
+                Log.e(getClass().getName(), e.getMessage());
             }
         }));
 
@@ -183,7 +188,7 @@ public class RecipeListFragment extends FragmentNav {
         return bundle;
     }
 
-    private void openStepFragmentAsNewRecipe(){
+    private void openStepFragmentAsNewRecipe() throws NavigationSystem.FragmentIntent.InValidIntentException {
         NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
         fragmentIntent.putExtra(Extras.StepFragmentData.CURRENT_MEDIA_MINT, 0L);
         fragmentIntent.putExtra(Extras.StepFragmentData.CURRENT_STEP_POSITION, 0);
@@ -192,7 +197,7 @@ public class RecipeListFragment extends FragmentNav {
         startFragment(fragmentIntent);
     }
 
-    private void openStepFragmentAsSameRecipe(){
+    private void openStepFragmentAsSameRecipe() throws NavigationSystem.FragmentIntent.InValidIntentException {
         NavigationBottomSystem.FragmentIntent fragmentIntent = new NavigationBottomSystem.FragmentIntent(StepFragment.class);
 
         fragmentIntent.putExtra(Extras.StepFragmentData.RECIPE_ID, mCurrentSelectedRecipe);
@@ -201,7 +206,7 @@ public class RecipeListFragment extends FragmentNav {
     }
 
     // Set current selected recipe to ingredient saver system.
-    private void updateIngredientRecipe(){
+    private void updateIngredientRecipe() throws NavigationSystem.FragmentIntent.InValidIntentException {
         new NavigationBottomSystem.FragmentIntent(IngredientFragment.class)
                 .putExtra(Extras.IngredientData.RECIPE_ID, mCurrentSelectedRecipe);
     }

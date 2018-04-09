@@ -76,8 +76,13 @@ public class NavigationBottomSystem extends NavigationSystem {
      */
     public void launchCurrentFragment(){
         mBottomNavigationView.setSelectedItemId(mCurrentSelectedFragment);
-        FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(mCurrentSelectedFragment));
-        startFragment(fragmentIntent);
+        try {
+            FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(mCurrentSelectedFragment));
+            startFragment(fragmentIntent);
+
+        } catch (FragmentIntent.InValidIntentException e) {
+            e.printStackTrace();
+        }
     }
 
     private Class<? extends FragmentNav> getFragmentClassFromId(int fragmentId){
