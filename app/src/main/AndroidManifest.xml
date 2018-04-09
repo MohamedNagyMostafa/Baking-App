@@ -3,7 +3,7 @@
     package="com.adja.apps.mohamednagy.bakingapp">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,14 +22,28 @@
 
         <provider
             android:name=".database.structure.ContentProviderDatabase"
-            android:authorities="com.adja.apps.mohamednagy.bakingapp" />
+            android:authorities="com.adja.apps.mohamednagy.bakingapp"
+            android:exported="true" />
 
-        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver" >
+        <service
+            android:name=".widget.widget_container.ListRemoteViewsService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".widget.widget_container.BakingWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baking_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

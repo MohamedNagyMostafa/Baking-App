@@ -254,4 +254,5 @@ public class DatabaseRetriever{
             void onCompleted(List<Recipe> recipes);
         }
     }
+
 }
