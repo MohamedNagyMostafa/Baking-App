@@ -46,9 +46,9 @@ public abstract class FragmentNav extends Fragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         onSaveData(getSaverSystem().savedData());
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     @Nullable

@@ -48,7 +48,15 @@ abstract public class NavigationSystem implements FragmentNav.FragmentNavListene
         Fragment fragment = mFragmentManager.findFragmentByTag(fragmentNavHolder.second);
 
         if(fragment != null) {
-            mFragmentManager.beginTransaction().show(fragment).commit();
+            for(Pair<FragmentNav, String> pair:mFragmentNavsHolder){
+                Fragment visibleFragment = mFragmentManager.findFragmentByTag(pair.second);
+                if(visibleFragment != null && visibleFragment.isVisible()){
+                    mFragmentManager.beginTransaction().detach(visibleFragment).commit();
+                    break;
+                }
+            }
+            Log.e("start class","name :" + fragment.getClass().getName());
+            mFragmentManager.beginTransaction().attach(fragment).commit();
         }else {
             mFragmentManager.beginTransaction().replace(
                     frameId,

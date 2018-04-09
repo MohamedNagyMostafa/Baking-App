@@ -1,10 +1,13 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 
@@ -22,11 +25,13 @@ import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 
 public class NavigationBottomSystem extends NavigationSystem {
     private BottomNavigationView mBottomNavigationView;
+    private Integer mCurrentSelectedFragment;
     private final Integer FRAME_ID;
 
-    public NavigationBottomSystem(AppCompatActivity appCompatActivity, Integer frameId){
+    public NavigationBottomSystem(AppCompatActivity appCompatActivity, Integer frameId, int defaultFragmentId){
         super(appCompatActivity);
         FRAME_ID = frameId;
+        mCurrentSelectedFragment = defaultFragmentId;
     }
 
     public void addView(BottomNavigationView bottomNavigationView){
@@ -54,19 +59,15 @@ public class NavigationBottomSystem extends NavigationSystem {
     }
 
     public void onSaveViewInstance(Bundle saveInstance){
-        saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, mBottomNavigationView.getSelectedItemId());
+        int selected = mBottomNavigationView.getSelectedItemId();
+        Log.e("fragment","save :" + String.valueOf(selected));
+        saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, selected);
     }
 
     public void onRestoreViewInstance(Bundle saveInstance){
-        int currentFragmentNav;
         if(saveInstance != null) {
-            currentFragmentNav = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
-        }else{
-            currentFragmentNav = 0;
+            mCurrentSelectedFragment = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
         }
-        FragmentIntent fragmentIntent = new FragmentIntent(mFragmentNavsHolder.get(currentFragmentNav).first.getClass());
-
-        startFragment(fragmentIntent);
     }
 
     /**
@@ -74,12 +75,13 @@ public class NavigationBottomSystem extends NavigationSystem {
      * Set Default Fragment At Initial State.
      */
     public void launchCurrentFragment(){
-        int fragmentId = mBottomNavigationView.getSelectedItemId();
-        FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(fragmentId));
+        mBottomNavigationView.setSelectedItemId(mCurrentSelectedFragment);
+        FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(mCurrentSelectedFragment));
         startFragment(fragmentIntent);
     }
 
     private Class<? extends FragmentNav> getFragmentClassFromId(int fragmentId){
+        Log.e("fragment",String.valueOf(fragmentId));
         switch (fragmentId){
             case R.id.step_nav:
                 return StepFragment.class;

@@ -24,21 +24,12 @@
         <item name="android:layout_marginEnd">@dimen/start_fit_margin</item>
     </style>
 
-    <style name="circleNumberText" parent="circleMargin">
-        <item name="android:textColor">@color/colorIcon</item>
-    </style>
-
     <style name="activeCircle" parent="circleMargin">
         <item name="android:layout_width">@dimen/twice_margin</item>
         <item name="android:layout_height">@dimen/twice_margin</item>
         <item name="android:background">@drawable/step_circle_active</item>
     </style>
 
-    <style name="nonactiveCircle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@drawable/step_circle_unactive</item>
-    </style>
     <!-- Text Style -->
     <style name="text">
         <item name="android:layout_width">wrap_content</item>
@@ -69,8 +60,4 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="horizontalDivider" parent="divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-    </style>
 </resources>
