@@ -2,6 +2,8 @@ package com.adja.apps.mohamednagy.bakingapp;
 
 import android.databinding.DataBindingUtil;
 import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
 import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
+import com.adja.apps.mohamednagy.bakingapp.testing_tools.BakingResourceIdle;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
@@ -19,9 +22,11 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSyste
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystemController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+    implements BakingResourceIdle.onStateChangingListener{
 
     public final SaverSystemController SAVER_SYSTEM_CONTROLLER = new SaverSystemController(this.getSupportFragmentManager());
+    @Nullable private BakingResourceIdle mBakingResourceIdle;
 
     public static final int TABLET_SCREEN_WIDTH = 0xAB;
     public static final int PHONE_SCREEN_WIDTH  = 0xAC;
@@ -120,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
         fragmentNavs[INGREDIENT_FRAGMENT_INDEX].setNavigationItem(GRADIENT_NV);
         fragmentNavs[STEP_FRAGMENT_INDEX]      .setNavigationItem(STEP_NAV);
 
+        // Testing notify state changing
+        fragmentNavs[RECIPE_FRAGMENT_INDEX]    .addOnStateChangingListener(this);
+        fragmentNavs[INGREDIENT_FRAGMENT_INDEX].addOnStateChangingListener(this);
+        fragmentNavs[STEP_FRAGMENT_INDEX]      .addOnStateChangingListener(this);
+
 
         mNavigationBottomSystem.put(fragmentNavs[RECIPE_FRAGMENT_INDEX]    , RECIPE_FRAGMENT_TAG);
         mNavigationBottomSystem.put(fragmentNavs[INGREDIENT_FRAGMENT_INDEX], INGREDIENT_FRAGMENT_TAG);
@@ -137,6 +147,11 @@ public class MainActivity extends AppCompatActivity {
         mNavigationPaneSystem.put(fragmentNavs[RECIPE_FRAGMENT_INDEX]    , RECIPE_FRAGMENT_TAG);
         mNavigationPaneSystem.put(fragmentNavs[INGREDIENT_FRAGMENT_INDEX], INGREDIENT_FRAGMENT_TAG);
         mNavigationPaneSystem.put(fragmentNavs[STEP_FRAGMENT_INDEX]      , STEP_FRAGMENT_TAG);
+
+        // Testing notify state changing
+        fragmentNavs[RECIPE_FRAGMENT_INDEX]    .addOnStateChangingListener(this);
+        fragmentNavs[INGREDIENT_FRAGMENT_INDEX].addOnStateChangingListener(this);
+        fragmentNavs[STEP_FRAGMENT_INDEX]      .addOnStateChangingListener(this);
 
         // Add Frames
         mNavigationPaneSystem.addFrameToFragmentByTag(R.id.recipeListFrame    , RECIPE_FRAGMENT_TAG);
@@ -203,4 +218,18 @@ public class MainActivity extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }
 
+    //** Testing **//
+    @VisibleForTesting
+    @Nullable
+    public BakingResourceIdle getIdleResource(){
+        if(mBakingResourceIdle == null)
+            mBakingResourceIdle = new BakingResourceIdle();
+        return mBakingResourceIdle;
+    }
+
+    @Override
+    public void onChanged(boolean newState) {
+        if(mBakingResourceIdle != null)
+            mBakingResourceIdle.setIdleState(newState);
+    }
 }

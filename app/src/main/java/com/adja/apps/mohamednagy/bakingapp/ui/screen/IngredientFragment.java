@@ -40,7 +40,7 @@ public class IngredientFragment extends FragmentNav {
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container) {
-        View rootView =  layoutInflater.inflate(R.layout.ingredient_fragment, container, false);
+        View rootView = layoutInflater.inflate(R.layout.ingredient_fragment, container, false);
         // Get Views
         mIngredientFragmentBinding = DataBindingUtil.bind(rootView);
         // Handle ListView
@@ -51,25 +51,33 @@ public class IngredientFragment extends FragmentNav {
             mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
             mIngredientFragmentBinding.progressBar.setVisibility(View.VISIBLE);
         }
-        if(mRecipeId != null)
+        if (mRecipeId != null){
+            // Testing Block
+            {
+                notifyStateChanging(false);
+            }
             mIngredientFragmentRetriever.getIngredientFromDatabase(
                     UriController.getIngredientTableUriByRecipeId(mRecipeId),
                     ingredients -> {
-                        if(ingredients.size() > 0){
+                        if (ingredients.size() > 0) {
                             mIngredientFragmentBinding.emptyView.setVisibility(View.GONE);
                             ingredientListAdapter.swap(ingredients);
 
                             checkPreviousScroll();
 
-                        }else{
+                        } else {
                             mIngredientFragmentBinding.emptyView.setVisibility(View.VISIBLE);
                         }
 
+                        // Testing Block
+                        {
+                            notifyStateChanging(true);
+                        }
                         mIngredientFragmentBinding.progressBar.setVisibility(View.GONE);
 
                     }
             );
-        else
+        }else
             mIngredientFragmentBinding.progressBar.setVisibility(View.GONE);
 
         return rootView;

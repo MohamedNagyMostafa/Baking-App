@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.adja.apps.mohamednagy.bakingapp.MainActivity;
+import com.adja.apps.mohamednagy.bakingapp.testing_tools.BakingResourceIdle;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystem;
 
 /**
@@ -24,6 +25,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystem;
 public abstract class FragmentNav extends Fragment {
 
     private FragmentNavListener mFragmentNavListener;
+    @Nullable volatile private BakingResourceIdle.onStateChangingListener mOnStateChangingListener;
     private int                 mNavigationItem;
 
     public FragmentNav(){}
@@ -48,6 +50,7 @@ public abstract class FragmentNav extends Fragment {
 
     @Override
     public void onDestroy() {
+        if(getSaverSystem() != null)
         onSaveData(getSaverSystem().savedData());
         super.onDestroy();
     }
@@ -63,6 +66,16 @@ public abstract class FragmentNav extends Fragment {
 
     public SaverSystem getSaverSystem(){
         return ((MainActivity)getActivity()).SAVER_SYSTEM_CONTROLLER.getSaverSystemInstance(this);
+    }
+
+    /** Testing **/
+    public void addOnStateChangingListener(BakingResourceIdle.onStateChangingListener onStateChangingListener){
+        mOnStateChangingListener = onStateChangingListener;
+    }
+
+    protected void notifyStateChanging(boolean newState){
+        if(mOnStateChangingListener != null)
+            mOnStateChangingListener.onChanged(newState);
     }
 
     /**

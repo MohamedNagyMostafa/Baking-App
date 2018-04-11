@@ -69,16 +69,20 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         stepFragmentBinding.emptyView.setVisibility(View.VISIBLE);
         stepFragmentBinding.progressBar.setVisibility(View.VISIBLE);
         // Get data from database.
-        if(mRecipeId != null)
+        if (mRecipeId != null){
+            // Testing Block
+            {
+                notifyStateChanging(false);
+            }
             mStepFragmentRetriever.getStepsFromDatabase(
                     UriController.getStepTableUriByRecipeId(mRecipeId),
                     steps -> {
-                        if(steps.size() > 0){
+                        if (steps.size() > 0) {
                             stepFragmentBinding.emptyView.setVisibility(View.GONE);
                             stepFragmentBinding.progressBar.setVisibility(View.GONE);
-                        }else{
+                        } else {
                             stepFragmentBinding.progressBar.setVisibility(View.GONE);
-                            Snackbar.make(stepFragmentBinding.getRoot(),getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(stepFragmentBinding.getRoot(), getString(R.string.no_step_empty), Snackbar.LENGTH_LONG).show();
                         }
 
                         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -87,7 +91,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                         // Add Recycle View to Stepper System
                         // To Handle Stepper Process.
                         mStepperSystem = new StepperSystem(getContext(), stepperRecycleView,
-                                layoutManager,StepFragment.this );
+                                layoutManager, StepFragment.this);
                         // Set Active Step (When rotation/Fragments-Swap is happened).
                         {
                             mStepperSystem.setCurrentActiveStepPosition(mCurrentActiveStep);
@@ -96,10 +100,13 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                         stepFragmentBinding.stepperRecycleView.setItemAnimator(new DefaultItemAnimator());
                         stepFragmentBinding.stepperRecycleView.setAdapter(stepperRecycleView);
 
-
+                        // Testing Block
+                        {
+                            notifyStateChanging(true);
+                        }
                     }
             );
-        else
+        }else
             stepFragmentBinding.progressBar.setVisibility(View.GONE);
 
 
