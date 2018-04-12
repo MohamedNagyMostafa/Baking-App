@@ -65,4 +65,25 @@ public class RecycleViewActions {
         };
     }
 
+    public static ViewAction clickOnItemInViewAt(int position, int itemId){
+        return new ViewAction() {
+            @Override
+            public Matcher<View> getConstraints() {
+                return withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE);
+            }
+
+            @Override
+            public String getDescription() {
+                return CLICK_ON_VIEW;
+            }
+
+            @Override
+            public void perform(UiController uiController, View view) {
+                RecyclerView recyclerView = (RecyclerView) view;
+                View childView = recyclerView.getChildAt(position);
+                childView.findViewById(itemId).performClick();
+            }
+        };
+    }
+
 }
