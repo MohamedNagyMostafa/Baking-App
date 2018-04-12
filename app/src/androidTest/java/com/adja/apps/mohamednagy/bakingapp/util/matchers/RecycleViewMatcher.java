@@ -1,4 +1,4 @@
-package com.adja.apps.mohamednagy.bakingapp;
+package com.adja.apps.mohamednagy.bakingapp.util.matchers;
 
 import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +23,7 @@ public class RecycleViewMatcher {
             @Override
             protected boolean matchesSafely(View item) {
                 RecyclerView recyclerView = (RecyclerView) item;
+                recyclerView.getLayoutManager().scrollToPosition(position);
                 View recyclerChildView = recyclerView.getChildAt(position);
                 TextView textView = recyclerChildView.findViewById(textViewId);
 
@@ -31,7 +32,7 @@ public class RecycleViewMatcher {
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("with class name: ");
+                description.appendText(getClass().getName());
             }
         };
     }
