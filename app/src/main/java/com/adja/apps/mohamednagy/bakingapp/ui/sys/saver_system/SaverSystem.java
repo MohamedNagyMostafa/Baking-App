@@ -3,9 +3,8 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 
-/**
+/*
  * Created by Mohamed Nagy on 3/30/2018 .
  * Project projects submission
  * Time    6:15 PM
@@ -30,7 +29,6 @@ public class SaverSystem extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.e("saver restore instacne","dalled");
         if(savedInstanceState != null)
             mSavedData = savedInstanceState.getBundle(SAVING_BUNDLE_DATA_ID);
     }
@@ -38,13 +36,11 @@ public class SaverSystem extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBundle(SAVING_BUNDLE_DATA_ID, mSavedData);
-        Log.e("saver save instacne","dalled");
         super.onSaveInstanceState(outState);
     }
 
     @Override
     public void onDestroy() {
-        Log.e("destroyed","Done");
         super.onDestroy();
     }
 

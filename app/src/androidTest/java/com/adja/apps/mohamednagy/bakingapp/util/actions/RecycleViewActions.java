@@ -7,10 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 
-import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
-import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
 
 /**

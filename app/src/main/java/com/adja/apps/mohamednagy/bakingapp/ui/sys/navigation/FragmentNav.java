@@ -9,7 +9,6 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +57,6 @@ public abstract class FragmentNav extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("view","created");
         if(getSaverSystem() != null)
             onRestoreData(getSaverSystem().savedData());
         return this.onCreateView(inflater, container);

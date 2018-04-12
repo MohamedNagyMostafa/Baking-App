@@ -1,17 +1,13 @@
 package com.adja.apps.mohamednagy.bakingapp;
 
 import android.databinding.DataBindingUtil;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.adja.apps.mohamednagy.bakingapp.databinding.ActivityMainBinding;
-import com.adja.apps.mohamednagy.bakingapp.model.Ingredient;
 import com.adja.apps.mohamednagy.bakingapp.testing_tools.BakingResourceIdle;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.FragmentNav;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSystem;
@@ -19,7 +15,6 @@ import com.adja.apps.mohamednagy.bakingapp.ui.screen.IngredientFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.RecipeListFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.screen.StepFragment;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationPaneSystem;
-import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.saver_system.SaverSystemController;
 
 public class MainActivity extends AppCompatActivity
@@ -59,14 +54,6 @@ public class MainActivity extends AppCompatActivity
         handleSaverSystem();
         // Handle Connect Fragments With Navigation System.
         handleFragments(initializeFragments());
-        Log.e(getClass().getName(), "onCreate");
-
-    }
-
-    @Override
-    protected void onStart() {
-        Log.e(getClass().getName(), "onStart");
-        super.onStart();
     }
 
     @Override

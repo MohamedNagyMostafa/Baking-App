@@ -19,7 +19,6 @@ public class DbContent {
     private static final String TEXT_TYPE    = "TEXT";
     private static final String INTEGER_TYPE = "INTEGER";
     private static final String BLOB_TYPE    = "BLOB";
-    private static final String REAL_TYPE    = "REAL";
 
     private static final String NOT_NULL     = "NOT NULL";
     private static final String CREATE_TABLE = "CREATE TABLE";
@@ -38,7 +37,7 @@ public class DbContent {
         public static final String RECIPE_SERVING_COLUMN = "serving";
         public static final String RECIPE_IMAGE_COLUMN   = "image";
 
-        public static String CREATE_RECIPE_TABLE = CREATE_TABLE + SPACE +
+        static String CREATE_RECIPE_TABLE = CREATE_TABLE + SPACE +
                 TABLE_NAME + "(" +
                 _ID                   + SPACE + INTEGER_TYPE + SPACE            + PRIMARY_KEY + "," +
                 RECIPE_NAME_COLUMN    + SPACE + TEXT_TYPE    + SPACE + NOT_NULL               + "," +
@@ -56,7 +55,7 @@ public class DbContent {
         public static final String INGREDIENT_COLUMN             = "ingredient";
         public static final String INGREDIENT_RECIPE_ID_COLUMN   = "rec_id";
 
-        public static String CREATE_INGREDIENT_TABLE = CREATE_TABLE + SPACE +
+        static String CREATE_INGREDIENT_TABLE = CREATE_TABLE + SPACE +
                 TABLE_NAME + "(" +
                 _ID                         + SPACE + INTEGER_TYPE + SPACE            + PRIMARY_KEY  + ","+
                 INGREDIENT_QUANTITY_COLUMN  + SPACE + INTEGER_TYPE + SPACE + NOT_NULL                + ","+
@@ -78,7 +77,7 @@ public class DbContent {
         public static final String STEP_THUMBNAIL_COLUMN         = "thumbnail";
         public static final String STEP_RECIPE_ID_COLUMN         = "recp_id";
 
-        public static final String CREATE_STEP_TABLE = CREATE_TABLE + SPACE +
+        static final String CREATE_STEP_TABLE = CREATE_TABLE + SPACE +
                 TABLE_NAME + "(" +
                 _ID                           + SPACE + INTEGER_TYPE + SPACE + PRIMARY_KEY  + "," +
                 STEP_SHORT_DESCRIPTION_COLUMN + SPACE + TEXT_TYPE                           + "," +
@@ -92,7 +91,7 @@ public class DbContent {
     }
 
 
-    public static final String RECIPE_JOIN_WITH_STEP_INGREDIENT_QUERY =
+    static final String RECIPE_JOIN_WITH_STEP_INGREDIENT_QUERY =
             Recipe.TABLE_NAME + SPACE +
                     INNER_JOIN + SPACE + Ingredient.TABLE_NAME + SPACE +
                     ON + SPACE + Recipe.TABLE_NAME + "." + Recipe._ID + "=" +

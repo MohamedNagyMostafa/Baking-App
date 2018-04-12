@@ -1,13 +1,9 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
 
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.Pair;
 import android.view.MenuItem;
 
@@ -60,13 +56,11 @@ public class NavigationBottomSystem extends NavigationSystem {
 
     public void onSaveViewInstance(Bundle saveInstance){
         int selected = mBottomNavigationView.getSelectedItemId();
-        Log.e(getClass().getName(),"save fragment:" + String.valueOf(selected));
         saveInstance.putInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM, selected);
     }
 
     public void onRestoreViewInstance(Bundle saveInstance){
         if(saveInstance != null) {
-            Log.e(getClass().getName(),"restore fragment:" + String.valueOf(mCurrentSelectedFragment));
             mCurrentSelectedFragment = saveInstance.getInt(Extras.NavigationSystemData.SELECTED_NAVIGATION_BOTTOM_ITEM);
         }
     }
@@ -76,7 +70,6 @@ public class NavigationBottomSystem extends NavigationSystem {
      * Set Default Fragment At Initial State.
      */
     public void launchCurrentFragment(){
-        Log.e(getClass().getName(), "current fragment " + String.valueOf(mCurrentSelectedFragment));
         mBottomNavigationView.setSelectedItemId(mCurrentSelectedFragment);
         try {
             FragmentIntent fragmentIntent = new FragmentIntent(getFragmentClassFromId(mCurrentSelectedFragment));
@@ -88,7 +81,6 @@ public class NavigationBottomSystem extends NavigationSystem {
     }
 
     private Class<? extends FragmentNav> getFragmentClassFromId(int fragmentId){
-        Log.e("fragment",String.valueOf(fragmentId));
         switch (fragmentId){
             case R.id.step_nav:
                 return StepFragment.class;

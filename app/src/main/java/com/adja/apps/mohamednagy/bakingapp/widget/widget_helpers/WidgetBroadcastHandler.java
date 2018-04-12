@@ -2,7 +2,6 @@ package com.adja.apps.mohamednagy.bakingapp.widget.widget_helpers;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 import com.adja.apps.mohamednagy.bakingapp.widget.widget_container.BakingWidgetProvider;
 

@@ -80,17 +80,6 @@ public class StepperRecycleView extends RecyclerView.Adapter<StepperRecycleView.
         }
     }
 
-    /**
-     * To avoid IllegalStateException.
-     * State: The specified child already has a parent.
-     * You must call removeView() on the child's parent first.
-     */
-    private void checkParentView(StepperViewBinding stepperViewBinding){
-        if(stepperViewBinding.getRoot().getParent() != null){
-            ((ViewGroup)stepperViewBinding.getRoot().getParent()).removeView(stepperViewBinding.getRoot());
-        }
-    }
-
     public interface OnItemCreatedListener{
         void bindView(StepperViewHolder stepperViewHolder, Step step, int position);
     }

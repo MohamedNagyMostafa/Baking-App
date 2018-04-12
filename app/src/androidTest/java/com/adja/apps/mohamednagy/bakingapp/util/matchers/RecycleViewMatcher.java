@@ -1,11 +1,9 @@
 package com.adja.apps.mohamednagy.bakingapp.util.matchers;
 
-import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -25,6 +23,7 @@ public class RecycleViewMatcher {
                 RecyclerView recyclerView = (RecyclerView) item;
                 recyclerView.getLayoutManager().scrollToPosition(position);
                 View recyclerChildView = recyclerView.getChildAt(position);
+
                 TextView textView = recyclerChildView.findViewById(textViewId);
 
                 return textView.getText().toString().equals(text);

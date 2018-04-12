@@ -13,7 +13,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Mohamed Nagy on 3/21/2018.
+ * Created by Mohamed Nagy on 3/21/2018 .
+ * Project projects submission
+ * Time    8:11 PM
  */
 
 public abstract class NetworkHandler {
@@ -47,7 +49,7 @@ public abstract class NetworkHandler {
                 }
             });
         }else{
-            Log.e("network","not exist");
+            Log.e(getClass().getName(),"Network isn't detected");
         }
     }
 

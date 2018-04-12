@@ -4,9 +4,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import org.hamcrest.Matcher;
@@ -20,7 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withEffectiveVi
  */
 
 public class BottomNavigationActions {
-    public static final String NAVIGATION_CLICK_DESCRIPTION = "there's an error is happened during navigation click action";
+    private static final String NAVIGATION_CLICK_DESCRIPTION = "there's an error is happened during navigation click action";
 
     public static ViewAction clickOnNavigationAt(int nav_id){
         return new ViewAction() {

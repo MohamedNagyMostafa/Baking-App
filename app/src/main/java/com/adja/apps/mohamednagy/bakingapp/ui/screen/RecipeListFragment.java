@@ -65,7 +65,6 @@ public class RecipeListFragment extends FragmentNav {
         recipeRecycleView.setSelectedView(mCurrentSelectedRecipe);
 
         recipeRecycleView.setRecipeClickListener(((recipeId) -> {
-            Log.e(getClass().getName(), "recipe is clicked\n" + "recipe value is " + String.valueOf(recipeId));
             try {
                 if (mCurrentSelectedRecipe == null || mCurrentSelectedRecipe != recipeId) {
                     mCurrentSelectedRecipe = recipeId;

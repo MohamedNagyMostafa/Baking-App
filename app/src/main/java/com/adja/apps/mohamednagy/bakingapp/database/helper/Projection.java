@@ -44,14 +44,4 @@ public class Projection {
     public static final int INGREDIENT_MEASURE_COLUMN  = 2;
     public static final int INGREDIENT_COLUMN          = 3;
 
-    public static final String[] RECIPE_INGREDIENT_STEP_JOIN = new String[]{
-            DbContent.Recipe.TABLE_NAME + "." + DbContent.Recipe._ID,
-            DbContent.Step.STEP_DESCRIPTION_COLUMN,
-            DbContent.Ingredient.INGREDIENT_QUANTITY_COLUMN,
-            DbContent.Recipe.RECIPE_NAME_COLUMN
-    };
-
-    public static final int STEP_DESCRIPTION_JOIN_COLUMN     = 1;
-    public static final int INGREDIENT_QUANTITY_JOIN_COLUMN  = 2;
-    public static final int RECIPE_NAME_JOIN_COLUMN          = 3;
 }
