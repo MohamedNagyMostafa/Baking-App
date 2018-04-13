@@ -12,6 +12,7 @@ public class Extras {
         public static final String RECIPE_ID             = "recipe_id";
         public static final String CURRENT_STEP_POSITION = "step_ps";
         public static final String CURRENT_MEDIA_MINT    = "media_ps";
+        public static final String CURRENT_MEDIA_STATE    = "media_st";
     }
 
     public static class RecipeListFragmentData{

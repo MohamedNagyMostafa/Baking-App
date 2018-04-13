@@ -28,6 +28,7 @@ import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationBottomSys
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation.NavigationSystem;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
+import com.adja.apps.mohamednagy.bakingapp.widget.widget_helpers.WidgetBroadcastHandler;
 
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +72,7 @@ public class RecipeListFragment extends FragmentNav {
                     // Reset active step position and video mint to initial state
                     updateIngredientRecipe();
                     openStepFragmentAsNewRecipe();
+                    WidgetBroadcastHandler.sendBroadcastToWidget(mCurrentSelectedRecipe, getActivity());
                 } else {
                     // Retrieve the previous state of steps/videos
                     openStepFragmentAsSameRecipe();

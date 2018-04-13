@@ -12,11 +12,11 @@ import com.adja.apps.mohamednagy.bakingapp.widget.widget_container.BakingWidgetP
  */
 
 public class WidgetBroadcastHandler {
-    public static final String SELECTED_RECIPE_ACTION = "selected_recipe";
+    public static final String SELECTED_RECIPE_ACTION = "SELECTED_RECIPE_ACTION";
     public static final String WIDGET_SAVED_DATA      = "data";
 
     public static void sendBroadcastToWidget(long selectedRecipe, Context context){
-        Intent intent = new Intent(context, BakingWidgetProvider.class);
+        Intent intent = new Intent(context.getApplicationContext(), BakingWidgetProvider.class);
         intent.setAction(SELECTED_RECIPE_ACTION);
         intent.putExtra(WIDGET_SAVED_DATA, selectedRecipe);
 

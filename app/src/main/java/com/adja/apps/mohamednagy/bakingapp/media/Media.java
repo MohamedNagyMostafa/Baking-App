@@ -35,6 +35,9 @@ public class Media{
 
     private Context mContext;
     private AudioFocusSystem mAudioFocusSystem;
+    private Long mLastMediaPosition;
+    private Boolean mLastMediaState;
+
 
     Media(Context context, SimpleExoPlayerView simpleExoPlayerView, Uri videoUri,
           OnMediaStateChanged onMediaStateChanged, AudioFocusSystem audioFocusSystem){
@@ -72,7 +75,8 @@ public class Media{
         mMediaSessionController.stop();
 
         if(mSimpleExoPlayer != null) {
-
+            mLastMediaPosition = mSimpleExoPlayer.getCurrentPosition();
+            mLastMediaState    = mSimpleExoPlayer.getPlayWhenReady();
             mSimpleExoPlayer.stop();
             mSimpleExoPlayer.release();
             mSimpleExoPlayer = null;
@@ -139,12 +143,20 @@ public class Media{
         mMediaSessionController.start();
     }
 
-    public long getCurrentMediaPosition(){
-        return mSimpleExoPlayer.getCurrentPosition();
+    public Long getCurrentMediaPosition(){
+        return mLastMediaPosition;
+    }
+
+    public Boolean getCurrentMediaState(){
+        return mLastMediaState;
     }
 
     public void setCurrentMediaPosition(long position){
         mSimpleExoPlayer.seekTo(position);
+    }
+
+    public void setCurrentMediaState(boolean state){
+        mSimpleExoPlayer.setPlayWhenReady(state);
     }
 
     public static class Builder{

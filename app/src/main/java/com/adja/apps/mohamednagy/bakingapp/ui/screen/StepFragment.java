@@ -38,6 +38,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     private Media         mMedia;
     // Current time of the running video.
     private Long          mMediaPosition;
+    private Boolean       mCurrentMediaState;
     // Recipe id to retrieve steps data.
     private Long          mRecipeId;
     private int           mCurrentActiveStep;
@@ -130,8 +131,12 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
                 if(mMediaPosition != null)
                     mMedia.setCurrentMediaPosition(mMediaPosition);
             }
-
             mMedia.play();
+            // Handle rotation.
+            {
+                if(mCurrentMediaState != null)
+                    mMedia.setCurrentMediaState(mCurrentMediaState);
+            }
         }
     }
     // Called when Next button of current active step
@@ -173,12 +178,18 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
         mMediaPosition     = bundle.getLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT);
         mRecipeId          = bundle.getLong(Extras.StepFragmentData.RECIPE_ID);
         mCurrentActiveStep = bundle.getInt(Extras.StepFragmentData.CURRENT_STEP_POSITION);
+        mCurrentMediaState = bundle.getBoolean(Extras.StepFragmentData.CURRENT_MEDIA_STATE);
+    }
+
+    @Override
+    public void onStop() {
+        if(mMedia != null)
+            mMedia.release();
+        super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        if(mMedia != null)
-            mMedia.release();
         if(mStepFragmentRetriever != null)
             mStepFragmentRetriever.release();
         super.onDestroyView();
@@ -187,6 +198,7 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     public void getSavedData(Bundle bundle){
         if(mStepperSystem != null) bundle.putInt(Extras.StepFragmentData.CURRENT_STEP_POSITION, mStepperSystem.getCurrentActiveStepPosition());
         if(mRecipeId      != null) bundle.putLong(Extras.StepFragmentData.RECIPE_ID, mRecipeId);
-        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMediaPosition != null? mMediaPosition:0L);
+        bundle.putLong(Extras.StepFragmentData.CURRENT_MEDIA_MINT, mMedia != null? mMedia.getCurrentMediaPosition():0L);
+        bundle.putBoolean(Extras.StepFragmentData.CURRENT_MEDIA_STATE, mMedia == null || mMedia.getCurrentMediaState());
     }
 }

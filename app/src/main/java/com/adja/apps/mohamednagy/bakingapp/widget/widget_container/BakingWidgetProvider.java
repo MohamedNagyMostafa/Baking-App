@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.adja.apps.mohamednagy.bakingapp.R;
@@ -73,14 +74,18 @@ public class BakingWidgetProvider extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if(intent != null) {
+            Log.e("recieved","data");
             String action = intent.getAction();
             assert action != null;
+            Log.e("recieved action",action);
 
             switch (action) {
                 case WidgetBroadcastHandler.SELECTED_RECIPE_ACTION:
+                    Log.e("detected","selected recipe");
                     Bundle bundle = intent.getExtras();
                     if (bundle != null) {
                         Long recipeId = bundle.getLong(WidgetBroadcastHandler.WIDGET_SAVED_DATA);
+                        Log.e("set recipe ","selected recipe is " + String.valueOf(recipeId));
                         WidgetSharedPreferences.saveData(recipeId, context);
                     }
                     break;
