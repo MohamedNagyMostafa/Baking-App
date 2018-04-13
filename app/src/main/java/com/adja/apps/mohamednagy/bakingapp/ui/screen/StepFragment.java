@@ -1,5 +1,6 @@
 package com.adja.apps.mohamednagy.bakingapp.ui.screen;
 
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,6 +26,9 @@ import com.adja.apps.mohamednagy.bakingapp.ui.util.DatabaseRetriever;
 import com.adja.apps.mohamednagy.bakingapp.ui.util.Extras;
 import com.adja.apps.mohamednagy.bakingapp.ui.adapter.stepper.StepperRecycleView;
 import com.adja.apps.mohamednagy.bakingapp.ui.sys.StepperSystem;
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 
 
 /**
@@ -117,15 +121,24 @@ public class StepFragment extends FragmentNav implements StepperSystem.OnCurrent
     @Override
     public void updateView(StepperRecycleView.StepperViewHolder stepperViewHolder, Step step) {
         stepperViewHolder.STEPPER_VIEW.descriptionText.setText(parseDescription(step.getDescription()));
-
         if(!step.getVideoLink().isEmpty()) {
-            mMedia = new Media.Builder(getContext())
+
+            Media.Builder builder = new Media.Builder(getContext())
                     .mediaStateListener(null)
                     .mediaView(stepperViewHolder.STEPPER_VIEW.exoPlayerView)
                     .audioFocusSystem(new AudioFocusSystem(getContext()))
-                    .videoLink(step.getVideoLink())
-                    .defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image))
-                    .build();
+                    .videoLink(step.getVideoLink());
+            // Handle thumbnail image
+            if(step.getThumbnailURL().isEmpty())
+                builder.defaultImage(BitmapFactory.decodeResource(getResources(), R.drawable.step_default_image));
+            else
+                try {
+                    builder.setThumbnailImage(Picasso.with(getContext()).load(step.getThumbnailURL()).get());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            mMedia = builder.build();
             // Handle rotation.
             {
                 if(mMediaPosition != null)
