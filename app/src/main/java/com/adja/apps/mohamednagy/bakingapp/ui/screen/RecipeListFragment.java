@@ -72,13 +72,14 @@ public class RecipeListFragment extends FragmentNav {
                     // Reset active step position and video mint to initial state
                     updateIngredientRecipe();
                     openStepFragmentAsNewRecipe();
-                    WidgetBroadcastHandler.sendBroadcastToWidget(mCurrentSelectedRecipe, getActivity());
+                    // Notify Widget
+                    WidgetBroadcastHandler.sendBroadcastToWidget(mCurrentSelectedRecipe, getContext());
                 } else {
                     // Retrieve the previous state of steps/videos
                     openStepFragmentAsSameRecipe();
 
                 }
-            } catch (Exception e) {
+            } catch (NavigationSystem.FragmentIntent.InValidIntentException  e) {
                 Log.e(getClass().getName(), e.getMessage());
             }
         }));

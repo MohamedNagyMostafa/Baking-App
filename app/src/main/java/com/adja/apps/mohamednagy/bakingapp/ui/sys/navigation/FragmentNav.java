@@ -6,6 +6,8 @@ package com.adja.apps.mohamednagy.bakingapp.ui.sys.navigation;
  * Project projects submission
  * Time    10:11 AM
  */
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,7 @@ public abstract class FragmentNav extends Fragment {
     private FragmentNavListener mFragmentNavListener;
     @Nullable volatile private BakingResourceIdle.onStateChangingListener mOnStateChangingListener;
     private int                 mNavigationItem;
+    private Context             mContext;
 
     public FragmentNav(){}
 
@@ -74,6 +77,17 @@ public abstract class FragmentNav extends Fragment {
     protected void notifyStateChanging(boolean newState){
         if(mOnStateChangingListener != null)
             mOnStateChangingListener.onChanged(newState);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
+    @Override
+    public Context getContext() {
+        return mContext;
     }
 
     /**

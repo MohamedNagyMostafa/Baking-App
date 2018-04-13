@@ -38,7 +38,6 @@
         <receiver android:name=".widget.widget_container.BakingWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="SELECTED_RECIPE_ACTION" />
             </intent-filter>
 
             <meta-data
